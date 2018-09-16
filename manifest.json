@@ -1,0 +1,46 @@
+{
+    "manifest_version": 2,
+
+    "name": "Robinhood Mint Integration",
+    "description": "Integrate Mint and Robinhood since they won't do it themselves...",
+    "version": "1.0.0",
+    "author": "George Walker",
+
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png",
+        "512": "images/icon512.png"
+    },
+
+    "background": {
+        "scripts": ["js/background.js"]
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["https://robinhood.com/account?mintRobinhood=true"],
+            "js": ["js/jquery.min.js", "js/shared.js", "js/robinhood.js"]
+        },
+        {
+            "matches": ["https://mint.intuit.com/settings.event?filter=property&addRobinhood=true*"],
+            "js": ["js/jquery.min.js", "js/shared.js", "js/mint-update.js"]
+        },
+        {
+            "matches": ["https://mint.intuit.com/addprovider.event?addRobinhood=true"],
+            "js": ["js/jquery.min.js", "js/shared.js", "js/mint-add.js"]
+        },
+        {
+            "matches": ["https://mint.intuit.com/overview.event"],
+            "js": ["js/jquery.min.js", "js/mint-overview.js"],
+            "css": ["css/mint-overview.css"]
+        }
+
+    ],
+    "permissions": [
+        "storage"
+    ],
+    "web_accessible_resources": [
+    "images/*.png"
+    ]
+}
