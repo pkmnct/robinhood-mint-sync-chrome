@@ -10,6 +10,7 @@
     transition: opacity ease-out 1s;
     max-width: 100%;
     width: 300px;
+    z-index: 999999;
 }
 #mintRobinhoodSyncStatus a {
     padding-top: 1em;
