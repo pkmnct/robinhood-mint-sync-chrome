@@ -21,9 +21,9 @@ $(document).ready(function() {
                     setTimeout(function() {
                         jQuery(".addProperty").click();
                         finishSetup();
-                    }, 2000);
-                }, 2000);
-            }, 2000);
+                    }, 10000);
+                }, 10000);
+            }, 10000);
         } else {
             setTimeout(setupRobinhoodProperty, 50);
         }
