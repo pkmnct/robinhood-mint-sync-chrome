@@ -3,5 +3,5 @@
 # Robinhood Mint Integration
 A Chrome Extension that allows you to automatically sync your Robinhood portfolio balance with your Mint account. It will add the balance as a _collectible_ in Mint.
 
-### Install from the chrome web store
+### Install from the Chrome Web Store
 [<img src="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_496x150.png" alt="Available in the Chrome Web Store" width="248" height="75">](https://chrome.google.com/webstore/detail/robinhood-mint-integratio/mogflmdandlpjobbddhopcggkjoggpdo)
