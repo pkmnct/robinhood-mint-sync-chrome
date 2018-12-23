@@ -40,7 +40,10 @@
     padding: 1.5em .4em;
     width: 32px !important;
 }
-#macOSNotifJS_n0_Text {
+.macOSNotif_Text {
     text-decoration: none !important;
     cursor: unset !important;
+}
+.macOSNotif_Title {
+  text-overflow: unset !important;
 }
