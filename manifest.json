@@ -2,7 +2,7 @@
     "manifest_version": 2,
 
     "name": "Robinhood Mint Sync for Chrome",
-    "description": "Integrate Mint and Robinhood since they won't do it themselves...",
+    "description": "Automatically add your Robinhood portfolio to Mint",
     "version": "1.1.0",
     "author": "George Walker",
 
