@@ -1,13 +1,13 @@
-chrome.storage.sync.get({"welcomeOnUpdate": true, "disableAnalytics": false}, function(result) {
+chrome.storage.sync.get({"changelogOnUpdate": true, "disableAnalytics": false}, function(result) {
     console.log(result);
-    if (result.welcomeOnUpdate) {
-        $("#setting-welcomeOnUpdate").prop("checked", true);
+    if (result.changelogOnUpdate) {
+        $("#setting-changelogOnUpdate").prop("checked", true);
     }
     if (result.disableAnalytics) {
         $("#setting-disableAnalytics").prop("checked", true);
     }
-    $("#setting-welcomeOnUpdate").change(function() {
-        chrome.storage.sync.set({"welcomeOnUpdate":  $("#setting-welcomeOnUpdate").is(':checked')});
+    $("#setting-changelogOnUpdate").change(function() {
+        chrome.storage.sync.set({"changelogOnUpdate":  $("#setting-changelogOnUpdate").is(':checked')});
     });
     $("#setting-disableAnalytics").change(function() {
         console.log("change");
