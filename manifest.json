@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
 
-    "name": "Robinhood Mint Integration",
+    "name": "Robinhood Mint Sync for Chrome",
     "description": "Integrate Mint and Robinhood since they won't do it themselves...",
     "version": "1.0.0",
     "author": "George Walker",
