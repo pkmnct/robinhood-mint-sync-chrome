@@ -1,0 +1,19 @@
+chrome.runtime.onInstalled.addListener(function(details) {
+    // When the plugin is installed
+    if (details.reason == "install") {
+        // Open the welcome page
+        window.open(chrome.extension.getURL("/html/welcome.html"), '_blank');
+
+    // When the plugin is updated
+    } else if (details.reason == "update") {
+        // Information about the previous versionCompare
+        var previousVersion = details.previousVersion;
+
+        // If the welcomeOnUpdate setting is set (default=true), open the welcome on updates
+        chrome.storage.sync.get({welcomeOnUpdate: true} , function(result) {
+            if (result.welcomeOnUpdate) {
+                window.open(chrome.extension.getURL("/html/welcome.html"), '_blank');
+            }
+        });
+    }
+});

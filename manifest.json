@@ -3,7 +3,7 @@
 
     "name": "Robinhood Mint Sync for Chrome",
     "description": "Integrate Mint and Robinhood since they won't do it themselves...",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "author": "George Walker",
 
     "icons": {
@@ -14,26 +14,36 @@
     },
 
     "background": {
-        "scripts": ["js/background.js"]
+        "scripts": ["js/analytics.js","js/background/event-listener.js","js/background/update-install-listener.js","js/background/browser-action.js"]
+    },
+
+    "browser_action": {
+        "default_icon": {
+            "16": "images/icon16.png",
+            "48": "images/icon48.png",
+            "128": "images/icon128.png",
+            "512": "images/icon512.png"
+        },
+        "default_title": "Robinhood Mint Sync for Chrome"
     },
 
     "content_scripts": [
         {
             "matches": ["https://robinhood.com/account?mintRobinhood=true"],
-            "js": ["js/jquery.min.js", "js/shared.js", "js/robinhood.js"]
+            "js": ["js/external/jquery.min.js", "js/shared.js", "js/robinhood/robinhood.js"]
         },
         {
             "matches": ["https://mint.intuit.com/settings.event?filter=property&addRobinhood=true*"],
-            "js": ["js/jquery.min.js", "js/shared.js", "js/mint-update.js"]
+            "js": ["js/external/jquery.min.js", "js/shared.js", "js/mint/mint-update.js"]
         },
         {
             "matches": ["https://mint.intuit.com/addprovider.event?addRobinhood=true"],
-            "js": ["js/jquery.min.js", "js/shared.js", "js/mint-add.js"]
+            "js": ["js/external/jquery.min.js", "js/shared.js", "js/mint/mint-add.js"]
         },
         {
-            "matches": ["https://mint.intuit.com/overview.event"],
-            "js": ["js/jquery.min.js", "js/mint-overview.js"],
-            "css": ["css/mint-overview.css"]
+            "matches": ["https://mint.intuit.com/overview.event*"],
+            "js": ["js/external/jquery.min.js","js/external/macOSNotif.min.js", "js/mint/mint-overview.js"],
+            "css": ["css/mint-overview.css","css/macOSNotif.min.css"]
         }
 
     ],
@@ -43,5 +53,5 @@
     "web_accessible_resources": [
     "images/*.png"
     ],
-    "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
+    "content_security_policy": "script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; object-src 'self'"
 }

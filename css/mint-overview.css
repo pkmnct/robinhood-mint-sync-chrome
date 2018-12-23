@@ -35,3 +35,12 @@
     font-size: 1.2em;
     font-weight: bold;
 }
+
+.macOSNotif_Image {
+    padding: 1.5em .4em;
+    width: 32px !important;
+}
+#macOSNotifJS_n0_Text {
+    text-decoration: none !important;
+    cursor: unset !important;
+}

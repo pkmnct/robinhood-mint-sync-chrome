@@ -1,9 +1,8 @@
 displayOverlay();
 $(document).ready(function() {
     function sendPortfolioValue() {
-        if ($(".subheading").length && !($(".subheading").text().startsWith("$0.00"))) {
-            var portfolioArray = $(".subheading").text().split(".");
-            var portfolioAmount = portfolioArray[0].split("$")[1].replace(/[^\d\.]/g,'') + "." + portfolioArray[1].substring(0,2);
+        if (jQuery(jQuery("h1")[1]).text().length && !(jQuery(jQuery("h1")[1]).text().startsWith("$0.00"))) {
+            var portfolioAmount = jQuery(jQuery("h1")[1]).text().split("9876543210-$,.")[0]
 
             console.log("Sending portfolio amount: $" + portfolioAmount);
 
