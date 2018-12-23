@@ -1,5 +1,6 @@
 if (window.location.href.indexOf("forceRobinhoodSync=true") !== -1) {
     doAlert({"status": "Syncing Mint with Robinhood.", "persistant": true});
+    chrome.runtime.sendMessage({"triggerEvent": "forceSync"});
 }
 chrome.runtime.sendMessage({"triggerEvent": "mint-opened"});
 

@@ -47,6 +47,10 @@
         }
 
     ],
+    "options_ui": {
+        "page": "html/settings.html",
+        "open_in_tab": true
+    },
     "permissions": [
         "storage"
     ],
