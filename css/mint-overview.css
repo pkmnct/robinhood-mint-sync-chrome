@@ -47,3 +47,6 @@
 .macOSNotif_Title {
   text-overflow: unset !important;
 }
+.macOSNotif_Subtitle {
+    font-size: 11px !important;
+}
