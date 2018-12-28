@@ -9,10 +9,7 @@ chrome.storage.sync.get({"disableAnalytics": false}, function(result) {
         sendAnalytics();
     } else {
         console.log("Analytics are disabled.");
-        function ga(p1, p2, p3) {
-            console.log("Analytics are disabled.");
-        }
-        function ga(p1, p2, p3, p4) {
+        ga = function() {
             console.log("Analytics are disabled.");
         }
     }
