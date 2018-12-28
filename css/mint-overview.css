@@ -50,3 +50,6 @@
 .macOSNotif_Subtitle {
     font-size: 11px !important;
 }
+.macOSNotif_Button {
+    text-decoration: none !important;
+}
