@@ -33,6 +33,10 @@
             "js": ["js/external/jquery/jquery.min.js", "js/shared.js", "js/robinhood/robinhood.js"]
         },
         {
+            "matches": ["https://robinhood.com/login?redirectMint=true"],
+            "js": ["js/external/jquery/jquery.min.js","js/shared.js", "js/robinhood/login.js"]
+        },
+        {
             "matches": ["https://mint.intuit.com/settings.event?filter=property&addRobinhood=true*"],
             "js": ["js/external/jquery/jquery.min.js", "js/shared.js", "js/mint/mint-update.js"]
         },

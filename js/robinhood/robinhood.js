@@ -13,5 +13,10 @@ $(document).ready(function() {
             setTimeout(sendPortfolioValue, 100);
         }
     }
-    sendPortfolioValue();
+    if (jQuery("*:contains('Sign In')").length) {
+        chrome.runtime.sendMessage({"triggerEvent": "robinhood-login"});
+        window.close();
+    } else {
+        sendPortfolioValue();
+    }
 });

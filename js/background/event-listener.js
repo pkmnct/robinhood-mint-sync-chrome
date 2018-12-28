@@ -101,6 +101,14 @@ chrome.runtime.onMessage.addListener(
             });
             // First we need to get the value of the Robinhood portfolio
             chrome.tabs.create({url: "https://robinhood.com/account?mintRobinhood=true", active: false, openerTabId: mintTab});
+        } else if (request.triggerEvent == "robinhood-login") {
+            console.log("Robinhood account not logged in.");
+            chrome.tabs.sendMessage(mintTab, {"status": "You need to log in to Robinhood", "link": "https://robinhood.com/login?redirectMint=true", "linkText": "Login", "persistant": true, "newTab": true});
+        } else if (request.triggerEvent == "robinhood-logged-in") {
+            console.log("Robinhood account logged in.");
+            chrome.tabs.sendMessage(mintTab, {shouldReload: true});
+            console.log(sender);
+            chrome.tabs.remove(sender.tab.id);
         }
     }
 );

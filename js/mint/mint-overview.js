@@ -19,6 +19,9 @@ function doAlert(request) {
         notificationSettings.btn2Text = request.linkText;
         notificationSettings.btn2Link = request.link;
     }
+    if (typeof(request.newTab !== "undefined")) {
+        notificationSettings.btn2NewTab = request.newTab;
+    }
     if (!(request.persistant)) {
         notificationSettings.autoDismiss = 15;
     }
@@ -30,6 +33,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (window.location.href.indexOf("forceRobinhoodSync=true") !== -1) {
         if (request.status == "Sync performed in the last hour. Not syncing.") {
             return;
+        }
+        if (request.shouldReload == true) {
+            location.reload();
         }
     }
     doAlert(request);
