@@ -1,8 +1,11 @@
-if (window.location.href.indexOf("forceRobinhoodSync=true") !== -1) {
-    doAlert({"status": "Syncing Mint with Robinhood.", "persistant": true});
-    chrome.runtime.sendMessage({"triggerEvent": "forceSync"});
-}
-chrome.runtime.sendMessage({"triggerEvent": "mint-opened"});
+// Wait a few seconds to start the sync, otherwise it will start before the login happens.
+setTimeout(function() {
+    chrome.runtime.sendMessage({"triggerEvent": "mint-opened"});
+    if (window.location.href.indexOf("forceRobinhoodSync=true") !== -1) {
+        doAlert({"status": "Syncing Mint with Robinhood.", "persistant": true});
+        chrome.runtime.sendMessage({"triggerEvent": "forceSync"});
+    }
+}, 2000);
 
 function doAlert(request) {
     var notificationSettings = {
