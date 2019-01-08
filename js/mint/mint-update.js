@@ -1,7 +1,7 @@
 // Update
 // https://mint.intuit.com/settings.event?filter=property
 
-displayOverlay();
+displayOverlay("Syncing Mint and Robinhood...","This window will automatically close when the sync is complete");
 
 var urlParams = new URLSearchParams(window.location.search);
 

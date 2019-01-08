@@ -1,7 +1,7 @@
 // First Add
 // https://mint.intuit.com/addprovider.event
 
-displayOverlay();
+displayOverlay("Adding Robinhood property to Mint...", "This window will automatically close when complete.");
 
 $(document).ready(function() {
     function setupRobinhoodProperty() {

@@ -1,4 +1,4 @@
-displayOverlay();
+displayOverlay("Syncing Mint and Robinhood...", "This window will automatically close when the sync is complete");
 $(document).ready(function() {
     function sendPortfolioValue() {
         if (jQuery(jQuery("h1")[1]).text().length && !(jQuery(jQuery("h1")[1]).text().startsWith("$0.00"))) {
