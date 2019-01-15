@@ -4,7 +4,6 @@ displayOverlay("Adding Robinhood property to Mint...", "This window will automat
 
 $(document).ready(function() {
     waitForElement("#addProperty", function() {
-        var accountTotal = "0.00";
         $("#addProperty").click();
 
         waitForElement("#addOther", function() {
@@ -19,7 +18,7 @@ $(document).ready(function() {
 
                     waitForElement("#propertyName", function() {
                         jQuery("#propertyName").val("Robinhood Account")
-                        jQuery("#propertyValue").val(accountTotal);
+                        jQuery("#propertyValue").val("0.00");
 
                         waitForElement(".addProperty", function() {
                             jQuery(".addProperty").click();
