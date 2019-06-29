@@ -46,8 +46,8 @@
         },
         {
             "matches": ["https://mint.intuit.com/overview.event*"],
-            "js": ["js/external/jquery/jquery.min.js","js/external/macOSNotif/macOSNotif.min.js", "js/mint/mint-overview.js"],
-            "css": ["css/mint-overview.css","css/macOSNotif.min.css"]
+            "js": ["js/external/jquery/jquery.min.js","js/external/noty/noty.js", "js/mint/mint-overview.js"],
+            "css": ["css/mint-overview.css","css/noty.css"]
         }
 
     ],
