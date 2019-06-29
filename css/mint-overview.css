@@ -36,20 +36,40 @@
     font-weight: bold;
 }
 
-.macOSNotif_Image {
-    padding: 1.5em .4em;
-    width: 32px !important;
+.notification-image {
+    padding: 1.5em;
+    padding-left: .75em;
+    max-width: 32px;
+    float: left;
 }
-.macOSNotif_Text {
-    text-decoration: none !important;
-    cursor: unset !important;
+
+.notification-title {
+    padding: 1em 0;
 }
-.macOSNotif_Title {
-  text-overflow: unset !important;
+
+.notification-action {
+    display: flex;
+    justify-content: flex-end;
 }
-.macOSNotif_Subtitle {
-    font-size: 11px !important;
+
+.notification-action-link {
+    margin: 1em;
+    padding: .5em 1em;
+    margin-top: .5em;
+    background-color: rgba(0,0,0,.07);
+    color: inherit;
 }
-.macOSNotif_Button {
-    text-decoration: none !important;
+
+.notification-action-link:hover {
+    background-color: rgba(0,0,0,.15);
+    text-decoration: none;
+}
+
+.notification-wrapper {
+    display: flex;
+}
+
+.notification-right {
+    display: flex;
+    flex-direction: column;
 }

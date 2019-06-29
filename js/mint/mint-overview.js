@@ -8,28 +8,29 @@ setTimeout(function() {
 }, 2000);
 
 function doAlert(request) {
-    var notificationSettings = {
-	    title: 'Robinhood Mint Sync for Chrome',
-        subtitle: request.status,
-        btn1Text: 'Close',
-        btn1Link: null,
-        imageSrc: chrome.extension.getURL("/images/icon128.png"),
-        imageLink: null,
-        btn2Text: null,
-        mainLink: null
-    };
-    if (typeof(request.link) !== "undefined") {
-        notificationSettings.btn2Text = request.linkText;
-        notificationSettings.btn2Link = request.link;
-    }
-    if (typeof(request.newTab !== "undefined")) {
-        notificationSettings.btn2NewTab = request.newTab;
-    }
-    if (!(request.persistant)) {
-        notificationSettings.autoDismiss = 15;
-    }
 
-    macOSNotif(notificationSettings);
+    const targetText = request.newTab ? `" target="_blank"` : "";
+
+    const linkText = request.link ? (`<a href="` + request.link + targetText + `" class="notification-action-link">` + request.linkText + `</a>`) : "";
+
+    const renderedText = `
+        <div class="notification-wrapper">
+            <div class="notification-left">
+                <img class="notification-image" src="` + chrome.extension.getURL("/images/icon128.png") + `">
+            </div>
+            <div class="notification-right">
+                <h5 class="notification-title">Robinhood Mint Sync for Chrome</h5>
+                <p>` + request.status + `</p>
+                <p class="notification-action">` + linkText + `</p>
+            </div>
+        </div>`;
+
+    new Noty({
+        text: renderedText,
+        timeout: request.persistant ? false : 15000,
+        progressBar: true,
+        closeWith: ['button'],
+    }).show();
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
