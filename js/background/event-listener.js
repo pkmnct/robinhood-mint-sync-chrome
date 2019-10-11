@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(
                 if (typeof(result.mintLastSynced) === 'undefined') {
                     // First Run
                     console.log("First run detected");
-                    chrome.storage.sync.get({"disableAnalytics": false}, function(result) {
+                    chrome.storage.sync.get({"disableAnalytics": true}, function(result) {
                         if (result.disableAnalytics == true) {
                             console.log("Analytics are disabled.");
                         } else {
@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener(
                     if (differenceHours >= 1) {
                         console.log("Syncing Mint with Robinhood.");
                         syncStartTime = new Date();
-                        chrome.storage.sync.get({"disableAnalytics": false}, function(result) {
+                        chrome.storage.sync.get({"disableAnalytics": true}, function(result) {
                             if (result.disableAnalytics == true) {
                                 console.log("Analytics are disabled.");
                             } else {
@@ -49,7 +49,7 @@ chrome.runtime.onMessage.addListener(
             });
         } else if (request.triggerEvent == "portfolioAmount") {
             console.log("Got Robinhood Portfolio Amount");
-            chrome.storage.sync.get({"disableAnalytics": false}, function(result) {
+            chrome.storage.sync.get({"disableAnalytics": true}, function(result) {
                 if (result.disableAnalytics == true) {
                     console.log("Analytics are disabled.");
                 } else {
@@ -67,7 +67,7 @@ chrome.runtime.onMessage.addListener(
 
             var timeToComplete = syncStartTime - currentTime;
 
-            chrome.storage.sync.get({"disableAnalytics": false}, function(result) {
+            chrome.storage.sync.get({"disableAnalytics": true}, function(result) {
                 if (result.disableAnalytics == true) {
                     console.log("Analytics are disabled.");
                 } else {
@@ -79,7 +79,7 @@ chrome.runtime.onMessage.addListener(
             chrome.tabs.sendMessage(mintTab, {"status": "Sync Complete! Reload to see the change.", "link": "/overview.event", "linkText": "Reload", "persistant": true});
 
         } else if (request.triggerEvent == "addRobinhoodComplete") {
-            chrome.storage.sync.get({"disableAnalytics": false}, function(result) {
+            chrome.storage.sync.get({"disableAnalytics": true}, function(result) {
                 if (result.disableAnalytics == true) {
                     console.log("Analytics are disabled.");
                 } else {
@@ -92,7 +92,7 @@ chrome.runtime.onMessage.addListener(
             console.log("Syncing Mint with Robinhood.");
             syncStartTime = new Date();
 
-            chrome.storage.sync.get({"disableAnalytics": false}, function(result) {
+            chrome.storage.sync.get({"disableAnalytics": true}, function(result) {
                 if (result.disableAnalytics == true) {
                     console.log("Analytics are disabled.");
                 } else {
