@@ -1,4 +1,4 @@
-chrome.storage.sync.get({"changelogOnUpdate": true, "disableAnalytics": false}, function(result) {
+chrome.storage.sync.get({"changelogOnUpdate": false, "disableAnalytics": false}, function(result) {
     console.log(result);
     if (result.changelogOnUpdate) {
         $("#setting-changelogOnUpdate").prop("checked", true);
