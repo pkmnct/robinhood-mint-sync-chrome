@@ -9,8 +9,8 @@ chrome.runtime.onInstalled.addListener(function(details) {
         // Information about the previous versionCompare
         var previousVersion = details.previousVersion;
 
-        // If the changelogOnUpdate setting is set (default=true), open the changelog on updates
-        chrome.storage.sync.get({changelogOnUpdate: true} , function(result) {
+        // If the changelogOnUpdate setting is set (default=false), open the changelog on updates
+        chrome.storage.sync.get({changelogOnUpdate: false} , function(result) {
             if (result.changelogOnUpdate) {
                 window.open(chrome.extension.getURL("/html/changelog.html"), '_blank');
             }
