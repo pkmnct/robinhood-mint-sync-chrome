@@ -1,5 +1,3 @@
-chrome.storage.sync.get({"fixTriangle": true}, function(result) {
-    if (result.fixTriangle) {
-        $("body").addClass("rhmsc-fix-triangle");
-    }
+chrome.storage.sync.get({"fixTriangle": true}, result => {
+    if (result.fixTriangle) document.getElementsByTagName("body")[0].classList.add("rhmsc-fix-triangle");
 });
