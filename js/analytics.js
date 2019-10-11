@@ -3,7 +3,7 @@
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-chrome.storage.sync.get({"disableAnalytics": false}, function(result) {
+chrome.storage.sync.get({"disableAnalytics": true}, function(result) {
     if (result.disableAnalytics == false) {
         console.log("Analytics are enabled.");
         sendAnalytics();

@@ -48,6 +48,11 @@
             "matches": ["https://mint.intuit.com/overview.event*"],
             "js": ["js/external/jquery/jquery.min.js","js/external/noty/noty.js", "js/mint/mint-overview.js"],
             "css": ["css/mint-overview.css","css/noty.css"]
+        },
+        {
+            "matches": ["https://mint.intuit.com/*"],
+            "js": ["js/mint/mint.js"],
+            "css": ["css/mint.css"]
         }
 
     ],
