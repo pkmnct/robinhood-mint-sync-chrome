@@ -22,14 +22,15 @@
 				<!-- Nav -->
 					<nav id="nav">
 						<ul>
-							<li><a href="#first" class="active">Welcome Page</a></li>
-							<li><a href="#second">Analytics</a></li>
+							<li><a href="#welcome" class="active">Welcome Page</a></li>
+							<li><a href="#analytics">Analytics</a></li>
+							<li><a href="#triangleFix">Triangle Indicator Fix</a></li>
 						</ul>
 					</nav>
 
 				<!-- Main -->
 					<div id="main">
-							<section id="first" class="main">
+							<section id="welcome" class="main">
 								<header class="major">
 									<h2>Changelog</h2>
 								</header>
@@ -37,13 +38,21 @@
 								<input type="checkbox" id="setting-changelogOnUpdate" name="setting-changelogOnUpdate">
 								<label for="setting-changelogOnUpdate">Display changelog on update</label>
 							</section>
-							<section id="second" class="main">
+							<section id="analytics" class="main">
 								<header class="major">
 									<h2>Analytics</h2>
 								</header>
 								<p>Enable or disable sending analytic data. This data includes the time it takes for a sync to complete, when the extension is being used, and how long users interact with the extension's pages. You can toggle the tracking using this setting. You must restart your browser for the change to take effect.</p>
 								<input type="checkbox" id="setting-disableAnalytics" name="setting-disableAnalytics">
 								<label for="setting-disableAnalytics">Disable analytics</label>
+							</section>
+							<section id="triangleFix" class="main">
+								<header class="major">
+									<h2>Triangle Indicator Fix</h2>
+								</header>
+								<p>In some areas of Mint, there is an expansion panel where the indicator functions counterintuitively. This setting enables a fix so that the indicator for the panel appears expanded when it should.</p>
+								<input type="checkbox" id="setting-fixTriangle" name="setting-fixTriangle">
+								<label for="setting-fixTriangle">Triangle Indicator Fix</label>
 							</section>
 					</div>
 
