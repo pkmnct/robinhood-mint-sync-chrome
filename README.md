@@ -1,5 +1,5 @@
-## Important Note: Mint now supports adding Robinhood accounts natively.
-The extension should continue to work, but will add the Robinhood balance as a _collectible_. If you [add Robinhood to Mint natively](https://help.mint.com/General/888961131/How-do-I-add-a-new-account-in-Mint.htm) the balance will show up under investments. Any changes made to Robinhood or Mint in the future could break this extension.
+## Note on Mint's native Robinhood support
+Support was added to Mint for Robinhood. Some users are reporting that the native support no longer works. This extension does continue to work, but it will add the Robinhood balance as a _collectible_. If you are able to successfully [add Robinhood to Mint natively](https://help.mint.com/General/888961131/How-do-I-add-a-new-account-in-Mint.htm) the balance will show up under investments. Any changes made to Robinhood or Mint in the future could break this extension.
 
 <img src="https://raw.githubusercontent.com/pkmnct/robinhood-mint-sync-chrome/master/images/icon512.png" alt="Mint and Robinhood Sync Icon" width="128" height="128">
 
