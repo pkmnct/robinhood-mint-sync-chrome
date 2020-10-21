@@ -1,8 +1,9 @@
 displayOverlay("Syncing Mint and Robinhood...", "This window will automatically close when the sync is complete");
 $(document).ready(function() {
     function sendPortfolioValue() {
-        if (jQuery(jQuery("h1")[1]).text().length && !(jQuery(jQuery("h1")[1]).text().startsWith("$0.00"))) {
-            var portfolioAmount = jQuery(jQuery("h1")[1]).text().split("9876543210-$,.")[0]
+        var portfolioAmountElement = document.querySelector(".main-container svg text").textContent;
+        if (portfolioAmountElement.includes("$")) {
+            var portfolioAmount = portfolioAmountElement.split("$")[1];
 
             console.log("Sending portfolio amount: $" + portfolioAmount);
 
@@ -17,6 +18,6 @@ $(document).ready(function() {
         chrome.runtime.sendMessage({"triggerEvent": "robinhood-login"});
         window.close();
     } else {
-        sendPortfolioValue();
+        waitForElement(".main-container svg text", sendPortfolioValue);
     }
 });
