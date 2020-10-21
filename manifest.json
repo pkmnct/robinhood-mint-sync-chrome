@@ -14,7 +14,7 @@
     },
 
     "background": {
-        "scripts": ["js/analytics.js","js/background/event-listener.js","js/background/update-install-listener.js","js/background/browser-action.js"]
+        "scripts": ["js/background/event-listener.js","js/background/update-install-listener.js","js/background/browser-action.js"]
     },
 
     "browser_action": {
@@ -65,6 +65,5 @@
     ],
     "web_accessible_resources": [
     "images/*.png"
-    ],
-    "content_security_policy": "script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; object-src 'self'"
+    ]
 }
