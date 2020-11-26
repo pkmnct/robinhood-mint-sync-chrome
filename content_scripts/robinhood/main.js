@@ -65,7 +65,7 @@ const init = () => {
     window.addEventListener("load", () => {
         if (document.location.pathname === "/login") {
             chrome.runtime.sendMessage({
-                event: "login"
+                event: "login-needed"
             });
             window.close();
         } else {
