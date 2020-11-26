@@ -2,11 +2,11 @@
  * Function to get the bearer token from the redux store on Robinhood. This will be used for the Robinhood API calls.
  */
 const getBearerToken = () => new Promise((resolve, reject) => {
-    let database = window.indexedDB.open("localforage");
+    const database = window.indexedDB.open("localforage");
     database.onsuccess = () => {
-        let transaction = database.result.transaction("keyvaluepairs", "readwrite");
-        let objectStore = transaction.objectStore("keyvaluepairs");
-        let auth = objectStore.get("reduxPersist:auth");
+        const transaction = database.result.transaction("keyvaluepairs", "readwrite");
+        const objectStore = transaction.objectStore("keyvaluepairs");
+        const auth = objectStore.get("reduxPersist:auth");
 
         auth.onsuccess = () => {
             try {
@@ -26,23 +26,53 @@ const getBearerToken = () => new Promise((resolve, reject) => {
 });
 
 /**
+ * Function to scrape the portfolio and cash values
+ */
+const scrapeData = async () => {
+    try {
+        const access_token = await getBearerToken();
+        const api_url = "https://phoenix.robinhood.com/accounts/unified";
+
+        const response = await fetch(api_url, {
+            method: "GET",
+            headers: new Headers({
+                'authorization': `Bearer ${access_token}`
+            })
+        });
+        
+        const json = await response.json();
+
+        const cashValue = json.uninvested_cash.amount;
+        const marketValue = json.total_market_value.amount;
+        chrome.runtime.sendMessage({
+            event: "portfolio_balance",
+            cash: cashValue,
+            market: marketValue,
+            error: false
+        });
+    } catch (error) {
+        chrome.runtime.sendMessage({
+            event: "portfolio_balance",
+            error: true
+        });
+    }
+}
+
+/**
  * Initialize the content script on Robinhood
  */
-const init = async () => {
-    const access_token = await getBearerToken();
-    const api_url = "https://phoenix.robinhood.com/accounts/unified";
-
-    const response = await fetch(api_url, {
-        method: "GET",
-        headers: new Headers({
-            'authorization': `Bearer ${access_token}`
-        })
-    });
-    
-    const json = await response.json();
-
-    const cashValue = json.uninvested_cash.amount;
-    const marketValue = json.total_market_value.amount;
+const init = () => {
+    window.addEventListener("load", () => {
+        if (document.location.pathname === "/login") {
+            chrome.runtime.sendMessage({
+                event: "login"
+            });
+            window.close();
+        } else {
+            await scrapeData();
+            window.close();
+        }
+    })
 }
 
 init();
