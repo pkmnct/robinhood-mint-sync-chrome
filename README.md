@@ -13,7 +13,7 @@ A Chrome Extension that allows you to automatically sync your Robinhood portfoli
 #### General Use
 The extension is offered through the [Chrome Web Store](https://chrome.google.com/webstore/detail/robinhood-mint-integratio/mogflmdandlpjobbddhopcggkjoggpdo):
 
-[<img src="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_496x150.png" alt="Available in the Chrome Web Store" width="248" height="75">](https://chrome.google.com/webstore/detail/robinhood-mint-integratio/mogflmdandlpjobbddhopcggkjoggpdo)
+[<img src="https://raw.githubusercontent.com/pkmnct/robinhood-mint-sync-chrome/master/images/chrome-web-store.png" alt="Available in the Chrome Web Store" width="248" height="75">](https://chrome.google.com/webstore/detail/robinhood-mint-integratio/mogflmdandlpjobbddhopcggkjoggpdo)
 
 #### Developer Use
 You can also run a local version of the extension for development.
