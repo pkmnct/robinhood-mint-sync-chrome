@@ -17,11 +17,11 @@ const getBearerToken = () => new Promise((resolve, reject) => {
             }
         }
         auth.onerror = () => {
-            reject("Failed to get reduxPersist:auth");
+            reject(new Error("Failed to get reduxPersist:auth"));
         }
     };
     database.onerror = (e) => {
-        reject("Failed to open database");
+        reject(new Error("Failed to open database"));
     }
 });
 
@@ -29,6 +29,10 @@ const getBearerToken = () => new Promise((resolve, reject) => {
  * Function to scrape the portfolio and cash values
  */
 const scrapeData = async () => {
+    const returnValue = {
+        event: "portfolio_balance",
+    }
+
     try {
         const access_token = await getBearerToken();
         const api_url = "https://phoenix.robinhood.com/accounts/unified";
@@ -42,19 +46,20 @@ const scrapeData = async () => {
         
         const json = await response.json();
 
-        const cashValue = json.uninvested_cash.amount;
-        const marketValue = json.total_market_value.amount;
-        chrome.runtime.sendMessage({
-            event: "portfolio_balance",
-            cash: cashValue,
-            market: marketValue,
-            error: false
-        });
+        returnValue.debug = json;
+
+        if (json && json.uninvested_cash && json.uninvested_cash.amount) {
+            returnValue.uninvested_cash = json.uninvested_cash.amount;
+        }
+
+        if (json && json.total_market_value && json.total_market_value.amount) {
+            returnValue.total_market_value = json.total_market_value.amount;
+        }
+        
+        return returnValue;
     } catch (error) {
-        chrome.runtime.sendMessage({
-            event: "portfolio_balance",
-            error: true
-        });
+        returnValue.error = true;
+        return returnValue;
     }
 }
 
@@ -69,7 +74,8 @@ const init = () => {
             });
             window.close();
         } else {
-            await scrapeData();
+            const data = await scrapeData();
+            chrome.runtime.sendMessage(data);
             window.close();
         }
     })
