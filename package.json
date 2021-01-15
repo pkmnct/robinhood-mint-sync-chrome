@@ -12,7 +12,9 @@
   },
   "homepage": "https://github.com/pkmnct/robinhood-mint-sync-chrome#readme",
   "dependencies": {
-    "copy-webpack-plugin": "^7.0.0"
+    "copy-webpack-plugin": "^7.0.0",
+    "jquery": "^3.5.1",
+    "noty": "^3.2.0-beta"
   },
   "devDependencies": {
     "@types/chrome": "0.0.128",
