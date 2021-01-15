@@ -1,0 +1,44 @@
+const webpack = require("webpack");
+const path = require('path');
+const glob = require('glob')
+const CopyPlugin = require('copy-webpack-plugin');
+
+const entryPoints = {};
+
+glob.sync("./src/**/*.ts").forEach(item => {
+    const key = item.replace("./src/","").replace(".ts", "");
+    entryPoints[key] = item;
+});
+
+module.exports = {
+    entry: entryPoints,
+    output: {
+        filename: '[name].js',
+        path: path.join(__dirname, '../dist/js')
+    },
+    optimization: {
+        splitChunks: {
+            name: 'vendor',
+            chunks: "initial"
+        }
+    },
+    module: {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/
+            }
+        ]
+    },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js']
+    },
+    plugins: [
+        // exclude locale files in moment
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new CopyPlugin({
+            patterns: [{ from: '.', to: '../', context: 'public' }]
+        }),
+    ]
+};
