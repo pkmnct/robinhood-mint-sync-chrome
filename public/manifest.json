@@ -54,9 +54,9 @@
     },
     {
       "matches": [
-        "https://mint.intuit.com/addprovider.event?addRobinhood=true*"
+        "https://mint.intuit.com/settings.event?filter=property&createProperty=true&property=*"
       ],
-      "js": ["js/content/mint/properties/setup.js"]
+      "js": ["js/content/mint/properties/create.js"]
     },
     {
       "matches": ["https://mint.intuit.com/overview.event*"],

@@ -79,13 +79,10 @@ const eventHandlers = {
       openerTabId: mintTab,
     });
   },
-  // TODO: is this event still needed?
-  "mint-robinhood-setup-complete": () => {
-    log(logConfig, "mint-robinhood-setup-complete event");
-    chrome.storage.sync.set({
-      syncTime: "1970-01-01Z00:00:00:000",
-    });
-    // TODO: trigger first sync?
+  // This event is emitted by the Mint property create content script.
+  "mint-property-added": ({ sender }: eventHandler) => {
+    log(logConfig, "mint-property-added event");
+    chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the Mint property update content script.
   "mint-sync-complete": () => {

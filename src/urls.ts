@@ -11,7 +11,8 @@ export const urls = {
         "https://mint.intuit.com/settings.event?filter=property&addRobinhood=true",
       check:
         "https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true",
-      setup: "https://mint.intuit.com/addprovider.event?addRobinhood=true",
+      create:
+        "https://mint.intuit.com/settings.event?filter=property?addRobinhood=true",
     },
   },
 };
