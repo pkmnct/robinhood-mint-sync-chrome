@@ -12,7 +12,7 @@ export const urls = {
       check:
         "https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true",
       create:
-        "https://mint.intuit.com/settings.event?filter=property?addRobinhood=true",
+        "https://mint.intuit.com/settings.event?filter=property&createProperty=true",
     },
   },
 };

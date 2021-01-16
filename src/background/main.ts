@@ -96,7 +96,7 @@ const eventHandlers = {
     });
   },
   // This event is emitted by the main Mint content script
-  "mint-opened": ({ sender }) => {
+  "mint-opened": ({ sender }: eventHandler) => {
     log(logConfig, "mint-opened event");
     // Store a reference to the mint tab to be able to show the notifications
     mintTab = sender.tab.id;
@@ -139,6 +139,17 @@ const eventHandlers = {
         }
       }
     });
+  },
+  // This event is emitted by the Mint property check content script.
+  "mint-create": ({ message, sender }: eventHandler) => {
+    chrome.tabs.create({
+      url: urls.mint.properties.create + "&property=" + message.property,
+      active: false,
+    });
+  },
+  // This event is emitted by the Mint property check content script.
+  "mint-remove": ({ message, sender }: eventHandler) => {
+    // TODO: Alert user to remove old account property
   },
 };
 

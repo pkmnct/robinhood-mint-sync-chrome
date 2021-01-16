@@ -4,9 +4,9 @@ export const waitForElement = (
   callback: () => void
 ): void => {
   const elements = document.querySelectorAll(selector);
-  if (!elements.length)
+  if (!elements.length) {
     setTimeout(() => waitForElement(selector, withText, callback), 500);
-  if (withText) {
+  } else if (withText) {
     let foundText = false;
     elements.forEach((element) => {
       if ((element as HTMLElement).innerText.toLowerCase().includes(withText)) {

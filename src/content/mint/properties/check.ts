@@ -1,6 +1,7 @@
 // Check to see if properties are set up, and trigger set up if they are not
 // https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true
 
+import { urls } from "../../../urls";
 import { Overlay } from "../../../utilities/overlay";
 import { waitForElement } from "../../../utilities/waitForElement";
 
@@ -30,13 +31,20 @@ window.addEventListener("load", () => {
   waitForElement(".OtherPropertyView", null, () => {
     robinhoodProperties.forEach((property) => {
       if (!checkIfPropertyExists(property)) {
-        // TODO: Trigger setup of property
-        console.log("Need to set up " + property);
+        // Trigger setup of property
+        chrome.runtime.sendMessage({
+          event: "mint-create",
+          property,
+        });
       }
     });
     if (checkIfPropertyExists("Account")) {
       // TODO: Need to remove the old way of storing portfolio balance
       console.log("Need to remove Account");
     }
+    // TODO: show notification to reload?
+    chrome.runtime.sendMessage({
+      event: "mint-property-added",
+    });
   });
 });
