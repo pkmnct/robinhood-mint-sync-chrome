@@ -20,6 +20,8 @@
     "@types/chrome": "0.0.128",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
+    "bestzip": "^2.1.7",
+    "cross-var": "^1.1.0",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
@@ -33,6 +35,9 @@
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "prerelease": "npm run clean",
+    "release": "npm run build",
+    "postrelease": "cd dist && cross-var bestzip ../$npm_package_name@$npm_package_version.zip * && cd .."
   }
 }
