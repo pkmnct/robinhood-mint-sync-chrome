@@ -60,7 +60,8 @@
     },
     {
       "matches": ["https://mint.intuit.com/overview.event*"],
-      "js": ["js/content/mint/main.js"]
+      "js": ["js/external/noty/noty.min.js", "js/content/mint/main.js"],
+      "css": ["css/mint-overview.css", "css/noty.css"]
     },
     {
       "matches": ["https://mint.intuit.com/*"],
