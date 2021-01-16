@@ -34,15 +34,20 @@ const eventHandlers = {
   "robinhood-login-success": ({ sender }: eventHandler) => {
     log(logConfig, "robinhood-login-success event");
 
+    // Close the Robinhood tab logged in from
+    chrome.tabs.remove(sender.tab.id);
+
     // Trigger the sync
     chrome.tabs.create({
-      url: "https://robinhood.com/account?mintRobinhood=true",
+      url: urls.robinhood.scrape,
       active: false,
       openerTabId: mintTab,
     });
 
-    // Close the Robinhood tab logged in from
-    chrome.tabs.remove(sender.tab.id);
+    // Switch focus back to Mint
+    chrome.tabs.update(mintTab, {
+      selected: true,
+    });
   },
   // This event is emitted by the main Robinhood content script.
   "robinhood-portfolio-scraped": ({ sender, message }: eventHandler) => {
@@ -84,6 +89,27 @@ const eventHandlers = {
     log(logConfig, "mint-property-added event");
     chrome.tabs.remove(sender.tab.id);
   },
+  // This event is emitted by the Mint property check content script.
+  "mint-property-setup-complete": ({ sender }: eventHandler) => {
+    log(logConfig, "mint-property-setup-complete event");
+    chrome.tabs.remove(sender.tab.id);
+    chrome.tabs.sendMessage(mintTab, {
+      status: "Setup complete! Initiating Sync.",
+      persistent: true,
+    });
+
+    // Trigger the Robinood sync content script
+    chrome.tabs.create({
+      url: urls.robinhood.scrape,
+      active: false,
+      openerTabId: mintTab,
+    });
+
+    // Switch focus back to Mint
+    chrome.tabs.update(mintTab, {
+      selected: true,
+    });
+  },
   // This event is emitted by the Mint property update content script.
   "mint-sync-complete": () => {
     log(logConfig, "mint-sync-complete event");
@@ -104,10 +130,12 @@ const eventHandlers = {
       if (!syncTime) {
         // Sync has not been set up
         chrome.tabs.sendMessage(mintTab, {
-          status: "Robinhood account is not set up in Mint",
+          status:
+            "You have not yet performed a sync on this device. You must run an initial setup.",
           persistent: true,
           link: urls.mint.properties.check,
           linkText: "Set up",
+          newTab: true,
         });
       } else {
         const syncTimeParsed = new Date(syncTime);

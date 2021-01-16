@@ -44,7 +44,7 @@ window.addEventListener("load", () => {
     }
     // TODO: show notification to reload?
     chrome.runtime.sendMessage({
-      event: "mint-property-added",
+      event: "mint-property-setup-complete",
     });
   });
 });

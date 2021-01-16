@@ -1,5 +1,5 @@
-import * as Noty from "noty";
-
+// TODO: Using Noty this way doesn't work?
+// import Noty from "noty";
 export class Notification {
   private wrapper = document.createElement("div");
   private left = document.createElement("div");
@@ -46,7 +46,7 @@ export class Notification {
 
     this.message.innerText = messageText;
 
-    if (action) {
+    if (action && action.text && action.link) {
       const actionLink = document.createElement("a");
       actionLink.setAttribute("href", action.link);
       if (action.newTab) {
@@ -61,11 +61,11 @@ export class Notification {
     this.wrapper.appendChild(this.right);
 
     this.persistent = persistent;
-
-    this.show();
   }
 
   public show(): void {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     new Noty({
       text: this.wrapper.innerHTML,
       timeout: this.persistent ? false : 15000,

@@ -70,6 +70,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       if (syncedLabels.length === 4) {
         const saveButtons = document.querySelectorAll(".saveButton");
         saveButtons.forEach((button) => {
+          button.removeAttribute("disabled");
           (button as HTMLInputElement).click();
         });
         closeWindow();
@@ -80,7 +81,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       if (document.querySelectorAll(".AccountView.open").length) {
         setTimeout(closeWindow, 50);
       } else {
-        chrome.runtime.sendMessage({ event: "syncComplete" });
+        chrome.runtime.sendMessage({ event: "mint-sync-complete" });
         window.close();
       }
     }
