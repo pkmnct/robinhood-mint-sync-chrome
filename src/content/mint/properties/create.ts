@@ -11,17 +11,13 @@ if (property) {
   );
 
   window.addEventListener("load", () => {
-    console.log("load");
     waitForElement("#addProperty", null, () => {
-      console.log("click add property");
       (document.querySelector("#addProperty") as HTMLElement).click();
 
       waitForElement("#addOther", null, () => {
-        console.log("click other");
         (document.querySelector("#addOther") as HTMLElement).click();
 
         waitForElement(".propertyType", null, () => {
-          console.log("collectible");
           // Find the type dropdown
           const select = document.querySelector(
             ".propertyType"
