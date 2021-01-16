@@ -33,7 +33,15 @@ const eventHandlers = {
   // This event is emitted by the login Robinhood content script.
   "robinhood-login-success": ({ sender }: eventHandler) => {
     log(logConfig, "robinhood-login-success event");
-    chrome.tabs.sendMessage(mintTab, { shouldReload: true });
+
+    // Trigger the sync
+    chrome.tabs.create({
+      url: "https://robinhood.com/account?mintRobinhood=true",
+      active: false,
+      openerTabId: mintTab,
+    });
+
+    // Close the Robinhood tab logged in from
     chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the main Robinhood content script.
@@ -44,13 +52,19 @@ const eventHandlers = {
       {
         url: urls.mint.properties.update,
         active: false,
-        openerTabId: mintTab,
+        openerTabId: sender.tab.id,
       },
       (tab) => {
-        chrome.tabs.sendMessage(tab.id, {
-          uninvested_cash: message.uninvested_cash,
-          total_market_value: message.total_market_value,
-        });
+        const checkIfLoaded = () => {
+          chrome.tabs.get(tab.id, (tab) => {
+            if (tab.status === "complete") {
+              // Once the tab is loaded, pass the message to it
+              chrome.tabs.sendMessage(tab.id, message);
+              clearInterval(sendMessageInterval);
+            }
+          });
+        };
+        const sendMessageInterval = setInterval(checkIfLoaded, 200);
       }
     );
     chrome.tabs.remove(sender.tab.id);
