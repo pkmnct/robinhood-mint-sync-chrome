@@ -1,3 +1,12 @@
+import { log } from "../utilities/logging";
+
+const logConfig = {
+  type: "background",
+  name: "Main",
+};
+
+log(logConfig, "initialized");
+
 // Need to be able to access this regardless of the message.
 let mintTab;
 

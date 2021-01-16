@@ -1,3 +1,11 @@
+import { log } from "../utilities/logging";
+const logConfig = {
+  type: "background",
+  name: "Update/Install Listener",
+};
+
+log(logConfig, "initialized");
+
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === "install") {
     // When the extension is installed
