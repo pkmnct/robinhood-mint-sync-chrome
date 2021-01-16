@@ -61,6 +61,11 @@
     {
       "matches": ["https://mint.intuit.com/overview.event*"],
       "js": ["js/content/mint/main.js"]
+    },
+    {
+      "matches": ["https://mint.intuit.com/*"],
+      "js": ["js/content/mint/triangleFix/triangleFix.js"],
+      "css": ["js/content/mint/triangleFix/triangleFix.css"]
     }
   ],
   "options_ui": {
