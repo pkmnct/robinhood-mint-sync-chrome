@@ -15,4 +15,8 @@ export const urls = {
         "https://mint.intuit.com/settings.event?filter=property&createProperty=true",
     },
   },
+  extension: {
+    changelog:
+      "https://pkmnct.github.io/robinhood-mint-sync-chrome/changelog.html",
+  },
 };

@@ -14,6 +14,6 @@ chrome.runtime.onInstalled.addListener((details) => {
   } else if (details.reason === "update") {
     // When the extension is updated
     log(logConfig, "update detected");
-    // TODO: set up a notification to show that the extension was updated, with a link to changelog
+    chrome.storage.sync.set({ updated: true });
   }
 });

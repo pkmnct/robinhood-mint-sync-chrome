@@ -137,8 +137,19 @@ const eventHandlers = {
     mintTab = sender.tab.id;
 
     chrome.storage.sync.get(
-      ["syncTime", "propertiesSetup", "needsOldPropertyRemoved"],
-      ({ syncTime, propertiesSetup, needsOldPropertyRemoved }) => {
+      ["syncTime", "propertiesSetup", "needsOldPropertyRemoved", "updated"],
+      ({ syncTime, propertiesSetup, needsOldPropertyRemoved, updated }) => {
+        if (updated) {
+          chrome.tabs.sendMessage(mintTab, {
+            status: "Robinhood Mint Sync for Chrome has updated.",
+            persistent: true,
+            link: urls.extension.changelog,
+            linkText: "View Changelog",
+            newTab: true,
+          });
+          // TODO: only dismiss changelog after it's been viewed?
+          chrome.storage.sync.set({ updated: false });
+        }
         if (needsOldPropertyRemoved) {
           chrome.tabs.create({
             url: urls.mint.properties.check,
@@ -198,7 +209,6 @@ const eventHandlers = {
   // This event is emitted by the Mint property check content script.
   "mint-property-remove": ({ message, sender }: eventHandler) => {
     log(logConfig, "mint-property-remove event");
-    // TODO: Alert user to remove old account property
     chrome.tabs.sendMessage(mintTab, {
       status:
         "Your account was set up prior to version 3 of this extension. Version 3 introduced separation of asset types when syncing. Please remove the old 'Robinhood Account' property from Mint to prevent duplication of your portfolio balance. Reload the overview to sync after removing the property.",
