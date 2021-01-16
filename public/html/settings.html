@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Robinhood Mint Sync for Chrome - Settings</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="/css/stellar.css" />
+    <link rel="stylesheet" href="/css/settings.css" />
+    <noscript
+      ><link rel="stylesheet" href="/css/stellar-noscript.css"
+    /></noscript>
+  </head>
+  <body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+      <!-- Header -->
+      <header id="header">
+        <h1>Settings</h1>
+        <p>Robinhood Mint Sync for Chrome</p>
+      </header>
+
+      <!-- Nav -->
+      <nav id="nav">
+        <ul>
+          <li><a href="#welcome" class="active">Welcome Page</a></li>
+          <li><a href="#triangleFix">Triangle Indicator Fix</a></li>
+        </ul>
+      </nav>
+
+      <!-- Main -->
+      <div id="main">
+        <section id="welcome" class="main">
+          <header class="major">
+            <h2>Changelog</h2>
+          </header>
+          <p>
+            Enable or disable the changelog page on extension updates. This
+            changelog shows information about the new features and changes
+            introduced with the update.
+          </p>
+          <input
+            type="checkbox"
+            id="setting-changelogOnUpdate"
+            name="setting-changelogOnUpdate"
+          />
+          <label for="setting-changelogOnUpdate"
+            >Display changelog on update</label
+          >
+        </section>
+        <section id="triangleFix" class="main">
+          <header class="major">
+            <h2>Triangle Indicator Fix</h2>
+          </header>
+          <p>
+            In some areas of Mint, there is an expansion panel where the
+            indicator functions counterintuitively. This setting enables a fix
+            so that the indicator for the panel appears expanded when it should.
+          </p>
+          <input
+            type="checkbox"
+            id="setting-fixTriangle"
+            name="setting-fixTriangle"
+          />
+          <label for="setting-fixTriangle">Triangle Indicator Fix</label>
+        </section>
+      </div>
+
+      <!-- Footer -->
+      <footer id="footer">
+        <p class="copyright">
+          <a href="licenses.html">View extension and third-party licenses</a>
+        </p>
+      </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/external/jquery/jquery.min.js"></script>
+    <script src="/js/external/ajlkn/jquery.scrollex.min.js"></script>
+    <script src="/js/external/ajlkn/jquery.scrolly.min.js"></script>
+    <script src="/js/external/ajlkn/browser.min.js"></script>
+    <script src="/js/external/ajlkn/breakpoints.min.js"></script>
+    <script src="/js/external/stellar/util.js"></script>
+    <script src="/js/external/stellar/main.js"></script>
+    <script src="/js/settings.js"></script>
+  </body>
+</html>

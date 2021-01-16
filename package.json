@@ -1,0 +1,43 @@
+{
+  "name": "robinhood-mint-sync-chrome",
+  "version": "3.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pkmnct/robinhood-mint-sync-chrome.git"
+  },
+  "author": "George W. Walker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pkmnct/robinhood-mint-sync-chrome/issues"
+  },
+  "homepage": "https://github.com/pkmnct/robinhood-mint-sync-chrome#readme",
+  "dependencies": {
+    "copy-webpack-plugin": "^7.0.0",
+    "jquery": "^3.5.1",
+    "noty": "^3.2.0-beta"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.128",
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
+    "bestzip": "^2.1.7",
+    "cross-var": "^1.1.0",
+    "eslint": "^7.18.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^8.0.14",
+    "typescript": "^4.1.3",
+    "webpack": "^5.15.0",
+    "webpack-cli": "^4.3.1"
+  },
+  "scripts": {
+    "watch": "webpack --config webpack/webpack.dev.js --watch",
+    "build": "webpack --config webpack/webpack.prod.js",
+    "clean": "rimraf dist",
+    "prerelease": "npm run clean",
+    "release": "npm run build",
+    "postrelease": "cd dist && cross-var bestzip ../$npm_package_name@$npm_package_version.zip * && cd .."
+  }
+}

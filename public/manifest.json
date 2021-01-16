@@ -1,0 +1,78 @@
+{
+  "manifest_version": 2,
+
+  "name": "Robinhood Mint Sync for Chrome",
+  "description": "Automatically add your Robinhood portfolio to Mint",
+  "version": "3.0.0",
+  "author": "George Walker",
+
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png",
+    "512": "images/icon512.png"
+  },
+
+  "background": {
+    "scripts": [
+      "js/background/main.js",
+      "js/background/update_install_listener.js",
+      "js/background/browser_action.js"
+    ]
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png",
+      "512": "images/icon512.png"
+    },
+    "default_title": "Robinhood Mint Sync for Chrome"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://robinhood.com/account?syncMint=true"],
+      "js": ["js/content/robinhood/main.js"]
+    },
+    {
+      "matches": ["https://robinhood.com/login?redirectMint=true"],
+      "js": ["js/content/robinhood/login.js"]
+    },
+    {
+      "matches": [
+        "https://mint.intuit.com/settings.event?filter=property&addRobinhood=true"
+      ],
+      "js": ["js/content/mint/properties/update.js"]
+    },
+    {
+      "matches": [
+        "https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true"
+      ],
+      "js": ["js/content/mint/properties/check.js"]
+    },
+    {
+      "matches": [
+        "https://mint.intuit.com/settings.event?filter=property&createProperty=true&property=*"
+      ],
+      "js": ["js/content/mint/properties/create.js"]
+    },
+    {
+      "matches": ["https://mint.intuit.com/overview.event*"],
+      "js": ["js/external/noty/noty.min.js", "js/content/mint/main.js"],
+      "css": ["css/mint-overview.css", "css/noty.css"]
+    },
+    {
+      "matches": ["https://mint.intuit.com/*"],
+      "js": ["js/content/mint/triangleFix/triangleFix.js"],
+      "css": ["css/triangleFix.css"]
+    }
+  ],
+  "options_ui": {
+    "page": "html/settings.html",
+    "open_in_tab": true
+  },
+  "permissions": ["storage"],
+  "web_accessible_resources": ["images/*.png"]
+}

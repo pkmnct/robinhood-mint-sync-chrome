@@ -3,3 +3,8 @@ images/mint.png
 images/sync.svg
 
 .DS_Store
+
+node_modules
+
+dist
+*.zip
