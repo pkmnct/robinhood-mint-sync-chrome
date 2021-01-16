@@ -39,12 +39,13 @@ window.addEventListener("load", () => {
       }
     });
     if (checkIfPropertyExists("Account")) {
-      // TODO: Need to remove the old way of storing portfolio balance
-      console.log("Need to remove Account");
+      chrome.runtime.sendMessage({
+        event: "mint-property-remove",
+      });
+    } else {
+      chrome.runtime.sendMessage({
+        event: "mint-property-setup-complete",
+      });
     }
-    // TODO: show notification to reload?
-    chrome.runtime.sendMessage({
-      event: "mint-property-setup-complete",
-    });
   });
 });

@@ -52,7 +52,6 @@ if (property) {
                 (document.querySelector(".addProperty") as HTMLElement).click();
 
                 waitForElement(".AddPropertySuccessView", null, () => {
-                  // TODO: Handle completion of new property add
                   chrome.runtime.sendMessage({
                     event: "mint-property-added",
                   });
