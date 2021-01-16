@@ -33,7 +33,7 @@
 
   "content_scripts": [
     {
-      "matches": ["https://robinhood.com/account?mintRobinhood=true"],
+      "matches": ["https://robinhood.com/account?syncMint=true"],
       "js": ["js/content/robinhood/main.js"]
     },
     {
@@ -48,12 +48,18 @@
     },
     {
       "matches": [
-        "https://mint.intuit.com/addprovider.event?addRobinhood=true"
+        "https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true"
+      ],
+      "js": ["js/content/mint/properties/check.js"]
+    },
+    {
+      "matches": [
+        "https://mint.intuit.com/addprovider.event?addRobinhood=true*"
       ],
       "js": ["js/content/mint/properties/setup.js"]
     },
     {
-      "matches": ["https://mint.intuit.com/*"],
+      "matches": ["https://mint.intuit.com/overview.event*"],
       "js": ["js/content/mint/main.js"]
     }
   ],
