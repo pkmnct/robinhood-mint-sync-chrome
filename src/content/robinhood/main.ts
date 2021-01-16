@@ -115,7 +115,7 @@ const init = () => {
         clearInterval(checkIfLoggedInInterval);
       } else if (document.location.pathname.includes("/login")) {
         chrome.runtime.sendMessage({
-          event: "robinhood-login",
+          event: "robinhood-login-needed",
         });
         clearInterval(checkIfLoggedInInterval);
       }

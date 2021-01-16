@@ -7,6 +7,7 @@ const logConfig = {
 log(logConfig, "initialized");
 
 chrome.browserAction.onClicked.addListener((tab) => {
+  log(logConfig, "browser action triggered");
   chrome.tabs.create({
     url: chrome.extension.getURL("html/welcome.html"),
     active: true,

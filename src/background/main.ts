@@ -1,3 +1,4 @@
+import { urls } from "../urls";
 import { log } from "../utilities/logging";
 
 const logConfig = {
@@ -17,26 +18,31 @@ interface eventHandler {
 
 // The key of the handler should match the message.event value
 const eventHandlers = {
+  // This event is emitted by the main Robinhood content script.
   "robinhood-login-needed": ({ sender }: eventHandler) => {
+    log(logConfig, "robinhood-login-needed event");
     chrome.tabs.sendMessage(mintTab, {
       status: "You need to log in to Robinhood",
-      link: "https://robinhood.com/login?redirectMint=true",
+      link: urls.robinhood.login,
       linkText: "Login",
       persistent: true,
       newTab: true,
     });
     chrome.tabs.remove(sender.tab.id);
   },
+  // This event is emitted by the login Robinhood content script.
   "robinhood-login-success": ({ sender }: eventHandler) => {
+    log(logConfig, "robinhood-login-success event");
     chrome.tabs.sendMessage(mintTab, { shouldReload: true });
     chrome.tabs.remove(sender.tab.id);
   },
+  // This event is emitted by the main Robinhood content script.
   "robinhood-portfolio-scraped": ({ sender, message }: eventHandler) => {
+    log(logConfig, "robinhood-portfolio-scraped event");
     // Trigger the Mint portfolio update content script
     chrome.tabs.create(
       {
-        url:
-          "https://mint.intuit.com/settings.event?filter=property&addRobinhood=true",
+        url: urls.mint.properties.update,
         active: false,
         openerTabId: mintTab,
       },
@@ -49,21 +55,27 @@ const eventHandlers = {
     );
     chrome.tabs.remove(sender.tab.id);
   },
+  // TODO: is this event still needed?
   "mint-force-sync": () => {
-    // Trigger the Robinhood sync content script
+    log(logConfig, "mint-force-sync event");
+    // Trigger the main Robinhood sync script
     chrome.tabs.create({
-      url: "https://robinhood.com/account?mintRobinhood=true",
+      url: urls.robinhood.scrape,
       active: false,
       openerTabId: mintTab,
     });
   },
+  // TODO: is this event still needed?
   "mint-robinhood-setup-complete": () => {
+    log(logConfig, "mint-robinhood-setup-complete event");
     chrome.storage.sync.set({
       syncTime: "1970-01-01Z00:00:00:000",
     });
     // TODO: trigger first sync?
   },
+  // This event is emitted by the Mint property update content script.
   "mint-sync-complete": () => {
+    log(logConfig, "mint-sync-complete event");
     chrome.storage.sync.set({ syncTime: new Date().toString() });
     chrome.tabs.sendMessage(mintTab, {
       status: "Sync Complete! Reload to see the change.",
@@ -72,7 +84,9 @@ const eventHandlers = {
       persistent: true,
     });
   },
+  // This event is emitted by the main Mint content script
   "mint-opened": ({ sender }) => {
+    log(logConfig, "mint-opened event");
     // Store a reference to the mint tab to be able to show the notifications
     mintTab = sender.tab.id;
     chrome.storage.sync.get("syncTime", ({ syncTime }) => {
@@ -81,7 +95,7 @@ const eventHandlers = {
         chrome.tabs.sendMessage(mintTab, {
           status: "Robinhood account is not set up in Mint",
           persistent: true,
-          link: "https://mint.intuit.com/addprovider.event?addRobinhood=true",
+          link: urls.mint.properties.check,
           linkText: "Set up",
         });
       } else {
@@ -100,15 +114,14 @@ const eventHandlers = {
 
           // Trigger the Robinood sync content script
           chrome.tabs.create({
-            url: "https://robinhood.com/account?mintRobinhood=true",
+            url: urls.robinhood.scrape,
             active: false,
             openerTabId: mintTab,
           });
         } else {
           chrome.tabs.sendMessage(mintTab, {
             status: "Sync performed in the last hour. Not syncing.",
-            link:
-              "https://mint.intuit.com/overview.event?forceRobinhoodSync=true",
+            link: urls.mint.forceSync,
             linkText: "Sync",
             persistent: false,
           });
@@ -118,8 +131,6 @@ const eventHandlers = {
   },
 };
 
-const messageListener = (message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   eventHandlers[message.event]({ message, sender });
-};
-
-// chrome.runtime.onMessage.addListener()
+});

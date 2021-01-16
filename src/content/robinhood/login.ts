@@ -2,7 +2,7 @@ window.addEventListener("load", () => {
   const checkIfLoggedIn = () => {
     if (document.title.includes("Portfolio")) {
       chrome.runtime.sendMessage({
-        triggerEvent: "robinhood-logged-in",
+        event: "robinhood-login-success",
       });
       clearInterval(checkIfLoggedInInterval);
     }
