@@ -78,7 +78,8 @@ const eventHandlers = {
       } else {
         const syncTimeParsed = new Date(syncTime);
         const currentTime = new Date();
-        const differenceMilliseconds = currentTime.valueOf() - syncTimeParsed.valueOf();
+        const differenceMilliseconds =
+          currentTime.valueOf() - syncTimeParsed.valueOf();
         const differenceHours = Math.floor(
           (differenceMilliseconds % 86400000) / 3600000
         );
