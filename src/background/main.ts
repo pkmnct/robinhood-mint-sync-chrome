@@ -94,23 +94,28 @@ const eventHandlers = {
   "mint-property-setup-complete": ({ sender }: eventHandler) => {
     debug.log("mint-property-setup-complete event");
 
+    debug.log("mint-property-setup-complete setting storage");
     chrome.storage.sync.set({
       propertiesSetup: true,
       needsOldPropertyRemoved: false,
     });
 
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
+
+    debug.log("mint-property-setup-complete sending notification");
     chrome.tabs.sendMessage(mintTab, {
       status: "Setup complete! Initiating Sync.",
       persistent: true,
     });
 
+    debug.log("mint-property-setup-complete opening Robinhood to scrape");
     // Trigger the Robinood sync content script
     chrome.tabs.create({
       url: urls.robinhood.scrape,
       active: false,
     });
 
+    debug.log("mint-property-setup-complete switching focus back to Mint");
     // Switch focus back to Mint
     chrome.tabs.update(mintTab, {
       selected: true,
