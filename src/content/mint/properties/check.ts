@@ -32,6 +32,7 @@ const checkIfPropertyExists = (property) => {
 
 window.addEventListener("load", () => {
   waitForElement(".OtherPropertyView", null, () => {
+    let newProperties = 0;
     robinhoodProperties.forEach((property) => {
       if (!checkIfPropertyExists(property)) {
         // Trigger setup of property
@@ -39,6 +40,7 @@ window.addEventListener("load", () => {
           event: "mint-create",
           property,
         });
+        newProperties++;
       }
     });
     if (checkIfPropertyExists("Account")) {
@@ -48,6 +50,7 @@ window.addEventListener("load", () => {
     } else {
       chrome.runtime.sendMessage({
         event: "mint-property-setup-complete",
+        newProperties,
       });
     }
   });

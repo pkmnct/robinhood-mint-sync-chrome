@@ -5,6 +5,8 @@ const debug = new Debug("background", "Main");
 
 // Need to be able to access this regardless of the message.
 let mintTab: undefined | number;
+let newProperties = 0;
+let newPropertiesComplete = 0;
 
 interface eventHandler {
   message: any;
@@ -88,10 +90,38 @@ const eventHandlers = {
   // This event is emitted by the Mint property create content script.
   "mint-property-added": ({ sender }: eventHandler) => {
     debug.log("mint-property-added event");
+    newPropertiesComplete++;
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
+
+    debug.log(`Setup ${newPropertiesComplete} of ${newProperties} properties.`);
+    if (newPropertiesComplete === newProperties) {
+      eventHandlers["setup-complete"]();
+    }
+  },
+  // This event is emitted by the mint-property-added and/or the mint-property-setup-complete event handlers
+  "setup-complete": () => {
+    debug.log("setup-complete event");
+    debug.log("setup-complete sending notification");
+    chrome.tabs.sendMessage(mintTab, {
+      status: "Setup complete! Initiating Sync.",
+      persistent: true,
+    });
+
+    debug.log("setup-complete opening Robinhood to scrape");
+    // Trigger the Robinood sync content script
+    chrome.tabs.create({
+      url: urls.robinhood.scrape,
+      active: false,
+    });
+
+    debug.log("setup-complete switching focus back to Mint");
+    // Switch focus back to Mint
+    chrome.tabs.update(mintTab, {
+      selected: true,
+    });
   },
   // This event is emitted by the Mint property check content script.
-  "mint-property-setup-complete": ({ sender }: eventHandler) => {
+  "mint-property-setup-complete": ({ sender, message }: eventHandler) => {
     debug.log("mint-property-setup-complete event");
 
     debug.log("mint-property-setup-complete setting storage");
@@ -102,24 +132,11 @@ const eventHandlers = {
 
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
 
-    debug.log("mint-property-setup-complete sending notification");
-    chrome.tabs.sendMessage(mintTab, {
-      status: "Setup complete! Initiating Sync.",
-      persistent: true,
-    });
-
-    debug.log("mint-property-setup-complete opening Robinhood to scrape");
-    // Trigger the Robinood sync content script
-    chrome.tabs.create({
-      url: urls.robinhood.scrape,
-      active: false,
-    });
-
-    debug.log("mint-property-setup-complete switching focus back to Mint");
-    // Switch focus back to Mint
-    chrome.tabs.update(mintTab, {
-      selected: true,
-    });
+    newProperties = parseInt(message.newProperties);
+    debug.log(`Setting up ${newProperties} properties.`);
+    if (newProperties === 0) {
+      eventHandlers["setup-complete"]();
+    }
   },
   // This event is emitted by the Mint property update content script.
   "mint-sync-complete": () => {
