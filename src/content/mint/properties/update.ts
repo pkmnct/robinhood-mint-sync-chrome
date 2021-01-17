@@ -7,10 +7,7 @@ import { waitForElement } from "../../../utilities/waitForElement";
 
 const debug = new Debug("content", "Mint - Properties - Update");
 
-new Overlay(
-  "Syncing Mint and Robinhood...",
-  "This window will automatically close when the sync is complete"
-);
+new Overlay("Syncing Mint and Robinhood...", "This window will automatically close when the sync is complete");
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.event === "robinhood-portfolio-scraped") {
@@ -48,7 +45,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
       function setRobinhoodAmount(label, amount) {
         debug.log(`Attempting to set ${label} to ${amount}`);
-        waitForElement(".OtherPropertyView", label, (foundElement) => {
+        waitForElement(".OtherPropertyView", `Robinhood ${label}`, (foundElement) => {
           debug.log(`Expanding property ${label}`, foundElement);
           foundElement.querySelector("span").click();
 
