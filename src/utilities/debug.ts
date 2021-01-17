@@ -17,7 +17,7 @@ export class Debug {
 
     this.prefix = `${
       type === "content" ? extensionPrefix + " - " : ""
-    }${typePrefix}${namePrefix} `;
+    }${typePrefix}${namePrefix}`;
 
     chrome.storage.sync.get("debugMode", ({ debugMode }) => {
       if (debugMode) {
@@ -27,8 +27,10 @@ export class Debug {
     });
   }
 
-  public log = (message: string): void => {
-    if (this.isDebug) console.log(`${this.prefix}${message}`);
+  public log = (...params: any[]): void => {
+    const newParams = [...params];
+    newParams.unshift(this.prefix);
+    if (this.isDebug) console.log(...newParams);
   };
 
   public isEnabled = (): boolean => this.isDebug;
