@@ -52,6 +52,34 @@
             <h2>Version History</h2>
           </header>
           <aside class="version">
+            <h4>Version 3.2.0</h4>
+            <h5>Bug Fixes</h5>
+            <ul>
+              <li>
+                Fixes an issue where, during initial setup, the extension could
+                cause the sync to happen before the properties have been set up
+                in Mint.
+              </li>
+              <li>
+                Fixes an issue where extension would sometimes fail to open the
+                tabs used for syncing.
+              </li>
+              <li>
+                Fixes an issue where the inputs for the values received from
+                Mint could not be found sometimes.
+              </li>
+            </ul>
+            <h5>New Features</h5>
+            <ul>
+              <li>
+                "Debug Mode" setting that enables logging. This can be used to
+                diagnose issues in the future. This will also prevent the tabs
+                the extension uses for syncing from closing when they are
+                finished.
+              </li>
+            </ul>
+          </aside>
+          <aside class="version">
             <h4>Version 3.1.0</h4>
             <p>
               Fixed race condition in Mint update script where save callback
