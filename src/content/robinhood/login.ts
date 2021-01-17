@@ -1,3 +1,7 @@
+import { Debug } from "../../utilities/debug";
+
+const debug = new Debug("content", "Robinhood - Login");
+
 window.addEventListener("load", () => {
   const checkIfLoggedIn = () => {
     if (document.title.includes("Portfolio")) {

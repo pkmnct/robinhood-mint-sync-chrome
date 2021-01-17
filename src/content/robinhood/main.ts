@@ -1,4 +1,7 @@
 import { Overlay } from "../../utilities/overlay";
+import { Debug } from "../../utilities/debug";
+
+const debug = new Debug("content", "Robinhood - Main");
 
 /**
  * Function to get the bearer token from the redux store on Robinhood. This will be used for the Robinhood API calls.

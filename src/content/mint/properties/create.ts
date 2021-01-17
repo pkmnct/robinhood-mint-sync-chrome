@@ -1,5 +1,8 @@
 import { Overlay } from "../../../utilities/overlay";
 import { waitForElement } from "../../../utilities/waitForElement";
+import { Debug } from "../../../utilities/debug";
+
+const debug = new Debug("content", "Mint - Properties - Create");
 
 const params = new URLSearchParams(document.location.search);
 const property = params.get("property");

@@ -1,8 +1,9 @@
 import { waitForElement } from "../../utilities/waitForElement";
 import { Notification } from "../../utilities/notification";
+import { Debug } from "../../utilities/debug";
 
-// Wait a few seconds to start the sync, otherwise it will start before the login happens.
-console.log("Test");
+const debug = new Debug("content", "Mint - Main");
+
 window.addEventListener("load", () => {
   waitForElement("#mintNavigation", null, () => {
     chrome.runtime.sendMessage({ event: "mint-opened" });

@@ -1,3 +1,7 @@
+import { Debug } from "../../../utilities/debug";
+
+const debug = new Debug("content", "Mint - Triangle Fix");
+
 chrome.storage.sync.get({ fixTriangle: true }, (result) => {
   if (result.fixTriangle)
     document
