@@ -85,7 +85,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       setRobinhoodAmount("Crypto", crypto);
 
       if (request.equities) {
-        stocks = parseFloat(request.equities);
+        stocks = parseFloat(request.equities) - cash;
       }
       setRobinhoodAmount("Stocks", stocks);
 
