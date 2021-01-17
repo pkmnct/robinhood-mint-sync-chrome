@@ -17,10 +17,7 @@ export class Notification {
     this.right.setAttribute("class", "notification-right");
 
     this.logo.setAttribute("class", "notification-image");
-    this.logo.setAttribute(
-      "src",
-      chrome.extension.getURL("/images/icon128.png")
-    );
+    this.logo.setAttribute("src", chrome.extension.getURL("/images/icon128.png"));
 
     this.left.appendChild(this.logo);
     this.wrapper.appendChild(this.left);
@@ -71,6 +68,7 @@ export class Notification {
       timeout: this.persistent ? false : 15000,
       progressBar: true,
       closeWith: ["button"],
+      theme: "relax",
     }).show();
   }
 }
