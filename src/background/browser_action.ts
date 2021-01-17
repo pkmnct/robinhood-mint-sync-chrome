@@ -1,13 +1,9 @@
-import { log } from "../utilities/logging";
-const logConfig = {
-  type: "background",
-  name: "Browser Action",
-};
+import { Debug } from "../utilities/debug";
 
-log(logConfig, "initialized");
+const debug = new Debug("background", "Browser Action");
 
 chrome.browserAction.onClicked.addListener((tab) => {
-  log(logConfig, "browser action triggered");
+  debug.log("browser action triggered");
   chrome.tabs.create({
     url: chrome.extension.getURL("html/welcome.html"),
     active: true,
