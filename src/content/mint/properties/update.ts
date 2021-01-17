@@ -48,30 +48,17 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
       function setRobinhoodAmount(label, amount) {
         debug.log(`Attempting to set ${label} to ${amount}`);
-        // Find the property that contains the label
-        const otherProperties = document.querySelectorAll(".OtherPropertyView");
-        let property;
-        otherProperties.forEach((thisProperty) => {
-          if ((thisProperty as HTMLElement).innerText.includes(label)) {
-            property = thisProperty;
-            return;
-          }
-        });
+        waitForElement(".OtherPropertyView", label, (foundElement) => {
+          debug.log(`Expanding property ${label}`);
+          foundElement.querySelector("span").click();
 
-        if (property) {
-          property.querySelector("span").click();
-
-          const robinhoodInputs = property.querySelectorAll("input");
-
-          if (robinhoodInputs[0].value === `Robinhood ${label}`) {
+          waitForElement("input", null, (foundInput: HTMLInputElement) => {
             debug.log(`Found ${label} input, setting amount`);
-            robinhoodInputs[1].value = amount;
+            foundInput.value = amount;
             syncedLabels.push(label);
             callback();
-          }
-        } else {
-          setTimeout(() => setRobinhoodAmount(label, amount), 50);
-        }
+          });
+        });
       }
 
       if (request.uninvested_cash) {
