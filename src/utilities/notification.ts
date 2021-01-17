@@ -49,6 +49,7 @@ export class Notification {
       if (action.newTab) {
         actionLink.setAttribute("target", "_blank");
       }
+      actionLink.setAttribute("class", "notification-action-link");
       actionLink.innerText = action.text;
       this.actionContainer.appendChild(actionLink);
     }
