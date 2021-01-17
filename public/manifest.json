@@ -62,7 +62,7 @@
       "matches": ["https://mint.intuit.com/overview.event*"],
       "js": ["js/external/noty/noty.min.js", "js/content/mint/main.js"],
       "css": [
-        "css/mint-overview.css",
+        "css/notification.css",
         "js/external/noty/noty.css",
         "js/external/noty/themes/relax.css"
       ]
