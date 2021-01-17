@@ -15,8 +15,8 @@ new Overlay(
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.event === "robinhood-portfolio-scraped") {
     debug.log("Waiting for Property Tab View to load");
-    waitForElement(".PropertyTabView", null, () => {
-      debug.log("Property Tab View loaded.");
+    waitForElement(".PropertyTabView", null, (propertyViewElement) => {
+      debug.log("Property Tab View loaded.", propertyViewElement);
 
       let crypto = 0;
       let stocks = 0;
@@ -38,7 +38,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           debug.log(`Fields updated. Attempting to save.`);
           const saveButtons = document.querySelectorAll(".saveButton");
           saveButtons.forEach((button) => {
-            debug.log(`Clicking save`);
+            debug.log(`Clicking save`, button);
             button.removeAttribute("disabled");
             (button as HTMLInputElement).click();
           });
@@ -49,15 +49,25 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       function setRobinhoodAmount(label, amount) {
         debug.log(`Attempting to set ${label} to ${amount}`);
         waitForElement(".OtherPropertyView", label, (foundElement) => {
-          debug.log(`Expanding property ${label}`);
+          debug.log(`Expanding property ${label}`, foundElement);
           foundElement.querySelector("span").click();
 
-          waitForElement("input", null, (foundInput: HTMLInputElement) => {
-            debug.log(`Found ${label} input, setting amount`);
-            foundInput.value = amount;
-            syncedLabels.push(label);
-            callback();
-          });
+          waitForElement(
+            "input",
+            null,
+            () => {
+              const inputs = foundElement.querySelectorAll("input");
+              inputs.forEach((foundInput) => {
+                if (foundInput.getAttribute("name") === "value") {
+                  debug.log(`Found ${label} input, setting amount`, foundInput);
+                  foundInput.value = amount;
+                  syncedLabels.push(label);
+                  callback();
+                }
+              });
+            },
+            foundElement
+          );
         });
       }
 
