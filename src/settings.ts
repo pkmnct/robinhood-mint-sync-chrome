@@ -31,5 +31,15 @@ chrome.storage.sync.get(
         fixTriangle: checkboxTriangle.checked,
       });
     });
+
+    // Debug Mode
+    if (result.debugMode) {
+      checkboxDebug.setAttribute("checked", "true");
+    }
+    checkboxDebug.addEventListener("change", () => {
+      chrome.storage.sync.set({
+        debugMode: checkboxDebug.checked,
+      });
+    });
   }
 );
