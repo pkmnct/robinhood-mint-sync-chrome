@@ -46,32 +46,48 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         }
       };
 
-      function setRobinhoodAmount(label, amount) {
-        debug.log(`Attempting to set ${label} to ${amount}`);
+      function setRobinhoodAmount(label, amount, timesCalled = 0) {
+        // Bail if recursion is too high
+        if (timesCalled > 20) {
+          debug.log(`Called too many times. Bail out`); // TODO: throw Error maybe?
+          return;
+        }
+
         // Find the property that contains the label
+        debug.log(`Attempting to set ${label} to ${amount}`);
         const otherProperties = document.querySelectorAll(".OtherPropertyView");
         let property;
         otherProperties.forEach((thisProperty) => {
-          if ((thisProperty as HTMLElement).innerText.includes(label)) {
+          if ((thisProperty as HTMLElement).innerText.includes(`Robinhood ${label}`)) {
             property = thisProperty;
             return;
           }
         });
 
-        if (property) {
-          property.querySelector("span").click();
-
-          const robinhoodInputs = property.querySelectorAll("input");
-
-          if (robinhoodInputs[0].value === `Robinhood ${label}`) {
-            debug.log(`Found ${label} input, setting amount`);
-            robinhoodInputs[1].value = amount;
-            syncedLabels.push(label);
-            callback();
-          }
-        } else {
-          setTimeout(() => setRobinhoodAmount(label, amount), 50);
+        // Bail & Recur if we didn't find a property.
+        if (!property) {
+          debug.log(`Failed to set to set ${label} to ${amount}. No property found. Attempt # ${timesCalled}.`);
+          setTimeout(() => setRobinhoodAmount(label, amount, timesCalled + 1), 50);
+          return;
         }
+
+        // Open our property, find the input
+        property.querySelector("span").click();
+        const robinhoodInputs = property.querySelectorAll("input");
+
+        // Bail & Recur if this isn't our input for some reason.
+        // thisProperty as HTMLElement).innerText.includes(label) can give false positives
+        if (robinhoodInputs[0].value !== `Robinhood ${label}`) {
+          debug.log(`Failed to set to set ${label} to ${amount}. Bad Input Value. Value: ${robinhoodInputs[0].value}. Attempt # ${timesCalled}.`);
+          setTimeout(() => setRobinhoodAmount(label, amount, timesCalled + 1), 50);
+          return;
+        }
+
+        // Success.
+        debug.log(`Found ${label} input, setting amount`);
+        robinhoodInputs[1].value = amount;
+        syncedLabels.push(label);
+        callback();
       }
 
       if (request.uninvested_cash) {
