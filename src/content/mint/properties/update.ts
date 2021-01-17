@@ -89,9 +89,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       }
       setRobinhoodAmount("Stocks", stocks);
 
-      if (request.total_market_value) {
+      if (request.total_equity) {
         const combined = stocks + cash + crypto;
-        const total = parseFloat(request.total_market_value);
+        const total = parseFloat(request.total_equity);
         if (total > combined) {
           other = total - combined;
         }
