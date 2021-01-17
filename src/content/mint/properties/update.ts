@@ -7,7 +7,7 @@ import { waitForElement } from "../../../utilities/waitForElement";
 
 const debug = new Debug("content", "Mint - Properties - Update");
 
-new Overlay("Syncing Mint and Robinhood...", "This window will automatically close when the sync is complete");
+new Overlay("Updating Mint Properties...", "This window will automatically close when the sync is complete");
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.event === "robinhood-portfolio-scraped") {
