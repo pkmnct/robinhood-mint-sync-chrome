@@ -4,6 +4,9 @@
 import { urls } from "../../../urls";
 import { Overlay } from "../../../utilities/overlay";
 import { waitForElement } from "../../../utilities/waitForElement";
+import { Debug } from "../../../utilities/debug";
+
+const debug = new Debug("content", "Mint - Properties - Check");
 
 new Overlay(
   "Checking if Robinhood account set up in Mint...",
