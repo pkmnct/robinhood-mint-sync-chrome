@@ -36,7 +36,6 @@ const eventHandlers = {
     chrome.tabs.create({
       url: urls.robinhood.scrape,
       active: false,
-      openerTabId: mintTab,
     });
 
     // Switch focus back to Mint
@@ -52,14 +51,15 @@ const eventHandlers = {
       {
         url: urls.mint.properties.update,
         active: false,
-        openerTabId: mintTab,
       },
       (tab) => {
-        debug.log("waiting for Mint tab to load")
+        debug.log("waiting for Mint tab to load");
         const checkIfLoaded = () => {
           if (!tab) {
             clearInterval(sendMessageInterval);
-            debug.log("Unexpected: Tab was not found. Clearing interval to prevent endless loop. Did the tab get closed?");
+            debug.log(
+              "Unexpected: Tab was not found. Clearing interval to prevent endless loop. Did the tab get closed?"
+            );
           } else {
             chrome.tabs.get(tab.id, (tab) => {
               if (tab.status === "complete") {
@@ -83,7 +83,6 @@ const eventHandlers = {
     chrome.tabs.create({
       url: urls.robinhood.scrape,
       active: false,
-      openerTabId: mintTab,
     });
   },
   // This event is emitted by the Mint property create content script.
@@ -110,7 +109,6 @@ const eventHandlers = {
     chrome.tabs.create({
       url: urls.robinhood.scrape,
       active: false,
-      openerTabId: mintTab,
     });
 
     // Switch focus back to Mint
@@ -153,7 +151,6 @@ const eventHandlers = {
           chrome.tabs.create({
             url: urls.mint.properties.check,
             active: false,
-            openerTabId: mintTab,
           });
         } else if (!propertiesSetup || !syncTime) {
           // Sync has not been set up
@@ -183,7 +180,6 @@ const eventHandlers = {
             chrome.tabs.create({
               url: urls.robinhood.scrape,
               active: false,
-              openerTabId: mintTab,
             });
           } else {
             chrome.tabs.sendMessage(mintTab, {
