@@ -1,6 +1,6 @@
 {
   "name": "robinhood-mint-sync-chrome",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pkmnct/robinhood-mint-sync-chrome.git"
