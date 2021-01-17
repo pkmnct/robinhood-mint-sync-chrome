@@ -10,18 +10,13 @@ const getBearerToken = () =>
   new Promise((resolve, reject) => {
     const database = window.indexedDB.open("localforage");
     database.onsuccess = () => {
-      const transaction = database.result.transaction(
-        "keyvaluepairs",
-        "readwrite"
-      );
+      const transaction = database.result.transaction("keyvaluepairs", "readwrite");
       const objectStore = transaction.objectStore("keyvaluepairs");
       const auth = objectStore.get("reduxPersist:auth");
 
       auth.onsuccess = () => {
         try {
-          const access_token = JSON.parse(auth.result)
-            .split(`access_token","`)[1]
-            .split(`"`)[0];
+          const access_token = JSON.parse(auth.result).split(`access_token","`)[1].split(`"`)[0];
           resolve(access_token);
         } catch (error) {
           reject(error);
@@ -50,6 +45,7 @@ export interface Message {
  * Function to scrape the portfolio and cash values
  */
 const scrapeData = async () => {
+  debug.log("Scraping data using Robinhood API");
   const returnValue = {
     event: "robinhood-portfolio-scraped",
   } as Message;
@@ -73,21 +69,11 @@ const scrapeData = async () => {
       returnValue.uninvested_cash = json.uninvested_cash.amount;
     }
 
-    if (
-      json &&
-      json.crypto &&
-      json.crypto.equity &&
-      json.crypto.equity.amount
-    ) {
+    if (json && json.crypto && json.crypto.equity && json.crypto.equity.amount) {
       returnValue.crypto = json.crypto.equity.amount;
     }
 
-    if (
-      json &&
-      json.equities &&
-      json.equities.equity &&
-      json.equities.equity.amount
-    ) {
+    if (json && json.equities && json.equities.equity && json.equities.equity.amount) {
       returnValue.equities = json.equities.equity.amount;
     }
 
@@ -107,20 +93,20 @@ const scrapeData = async () => {
  */
 const init = () => {
   window.addEventListener("load", () => {
-    new Overlay(
-      "Syncing Mint and Robinhood...",
-      "This window will automatically close when the sync is complete"
-    );
+    new Overlay("Getting data from Robinhood...", "This window will automatically close when the sync is complete");
     const checkIfLoggedIn = async () => {
+      debug.log("Waiting for page to load");
       if (document.location.pathname.includes("/account")) {
+        clearInterval(checkIfLoggedInInterval);
+        debug.log("Page loaded. Appears to be logged in.");
         const data = await scrapeData();
         chrome.runtime.sendMessage(data);
-        clearInterval(checkIfLoggedInInterval);
       } else if (document.location.pathname.includes("/login")) {
+        clearInterval(checkIfLoggedInInterval);
+        debug.log("Page loaded. Appears to be logged out.");
         chrome.runtime.sendMessage({
           event: "robinhood-login-needed",
         });
-        clearInterval(checkIfLoggedInInterval);
       }
     };
     const checkIfLoggedInInterval = setInterval(checkIfLoggedIn, 500);

@@ -7,16 +7,13 @@ import { waitForElement } from "../../../utilities/waitForElement";
 
 const debug = new Debug("content", "Mint - Properties - Update");
 
-new Overlay(
-  "Syncing Mint and Robinhood...",
-  "This window will automatically close when the sync is complete"
-);
+new Overlay("Updating Mint Properties...", "This window will automatically close when the sync is complete");
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.event === "robinhood-portfolio-scraped") {
     debug.log("Waiting for Property Tab View to load");
-    waitForElement(".PropertyTabView", null, () => {
-      debug.log("Property Tab View loaded.");
+    waitForElement(".PropertyTabView", null, (propertyViewElement) => {
+      debug.log("Property Tab View loaded.", propertyViewElement);
 
       let crypto = 0;
       let stocks = 0;
@@ -38,7 +35,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           debug.log(`Fields updated. Attempting to save.`);
           const saveButtons = document.querySelectorAll(".saveButton");
           saveButtons.forEach((button) => {
-            debug.log(`Clicking save`);
+            debug.log(`Clicking save`, button);
             button.removeAttribute("disabled");
             (button as HTMLInputElement).click();
           });
@@ -48,30 +45,27 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
       function setRobinhoodAmount(label, amount) {
         debug.log(`Attempting to set ${label} to ${amount}`);
-        // Find the property that contains the label
-        const otherProperties = document.querySelectorAll(".OtherPropertyView");
-        let property;
-        otherProperties.forEach((thisProperty) => {
-          if ((thisProperty as HTMLElement).innerText.includes(label)) {
-            property = thisProperty;
-            return;
-          }
+        waitForElement(".OtherPropertyView", `Robinhood ${label}`, (foundElement) => {
+          debug.log(`Expanding property ${label}`, foundElement);
+          foundElement.querySelector("span").click();
+
+          waitForElement(
+            "input",
+            null,
+            () => {
+              const inputs = foundElement.querySelectorAll("input");
+              inputs.forEach((foundInput) => {
+                if (foundInput.getAttribute("name") === "value") {
+                  debug.log(`Found ${label} input, setting amount`, foundInput);
+                  foundInput.value = amount;
+                  syncedLabels.push(label);
+                  callback();
+                }
+              });
+            },
+            foundElement
+          );
         });
-
-        if (property) {
-          property.querySelector("span").click();
-
-          const robinhoodInputs = property.querySelectorAll("input");
-
-          if (robinhoodInputs[0].value === `Robinhood ${label}`) {
-            debug.log(`Found ${label} input, setting amount`);
-            robinhoodInputs[1].value = amount;
-            syncedLabels.push(label);
-            callback();
-          }
-        } else {
-          setTimeout(() => setRobinhoodAmount(label, amount), 50);
-        }
       }
 
       if (request.uninvested_cash) {
