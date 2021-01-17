@@ -65,6 +65,16 @@
             <h2>Version History</h2>
           </header>
           <aside class="version">
+            <h4>Version 3.1.0</h4>
+            <p>
+              Fixed race condition in Mint update script where save callback
+              could be called before it was initialized. Added a debug mode to
+              facilitate debugging and support. This mode will log to either the
+              background script or the console on the pages where content
+              scripts are running.
+            </p>
+          </aside>
+          <aside class="version">
             <h4>Version 3.0.0</h4>
             <p>
               Robinhood scraping has been improved, and will now show up as

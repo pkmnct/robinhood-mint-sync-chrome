@@ -6,3 +6,4 @@ images/sync.svg
 
 node_modules
 dist
+*.zip
