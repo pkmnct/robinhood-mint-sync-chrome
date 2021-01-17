@@ -76,7 +76,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         const robinhoodInputs = property.querySelectorAll("input");
 
         // Bail & Recur if this isn't our input for some reason.
-        // thisProperty as HTMLElement).innerText.includes(label) can give false positives
         if (robinhoodInputs[0].value !== `Robinhood ${label}`) {
           debug.log(`Failed to set to set ${label} to ${amount}. Bad Input Value. Value: ${robinhoodInputs[0].value}. Attempt # ${timesCalled}.`);
           setTimeout(() => setRobinhoodAmount(label, amount, timesCalled + 1), 50);
