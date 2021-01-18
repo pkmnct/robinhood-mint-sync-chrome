@@ -23,11 +23,13 @@ if (property) {
         (document.querySelector("#addProperty") as HTMLElement).click();
 
         waitForElement({
-          selector: "#addOther", callback: () => {
+          selector: "#addOther",
+          callback: () => {
             (document.querySelector("#addOther") as HTMLElement).click();
 
             waitForElement({
-              selector: ".propertyType", callback: () => {
+              selector: ".propertyType",
+              callback: () => {
                 debug.log(`Found Property Type Field. Selecting "Collectible"...`);
                 // Find the type dropdown
                 const select = document.querySelector(
@@ -47,12 +49,15 @@ if (property) {
                 select.value = option;
 
                 waitForElement({
-                  selector: ".addPropertyModal .modal-btn-primary", withText: "next", callback: (button) => {
+                  selector: ".addPropertyModal .modal-btn-primary",
+                  withText: "next",
+                  callback: (button) => {
                     debug.log(`Found Next Button. Clicking...`);
                     button.click();
 
                     waitForElement({
-                      selector: "#propertyName", callback: () => {
+                      selector: "#propertyName",
+                      callback: () => {
                         debug.log(`Found Property Name Field. Filling out...`);
                         (document.querySelector(
                           "#propertyName"
@@ -62,12 +67,15 @@ if (property) {
                         ) as HTMLInputElement).value = "0.00";
 
                         waitForElement({
-                          selector: ".addPropertyModal .addProperty", withText: "add it", callback: (button) => {
+                          selector: ".addPropertyModal .addProperty",
+                          withText: "add it",
+                          callback: (button) => {
                             debug.log(`Found Add It Button. Clicking...`);
                             button.click();
 
                             waitForElement({
-                              selector: ".AddPropertySuccessView", callback: () => {
+                              selector: ".AddPropertySuccessView",
+                              callback: () => {
                                 debug.log(`Found Success View.`);
                                 chrome.runtime.sendMessage({
                                   event: "mint-property-added",

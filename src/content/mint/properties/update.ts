@@ -13,7 +13,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.event === "robinhood-portfolio-scraped") {
     debug.log("Waiting for Property Tab View to load");
     waitForElement({
-      selector: ".PropertyTabView", callback: (propertyViewElement) => {
+      selector: ".PropertyTabView",
+      callback: (propertyViewElement) => {
         debug.log("Property Tab View loaded.", propertyViewElement);
 
         let crypto = 0;
@@ -47,7 +48,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         function setRobinhoodAmount(label, amount) {
           debug.log(`Attempting to set ${label} to ${amount}`);
           waitForElement({
-            selector: ".OtherPropertyView", withText: `Robinhood ${label}`, callback: (foundElement) => {
+            selector: ".OtherPropertyView",
+            withText: `Robinhood ${label}`,
+            callback: (foundElement) => {
               debug.log(`Expanding property ${label}`, foundElement);
               foundElement.querySelector("span").click();
 
