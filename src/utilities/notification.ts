@@ -49,6 +49,7 @@ export class Notification {
       if (action.newTab) {
         actionLink.setAttribute("target", "_blank");
       }
+      actionLink.setAttribute("class", "notification-action-link");
       actionLink.innerText = action.text;
       this.actionContainer.appendChild(actionLink);
     }
@@ -69,6 +70,7 @@ export class Notification {
       timeout: this.persistent ? false : 15000,
       progressBar: true,
       closeWith: ["button"],
+      theme: "relax",
     }).show();
   }
 }

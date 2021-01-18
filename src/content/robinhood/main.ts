@@ -37,7 +37,7 @@ export interface Message {
   uninvested_cash?: string;
   crypto?: string;
   equities?: string;
-  total_market_value?: string;
+  total_equity?: string;
   error?: boolean;
   newProperties?: string;
   property?: string;
@@ -71,16 +71,16 @@ const scrapeData = async () => {
       returnValue.uninvested_cash = json.uninvested_cash.amount;
     }
 
-    if (json && json.crypto && json.crypto.market_value && json.crypto.market_value.amount) {
-      returnValue.crypto = json.crypto.market_value.amount;
+    if (json && json.crypto && json.crypto.equity && json.crypto.equity.amount) {
+      returnValue.crypto = json.crypto.equity.amount;
     }
 
-    if (json && json.equities && json.equities.market_value && json.equities.market_value.amount) {
-      returnValue.equities = json.equities.market_value.amount;
+    if (json && json.equities && json.equities.equity && json.equities.equity.amount) {
+      returnValue.equities = json.equities.equity.amount;
     }
 
-    if (json && json.total_market_value && json.total_market_value.amount) {
-      returnValue.total_market_value = json.total_market_value.amount;
+    if (json && json.total_equity && json.total_equity.amount) {
+      returnValue.total_equity = json.total_equity.amount;
     }
 
     return returnValue;

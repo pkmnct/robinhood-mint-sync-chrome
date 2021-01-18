@@ -16,6 +16,20 @@ interface eventHandler {
 
 // The key of the handler should match the message.event value
 const eventHandlers = {
+  "trigger-sync": () => {
+    debug.log("trigger-sync event");
+    // Send notification
+    chrome.tabs.sendMessage(mintTab, {
+      status: "Syncing Mint with Robinhood.",
+      persistent: true,
+    });
+
+    // Trigger the sync
+    chrome.tabs.create({
+      url: urls.robinhood.scrape,
+      active: false,
+    });
+  },
   // This event is emitted by the main Robinhood content script.
   "robinhood-login-needed": ({ sender }: eventHandler) => {
     debug.log("robinhood-login-needed event");
@@ -35,11 +49,7 @@ const eventHandlers = {
     // Close the Robinhood tab logged in from
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
 
-    // Trigger the sync
-    chrome.tabs.create({
-      url: urls.robinhood.scrape,
-      active: false,
-    });
+    eventHandlers["trigger-sync"]();
 
     // Switch focus back to Mint
     chrome.tabs.update(mintTab, {
@@ -77,15 +87,6 @@ const eventHandlers = {
     );
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
-  // This event is emitted by the Mint main content script.
-  "mint-force-sync": () => {
-    debug.log("mint-force-sync event");
-    // Trigger the main Robinhood sync script
-    chrome.tabs.create({
-      url: urls.robinhood.scrape,
-      active: false,
-    });
-  },
   // This event is emitted by the Mint property create content script.
   "mint-property-added": ({ sender }: eventHandler) => {
     debug.log("mint-property-added event");
@@ -102,16 +103,11 @@ const eventHandlers = {
     debug.log("setup-complete event");
     debug.log("setup-complete sending notification");
     chrome.tabs.sendMessage(mintTab, {
-      status: "Setup complete! Initiating Sync.",
-      persistent: true,
+      status: "Setup complete!",
     });
 
-    debug.log("setup-complete opening Robinhood to scrape");
-    // Trigger the Robinood sync content script
-    chrome.tabs.create({
-      url: urls.robinhood.scrape,
-      active: false,
-    });
+    debug.log("setup-complete triggering sync");
+    eventHandlers["trigger-sync"]();
 
     debug.log("setup-complete switching focus back to Mint");
     // Switch focus back to Mint
@@ -177,7 +173,7 @@ const eventHandlers = {
           // Sync has not been set up
           chrome.tabs.sendMessage(mintTab, {
             status: "You have not yet performed a sync on this device. You must run an initial setup.",
-            persistent: true,
+            persistent: false,
             link: urls.mint.properties.check,
             linkText: "Set up",
             newTab: true,
@@ -188,16 +184,7 @@ const eventHandlers = {
           const differenceMilliseconds = currentTime.valueOf() - syncTimeParsed.valueOf();
           const differenceHours = Math.floor((differenceMilliseconds % 86400000) / 3600000);
           if (differenceHours >= 1) {
-            chrome.tabs.sendMessage(mintTab, {
-              status: "Syncing Mint with Robinhood.",
-              persistent: true,
-            });
-
-            // Trigger the Robinood sync content script
-            chrome.tabs.create({
-              url: urls.robinhood.scrape,
-              active: false,
-            });
+            eventHandlers["trigger-sync"]();
           } else {
             chrome.tabs.sendMessage(mintTab, {
               status: "Sync performed in the last hour. Not syncing.",
