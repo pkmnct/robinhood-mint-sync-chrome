@@ -6,6 +6,7 @@ import { Debug } from "../../../utilities/debug";
 import { waitForElement } from "../../../utilities/waitForElement";
 
 const debug = new Debug("content", "Mint - Properties - Update");
+const handleError = (error: Error) => debug.error(error);
 
 new Overlay("Updating Mint Properties...", "This window will automatically close when the sync is complete");
 
@@ -14,6 +15,7 @@ chrome.runtime.onMessage.addListener((request) => {
     debug.log("Waiting for Property Tab View to load");
     waitForElement({
       selector: ".PropertyTabView",
+      onError: handleError,
       callback: (propertyViewElement) => {
         debug.log("Property Tab View loaded.", propertyViewElement);
 
@@ -49,6 +51,7 @@ chrome.runtime.onMessage.addListener((request) => {
           debug.log(`Attempting to set ${label} to ${amount}`);
           waitForElement({
             selector: ".OtherPropertyView",
+            onError: handleError,
             withText: `Robinhood ${label}`,
             callback: (foundElement) => {
               debug.log(`Expanding property ${label}`, foundElement);
@@ -56,6 +59,7 @@ chrome.runtime.onMessage.addListener((request) => {
 
               waitForElement({
                 selector: "input",
+                onError: handleError,
                 callback: () => {
                   const inputs = foundElement.querySelectorAll("input");
                   inputs.forEach((foundInput) => {

@@ -3,6 +3,7 @@ import { waitForElement } from "../../../utilities/waitForElement";
 import { Debug } from "../../../utilities/debug";
 
 const debug = new Debug("content", "Mint - Properties - Create");
+const handleError = (error: Error) => debug.error(error);
 
 const params = new URLSearchParams(document.location.search);
 const property = params.get("property");
@@ -14,6 +15,7 @@ if (property) {
     debug.log("Waiting for Add Property button.");
     waitForElement({
       selector: "#addProperty",
+      onError: handleError,
       callback: (addPropertyButton) => {
         debug.log("Found add property button. Clicking it.", addPropertyButton);
         addPropertyButton.click();
@@ -21,6 +23,7 @@ if (property) {
         debug.log("Waiting for add other button.");
         waitForElement({
           selector: "#addOther",
+          onError: handleError,
           callback: (addOtherButton) => {
             debug.log("Found add other button. Clicking it.", addOtherButton);
             addOtherButton.click();
@@ -28,6 +31,7 @@ if (property) {
             debug.log("Waiting for property type dropdown.");
             waitForElement({
               selector: ".propertyType",
+              onError: handleError,
               callback: (propertyType) => {
                 debug.log("Found property type dropdown. Looking for 'Collectible' option.", propertyType);
 
@@ -48,6 +52,7 @@ if (property) {
                 debug.log("Searching for Next button");
                 waitForElement({
                   selector: ".addPropertyModal .modal-btn-primary",
+                  onError: handleError,
                   withText: "next",
                   callback: (nextButton) => {
                     debug.log("Found next button, clicking", nextButton);
@@ -56,6 +61,7 @@ if (property) {
                     debug.log("Searching for Property Name field");
                     waitForElement({
                       selector: "#propertyName",
+                      onError: handleError,
                       callback: (propertyName) => {
                         debug.log("Found Property Name field. Setting value.", propertyName);
                         (propertyName as HTMLInputElement).value = `Robinhood ${property}`;
@@ -66,6 +72,7 @@ if (property) {
                         debug.log("Searching for Add Property button");
                         waitForElement({
                           selector: ".addPropertyModal .addProperty",
+                          onError: handleError,
                           withText: "add it",
                           callback: (addPropertyButton) => {
                             debug.log("Found Add Property button. Clicking.", addPropertyButton);
@@ -74,6 +81,7 @@ if (property) {
                             debug.log("Waiting for Property Added Success view");
                             waitForElement({
                               selector: ".AddPropertySuccessView",
+                              onError: handleError,
                               callback: () => {
                                 debug.log("Success screen found. Triggering mint-property-added event");
                                 chrome.runtime.sendMessage({

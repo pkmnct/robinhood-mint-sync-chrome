@@ -10,7 +10,7 @@ export interface WaitForElementOptions {
   // Callback
   callback: (result: HTMLElement) => void;
   // Error Callback
-  onError?: (result: Error) => void;
+  onError: (result: Error) => void;
   // Container to limit search to (Optional)
   initialContainer?: Element;
   // How often (in ms) to check for the new element. Defaults to 500ms

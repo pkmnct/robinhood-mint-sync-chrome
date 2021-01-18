@@ -16,6 +16,7 @@ window.addEventListener("load", () => {
         chrome.runtime.sendMessage({ event: "mint-force-sync" });
       }
     },
+    onError: (error) => debug.error("It appears Mint has not signed in", error),
   });
 });
 
