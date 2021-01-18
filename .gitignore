@@ -5,6 +5,7 @@ images/sync.svg
 .DS_Store
 
 node_modules
+.eslintcache
 
 dist
 *.zip
