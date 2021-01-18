@@ -13,6 +13,8 @@ new Overlay(
   "This window will automatically close when complete."
 );
 
+debug.log('Robinhood Mint Sync - Check: Overlay added.');
+
 export const robinhoodProperties = ["Cash", "Stocks", "Crypto", "Other"];
 
 const checkIfPropertyExists = (property) => {
@@ -30,28 +32,47 @@ const checkIfPropertyExists = (property) => {
   return foundProperty;
 };
 
-window.addEventListener("load", () => {
-  waitForElement(".OtherPropertyView", null, () => {
-    let newProperties = 0;
-    robinhoodProperties.forEach((property) => {
-      if (!checkIfPropertyExists(property)) {
-        // Trigger setup of property
-        chrome.runtime.sendMessage({
-          event: "mint-create",
-          property,
-        });
-        newProperties++;
-      }
-    });
-    if (checkIfPropertyExists("Account")) {
+const checkForCreateProperties = () => {
+  debug.log('Found Property View or Zero State.');
+  let newProperties = 0;
+  robinhoodProperties.forEach((property) => {
+    if (!checkIfPropertyExists(property)) {
+      debug.log(`Property doesn't exist: ${property}`);
+      // Trigger setup of property
       chrome.runtime.sendMessage({
-        event: "mint-property-remove",
+        event: "mint-create",
+        property,
       });
-    } else {
-      chrome.runtime.sendMessage({
-        event: "mint-property-setup-complete",
-        newProperties,
-      });
+      newProperties++;
     }
+  });
+
+  // Check for old version
+  if (checkIfPropertyExists("Account")) {
+    debug.log(`Found v2 property.`);
+    chrome.runtime.sendMessage({
+      event: "mint-property-remove",
+    });
+    return;
+  }
+
+  // Success.
+  chrome.runtime.sendMessage({
+    event: "mint-property-setup-complete",
+    newProperties,
+  });
+}
+
+window.addEventListener("load", () => {
+  waitForElement({
+    selector: ".OtherPropertyView",
+    callback: checkForCreateProperties,
+    failureCallback: () => {
+      debug.log('Failed to find "Other" Property View. Checking for Zero State');
+      waitForElement({
+        selector: ".zeroState",
+        callback: checkForCreateProperties,
+      });
+    },
   });
 });

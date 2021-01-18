@@ -5,11 +5,13 @@ import { Debug } from "../../utilities/debug";
 const debug = new Debug("content", "Mint - Main");
 
 window.addEventListener("load", () => {
-  waitForElement("#mintNavigation", null, () => {
-    chrome.runtime.sendMessage({ event: "mint-opened" });
-    if (window.location.href.indexOf("forceRobinhoodSync=true") !== -1) {
-      new Notification("Syncing Mint with Robinhood.", true).show();
-      chrome.runtime.sendMessage({ event: "mint-force-sync" });
+  waitForElement({
+    selector: "#mintNavigation", callback: () => {
+      chrome.runtime.sendMessage({ event: "mint-opened" });
+      if (window.location.href.indexOf("forceRobinhoodSync=true") !== -1) {
+        new Notification("Syncing Mint with Robinhood.", true).show();
+        chrome.runtime.sendMessage({ event: "mint-force-sync" });
+      }
     }
   });
 });
