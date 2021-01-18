@@ -43,7 +43,7 @@
     "zip": "cd dist && cross-var bestzip ../$npm_package_name@$npm_package_version.zip * && cd ..",
     "postrelease": "rimraf *.zip && npm run zip",
     "eslint": "eslint src/**",
-    "eslint:fix": "eslint --fix src/**",
+    "eslint:fix": "eslint --fix --max-warnings 0 src/**",
     "prettier": "prettier --check src/**",
     "prettier:fix": "prettier --write src/**"
   },
