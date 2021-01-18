@@ -1,13 +1,10 @@
 import { Debug } from "./debug";
 
-// ---------------------------------------------
-
-const debug = new Debug("content", "Mint - Utilites - waitForElement");
+const debug = new Debug("content", "Mint - Utilities - waitForElement");
 
 /**
- *
  * waitForElement - Tries to wait for an element to appear on the page and then calls
- * the callback function. If it fails too many times, calls the failure callback funtion
+ * the callback function. If it fails too many times, calls the failure callback function
  *
  * @param {Object}    args
  * @param {String}    args.selector - Selector to search for
@@ -101,6 +98,6 @@ export const waitForElement = ({
     return;
   }
 
-  // Success! Call the callback funtion with our found item
+  // Success! Call the callback function with our found item
   callback(foundElement);
 };
