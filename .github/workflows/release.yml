@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create Release
+        uses: actions/create-release@v1.1.3
         id: create-release
-        uses: actions/create-release@1.1.4
         with:
           draft: true
 
