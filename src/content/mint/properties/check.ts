@@ -7,7 +7,7 @@ import { Debug } from "../../../utilities/debug";
 
 const debug = new Debug("content", "Mint - Properties - Check");
 
-new Overlay("Checking if Robinhood account set up in Mint...", "This window will automatically close when complete.");
+new Overlay("Performing Initial Setup. Please Wait...", "This window will automatically close when complete.");
 
 // The properties to set up/check for
 export const robinhoodProperties = ["Cash", "Stocks", "Crypto", "Other"];
