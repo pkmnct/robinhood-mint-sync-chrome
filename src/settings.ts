@@ -68,6 +68,9 @@ chrome.storage.sync.get(
     if (multipleAccountsEnabled) {
       populateMultipleAccountFields(multipleAccounts);
     }
+
+    // Allow adding of inputs
+    buttonMultipleAccountsAdd.addEventListener("click", multipleAccountsAddAction);
   }
 );
 
@@ -114,9 +117,6 @@ function populateMultipleAccountFields(multipleAccounts) {
     });
   });
 
-  // Allow adding of inputs
-  buttonMultipleAccountsAdd.addEventListener("click", multipleAccountsAddAction);
-
   // Allow Deletion of added inputs
   const buttonsMultipleAccountsDelete = document.querySelectorAll(".multipleAccounts-delete") as NodeListOf<HTMLButtonElement>;
   // loop through list items and add listener to click event
@@ -125,13 +125,28 @@ function populateMultipleAccountFields(multipleAccounts) {
   }
 }
 
+/**
+ * Action for add click event handler
+ *
+ * @param multipleAccounts - current array of accounts
+ */
 function multipleAccountsAddAction() {
+  // Disable add button
   buttonMultipleAccountsAdd.setAttribute("disabled", "true");
 
+  // Find our index for the new row
   const inputsWrappersMultipleAccounts = document.querySelectorAll(".mutiple-accounts-input-wrapper") as NodeListOf<HTMLElement>;
   const index = inputsWrappersMultipleAccounts.length;
+
+  // If we don't have any inputs, something has gone wrong. just bail.
+  if (index === 0) {
+    return;
+  }
+
+  // Clone our template
   const clonedInputWrapper = templateMultipleAccountsRow.content.cloneNode(true) as HTMLElement;
 
+  // Set values on new inputs
   const thisRobinHoodInput = clonedInputWrapper.querySelector(`.setting-multipleAccounts-robinHoodInput`) as HTMLInputElement;
   thisRobinHoodInput.id = `setting-multipleAccounts-robinHoodInput-${index}`;
   thisRobinHoodInput.name = `setting-multipleAccounts-robinHoodInput-${index}`;
@@ -144,8 +159,10 @@ function multipleAccountsAddAction() {
 
   const thisDeleteButton = clonedInputWrapper.querySelector(`.multipleAccounts-delete`) as HTMLButtonElement;
 
+  // Attach to row holder
   wrapperMultipleAccountsRows.appendChild(clonedInputWrapper);
 
+  // Attach event listeners
   thisRobinHoodInput.addEventListener("change", function () {
     multipleAccountInputChange(index, "robinHoodValue", this.value); // TODO: sanitize
   });
@@ -155,28 +172,16 @@ function multipleAccountsAddAction() {
   });
 
   thisDeleteButton.addEventListener("click", multipleAccountsDeleteAction);
+
+  // Reenable add button
   buttonMultipleAccountsAdd.removeAttribute("disabled");
 }
 
-function multipleAccountInputChange(index, key, value) {
-  chrome.storage.sync.get({ multipleAccounts: [] }, (result) => {
-    // Bail with bad data
-    if (!value || typeof value !== "string" || !key || typeof key !== "string" || !Number.isInteger(index) || index < 0) {
-      return;
-    }
-
-    const { multipleAccounts } = result;
-    const updatedMultipleAccounts = multipleAccounts;
-    updatedMultipleAccounts[index] = {
-      ...updatedMultipleAccounts[index],
-      [key]: value, // TODO: sanitize
-    };
-    chrome.storage.sync.set({
-      multipleAccounts: updatedMultipleAccounts,
-    });
-  });
-}
-
+/**
+ * Action for delete click event handler
+ *
+ * @param multipleAccounts - current array of accounts
+ */
 function multipleAccountsDeleteAction() {
   const buttonMultipleAccountsDelete = document.querySelector(".multipleAccounts-delete") as HTMLButtonElement;
   buttonMultipleAccountsAdd.setAttribute("disabled", "true");
@@ -211,4 +216,30 @@ function multipleAccountsDeleteAction() {
   thisWrapper.remove();
   buttonMultipleAccountsAdd.removeAttribute("disabled");
   buttonMultipleAccountsDelete.removeAttribute("disabled");
+}
+
+/**
+ * Sets value for multipleAccount keys in storage
+ *
+ * @param index - current index
+ * @param key - key to update
+ * @param value - value to update to
+ */
+function multipleAccountInputChange(index, key, value) {
+  chrome.storage.sync.get({ multipleAccounts: [] }, (result) => {
+    // Bail with bad data
+    if (!value || typeof value !== "string" || !key || typeof key !== "string" || !Number.isInteger(index) || index < 0) {
+      return;
+    }
+
+    const { multipleAccounts } = result;
+    const updatedMultipleAccounts = multipleAccounts;
+    updatedMultipleAccounts[index] = {
+      ...updatedMultipleAccounts[index],
+      [key]: value, // TODO: sanitize
+    };
+    chrome.storage.sync.set({
+      multipleAccounts: updatedMultipleAccounts,
+    });
+  });
 }
