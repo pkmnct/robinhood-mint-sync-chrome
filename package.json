@@ -38,7 +38,9 @@
   },
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
+    "watch:docs": "webpack --config webpack/webpack.docs.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
+    "build:docs": "webpack --config webpack/webpack.docs.js",
     "clean": "rimraf dist",
     "prerelease": "npm run clean",
     "release": "npm run build",
