@@ -13,8 +13,6 @@ new Overlay(
   "This window will automatically close when complete."
 );
 
-debug.log('Robinhood Mint Sync - Check: Overlay added.');
-
 export const robinhoodProperties = ["Cash", "Stocks", "Crypto", "Other"];
 
 const checkIfPropertyExists = (property) => {

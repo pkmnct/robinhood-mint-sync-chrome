@@ -7,8 +7,6 @@ const debug = new Debug("content", "Mint - Properties - Create");
 const params = new URLSearchParams(document.location.search);
 const property = params.get("property");
 
-debug.log('Robinhood Mint Sync - Create: Script Running.');
-
 if (property) {
   new Overlay(
     `Adding Robinhood ${property} property to Mint...`,
