@@ -10,4 +10,4 @@ node_modules
 dist
 *.zip
 
-stellar
+.stellar
