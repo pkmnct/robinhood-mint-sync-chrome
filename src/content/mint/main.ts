@@ -5,14 +5,18 @@ import { Debug } from "../../utilities/debug";
 const debug = new Debug("content", "Mint - Main");
 
 window.addEventListener("load", () => {
-  waitForElement("#mintNavigation", null, () => {
-    debug.log("Detected Mint Overview Page");
-    chrome.runtime.sendMessage({ event: "mint-opened" });
-    if (window.location.href.indexOf("forceRobinhoodSync=true") !== -1) {
-      debug.log("Forcing sync");
-      new Notification("Syncing Mint with Robinhood.", true).show();
-      chrome.runtime.sendMessage({ event: "mint-force-sync" });
-    }
+  waitForElement({
+    selector: "#mintNavigation",
+    callback: () => {
+      debug.log("Detected Mint Overview Page");
+      chrome.runtime.sendMessage({ event: "mint-opened" });
+      if (window.location.href.indexOf("forceRobinhoodSync=true") !== -1) {
+        debug.log("Forcing sync");
+        new Notification("Syncing Mint with Robinhood.", true).show();
+        chrome.runtime.sendMessage({ event: "mint-force-sync" });
+      }
+    },
+    onError: (error) => debug.error("It appears Mint has not signed in", error),
   });
 });
 
