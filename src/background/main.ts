@@ -1,3 +1,4 @@
+import { Message } from "../content/robinhood/main";
 import { urls } from "../urls";
 import { Debug } from "../utilities/debug";
 
@@ -9,7 +10,7 @@ let newProperties = 0;
 let newPropertiesComplete = 0;
 
 interface eventHandler {
-  message: any;
+  message: Message;
   sender: chrome.runtime.MessageSender;
 }
 
@@ -59,9 +60,7 @@ const eventHandlers = {
         const checkIfLoaded = () => {
           if (!tab) {
             clearInterval(sendMessageInterval);
-            debug.log(
-              "Unexpected: Tab was not found. Clearing interval to prevent endless loop. Did the tab get closed?"
-            );
+            debug.log("Unexpected: Tab was not found. Clearing interval to prevent endless loop. Did the tab get closed?");
           } else {
             chrome.tabs.get(tab.id, (tab) => {
               if (tab.status === "complete") {
@@ -177,8 +176,7 @@ const eventHandlers = {
         } else if (!propertiesSetup || !syncTime) {
           // Sync has not been set up
           chrome.tabs.sendMessage(mintTab, {
-            status:
-              "You have not yet performed a sync on this device. You must run an initial setup.",
+            status: "You have not yet performed a sync on this device. You must run an initial setup.",
             persistent: true,
             link: urls.mint.properties.check,
             linkText: "Set up",
@@ -187,11 +185,8 @@ const eventHandlers = {
         } else {
           const syncTimeParsed = new Date(syncTime);
           const currentTime = new Date();
-          const differenceMilliseconds =
-            currentTime.valueOf() - syncTimeParsed.valueOf();
-          const differenceHours = Math.floor(
-            (differenceMilliseconds % 86400000) / 3600000
-          );
+          const differenceMilliseconds = currentTime.valueOf() - syncTimeParsed.valueOf();
+          const differenceHours = Math.floor((differenceMilliseconds % 86400000) / 3600000);
           if (differenceHours >= 1) {
             chrome.tabs.sendMessage(mintTab, {
               status: "Syncing Mint with Robinhood.",
@@ -239,6 +234,6 @@ const eventHandlers = {
   },
 };
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender) => {
   eventHandlers[message.event]({ message, sender });
 });

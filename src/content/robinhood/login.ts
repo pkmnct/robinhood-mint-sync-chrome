@@ -4,7 +4,9 @@ const debug = new Debug("content", "Robinhood - Login");
 
 window.addEventListener("load", () => {
   const checkIfLoggedIn = () => {
+    debug.log("Checking if logged in.");
     if (document.title.includes("Portfolio")) {
+      debug.log("Appears to be logged in!");
       chrome.runtime.sendMessage({
         event: "robinhood-login-success",
       });
