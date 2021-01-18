@@ -43,6 +43,20 @@ module.exports = {
         { from: ".", to: "../", context: "public" },
         { from: "node_modules/jquery/dist", to: "external/jquery" },
         { from: "node_modules/noty/lib", to: "external/noty" },
+        {
+          from: "stellar/assets/js",
+          globOptions: {
+            ignore: ["**/jquery.min.js*"],
+          },
+          to: "external/stellar",
+        },
+        {
+          from: "stellar/assets/css",
+          globOptions: {
+            ignore: ["**/fontawesome*", "**/images/*"],
+          },
+          to: "external/stellar",
+        },
       ],
     }),
   ],
