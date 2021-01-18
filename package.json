@@ -12,7 +12,6 @@
   },
   "homepage": "https://github.com/pkmnct/robinhood-mint-sync-chrome#readme",
   "dependencies": {
-    "copy-webpack-plugin": "^7.0.0",
     "jquery": "^3.5.1",
     "noty": "^3.2.0-beta"
   },
@@ -21,10 +20,13 @@
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
     "bestzip": "^2.1.7",
+    "copy-webpack-plugin": "^7.0.0",
     "cross-var": "^1.1.0",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^4.3.8",
+    "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "ts-loader": "^8.0.14",
@@ -39,6 +41,19 @@
     "prerelease": "npm run clean",
     "release": "npm run build",
     "zip": "cd dist && cross-var bestzip ../$npm_package_name@$npm_package_version.zip * && cd ..",
-    "postrelease": "rimraf *.zip && npm run zip"
+    "postrelease": "rimraf *.zip && npm run zip",
+    "eslint": "eslint src/**",
+    "eslint:fix": "eslint --fix src/**",
+    "prettier": "prettier --check src/**",
+    "prettier:fix": "prettier --write src/**"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/*": "prettier --write",
+    "*.ts": "eslint --cache --fix --max-warnings 0"
   }
 }

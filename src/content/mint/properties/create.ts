@@ -8,53 +8,61 @@ const params = new URLSearchParams(document.location.search);
 const property = params.get("property");
 
 if (property) {
-  new Overlay(
-    `Adding Robinhood ${property} property to Mint...`,
-    "This window will automatically close when complete."
-  );
+  new Overlay(`Adding Robinhood ${property} property to Mint...`, "This window will automatically close when complete.");
 
   window.addEventListener("load", () => {
-    waitForElement("#addProperty", null, () => {
-      (document.querySelector("#addProperty") as HTMLElement).click();
+    debug.log("Waiting for Add Property button.");
 
-      waitForElement("#addOther", null, () => {
-        (document.querySelector("#addOther") as HTMLElement).click();
+    waitForElement("#addProperty", null, (addPropertyButton) => {
+      debug.log("Found add property button. Clicking it.", addPropertyButton);
 
-        waitForElement(".propertyType", null, () => {
-          // Find the type dropdown
-          const select = document.querySelector(
-            ".propertyType"
-          ) as HTMLInputElement;
+      addPropertyButton.click();
+
+      debug.log("Waiting for add other button.");
+      waitForElement("#addOther", null, (addOtherButton) => {
+        debug.log("Found add other button. Clicking it.", addOtherButton);
+
+        addOtherButton.click();
+
+        debug.log("Waiting for property type dropdown.");
+        waitForElement(".propertyType", null, (propertyType) => {
+          debug.log("Found property type dropdown. Looking for 'Collectible' option.", propertyType);
 
           // Find the "Collectible" type
-          const options = document.querySelectorAll(".propertyType option");
+          const options = propertyType.querySelectorAll("option");
           let option;
           options.forEach((thisOption) => {
-            if ((thisOption as HTMLInputElement).innerText === "Collectible") {
-              option = (thisOption as HTMLInputElement).value;
+            if (thisOption.innerText === "Collectible") {
+              debug.log("Found 'Collectible' option.", thisOption);
+              option = thisOption.value;
             }
           });
 
+          debug.log("Setting option", option);
           // Set the type to collectible
-          select.value = option;
+          (propertyType as HTMLInputElement).value = option;
 
-          waitForElement(".modal-btn-primary", "next", () => {
-            (document.querySelector(
-              ".modal-btn-primary"
-            ) as HTMLElement).click();
+          debug.log("Searching for Next button");
+          waitForElement(".modal-btn-primary", "next", (nextButton) => {
+            debug.log("Found next button, clicking", nextButton);
+            nextButton.click();
 
-            waitForElement("#propertyName", null, () => {
-              (document.querySelector(
-                "#propertyName"
-              ) as HTMLInputElement).value = `Robinhood ${property}`;
-              (document.querySelector(
-                "#propertyValue"
-              ) as HTMLInputElement).value = "0.00";
+            debug.log("Searching for Property Name field");
+            waitForElement("#propertyName", null, (propertyName) => {
+              debug.log("Found Property Name field. Setting value.", propertyName);
+              (propertyName as HTMLInputElement).value = `Robinhood ${property}`;
 
-              waitForElement(".addProperty", null, () => {
-                (document.querySelector(".addProperty") as HTMLElement).click();
+              debug.log("Setting Property Value");
+              (document.querySelector("#propertyValue") as HTMLInputElement).value = "0.00";
 
+              debug.log("Searching for Add Property button");
+              waitForElement(".addProperty", null, (addPropertyButton) => {
+                debug.log("Found Add Property button. Clicking.");
+                addPropertyButton.click();
+
+                debug.log("Waiting for Property Added Success view");
                 waitForElement(".AddPropertySuccessView", null, () => {
+                  debug.log("Success screen found. Triggering mint-property-added event");
                   chrome.runtime.sendMessage({
                     event: "mint-property-added",
                   });

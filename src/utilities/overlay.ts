@@ -20,10 +20,7 @@ export class Overlay {
 
     // Header
     const headerElement = document.createElement("h1");
-    headerElement.setAttribute(
-      "style",
-      "font-size: 2.4em; margin: 1em 0 .5em 0;"
-    );
+    headerElement.setAttribute("style", "font-size: 2.4em; margin: 1em 0 .5em 0;");
     headerElement.innerText = headerText;
 
     // Message

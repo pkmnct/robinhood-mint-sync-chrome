@@ -27,7 +27,7 @@ const getBearerToken = () =>
       };
     };
     database.onerror = (e) => {
-      reject(new Error("Failed to open database"));
+      reject(e);
     };
   });
 
@@ -39,6 +39,8 @@ export interface Message {
   equities?: string;
   total_equity?: string;
   error?: boolean;
+  newProperties?: string;
+  property?: string;
 }
 
 /**

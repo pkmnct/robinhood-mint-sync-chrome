@@ -62,6 +62,7 @@ export class Notification {
   }
 
   public show(): void {
+    // For now, we are manually loading the Noty JS file via the manifest.json (content script).
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     new Noty({

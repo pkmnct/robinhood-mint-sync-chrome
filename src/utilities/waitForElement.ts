@@ -1,9 +1,4 @@
-export const waitForElement = (
-  selector: string,
-  withText: string | null,
-  callback: (foundElement?: HTMLElement) => void,
-  initialContainer?: Element
-): void => {
+export const waitForElement = (selector: string, withText: string | null, callback: (foundElement?: HTMLElement) => void, initialContainer?: Element): void => {
   const queryContainer = initialContainer ? initialContainer : document;
   const elements = queryContainer.querySelectorAll(selector);
   if (!elements.length) {

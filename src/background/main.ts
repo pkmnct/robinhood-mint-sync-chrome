@@ -1,3 +1,4 @@
+import { Message } from "../content/robinhood/main";
 import { urls } from "../urls";
 import { Debug } from "../utilities/debug";
 
@@ -9,7 +10,7 @@ let newProperties = 0;
 let newPropertiesComplete = 0;
 
 interface eventHandler {
-  message: any;
+  message: Message;
   sender: chrome.runtime.MessageSender;
 }
 
@@ -220,6 +221,6 @@ const eventHandlers = {
   },
 };
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender) => {
   eventHandlers[message.event]({ message, sender });
 });
