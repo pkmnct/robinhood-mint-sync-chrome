@@ -1,43 +1,33 @@
-import { Debug } from "./debug";
-
-const debug = new Debug("content", "Mint - Utilities - waitForElement");
-
 /**
  * waitForElement - Tries to wait for an element to appear on the page and then calls
- * the callback function. If it fails too many times, calls the failure callback function
- *
- * @param {Object}    args
- * @param {String}    args.selector - Selector to search for
- * @param {String}    args.withText - Text that must be in the selector (Optional)
- * @param {Function}  args.callback - Function to call on success
- * @param {Function}  args.failureCallback - Function to call on failure (Optional)
- * @param {Element}   args.initialContainer - Container to limit search to (Optional)
- * @param {Number}    args.failureAttempts - Allowed number of failure attempts. Default is 5 seconds. (Optional)
- * @param {Number}    args._timesRun - Internal - How many loops we've run through (Optional)
+ * the callback function. If it fails too many times, calls the onError callback function
  */
-
-export const waitForElement = ({
-  selector,
-  withText = null,
-  callback,
-  initialContainer,
-  failureCallback = (sel) => {
-    debug.log(`Failed to find ${sel}`);
-  },
-  failureAttempts = 10,
-  _timesRun = 0,
-}: {
+export interface WaitForElementOptions {
+  // Selector to search for
   selector: string;
+  // Text that must be in the selector (Optional)
   withText?: string | null;
-  callback: (foundElement?: HTMLElement) => void;
+  // Callback
+  callback: (result: HTMLElement) => void;
+  // Error Callback
+  onError?: (result: Error) => void;
+  // Container to limit search to (Optional)
   initialContainer?: Element;
-  failureCallback?: (sel?: string) => void;
+  // How often (in ms) to check for the new element. Defaults to 500ms
+  checkInterval?: number;
+  // Allowed number of failure attempts. Default is 50. (Optional)
   failureAttempts?: number;
+  // Internal - How many loops we've run through (Optional)
+  // TODO: perhaps convert waitForElement to class so this can be private
   _timesRun?: number;
-}): void => {
-  // Bail and call failure if we've reached out fail limit
+}
+
+export const waitForElement = (options: WaitForElementOptions): void => {
+  const { selector, withText, onError, callback, initialContainer, failureAttempts = 50, _timesRun = 0, checkInterval = 500 } = options;
+
+  // Bail and callback with Error if we've reached out fail limit
   if (_timesRun >= failureAttempts) {
-    failureCallback(selector);
+    onError(new Error(`Unable to find selector "${selector}"` + withText ? ` with text "${withText}"` : ""));
     return;
   }
 
@@ -45,59 +35,28 @@ export const waitForElement = ({
   const queryContainer = initialContainer ? initialContainer : document;
   const elements = queryContainer.querySelectorAll(selector);
 
-  // Bail & Recur if we didn't find the element.
-  if (!elements.length) {
-    setTimeout(
-      () =>
-        waitForElement({
-          selector,
-          withText,
-          callback,
-          initialContainer,
-          failureCallback,
-          failureAttempts,
-          _timesRun: _timesRun + 1,
-        }),
-      500
-    );
-    return;
-  }
-
-  // If we don't need specific text to have appeared, we can just return the first of what we found.
-  if (!withText) {
-    callback(elements[0] as HTMLElement);
-    return;
-  }
-
-  // Loop through our found items and try to find the one that has text that matches
-  let foundText = false;
-  let foundElement: HTMLElement | null = null;
-  elements.forEach((element) => {
-    if (!foundElement && (element as HTMLElement).innerText.toLowerCase().includes(withText.toLowerCase())) {
-      foundText = true;
-      foundElement = element as HTMLElement;
+  // If at least one element was found with the selector
+  if (elements.length) {
+    // If we don't need specific text to have appeared, we can just return the first of what we found.
+    if (!withText) {
+      callback(elements[0] as HTMLElement);
       return;
     }
-  });
 
-  // Bail & Recur if we didn't find any text
-  if (!foundText) {
-    setTimeout(
-      () =>
-        waitForElement({
-          selector,
-          withText,
-          callback,
-          initialContainer,
-          failureCallback,
-          failureAttempts,
-          _timesRun: _timesRun + 1,
-        }),
-      500
-    );
-    return;
+    // Loop through our found items and try to find the one that has text that matches
+    let foundText = false;
+    for (const element of elements) {
+      if ((element as HTMLElement).innerText.toLowerCase().includes(withText.toLowerCase())) {
+        // Success! Call the callback function with our found item
+        foundText = true;
+        callback(element as HTMLElement);
+        // Stop searching for elements
+        break;
+      }
+    }
+    if (foundText) return;
   }
 
-  // Success! Call the callback function with our found item
-  callback(foundElement);
+  // Try again after checkInterval
+  setTimeout(() => waitForElement({ ...options, _timesRun: _timesRun + 1 }), checkInterval);
 };
