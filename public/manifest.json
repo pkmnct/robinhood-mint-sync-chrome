@@ -3,7 +3,7 @@
 
   "name": "Robinhood Mint Sync for Chrome",
   "description": "Automatically add your Robinhood portfolio to Mint",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "author": "George Walker",
 
   "icons": {
@@ -61,7 +61,11 @@
     {
       "matches": ["https://mint.intuit.com/overview.event*"],
       "js": ["js/external/noty/noty.min.js", "js/content/mint/main.js"],
-      "css": ["css/mint-overview.css", "css/noty.css"]
+      "css": [
+        "css/notification.css",
+        "js/external/noty/noty.css",
+        "js/external/noty/themes/relax.css"
+      ]
     },
     {
       "matches": ["https://mint.intuit.com/*"],
@@ -74,5 +78,5 @@
     "open_in_tab": true
   },
   "permissions": ["storage"],
-  "web_accessible_resources": ["images/*.png"]
+  "web_accessible_resources": ["images/*.png", "js/external/*"]
 }

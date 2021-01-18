@@ -17,10 +17,7 @@ export class Notification {
     this.right.setAttribute("class", "notification-right");
 
     this.logo.setAttribute("class", "notification-image");
-    this.logo.setAttribute(
-      "src",
-      chrome.extension.getURL("/images/icon128.png")
-    );
+    this.logo.setAttribute("src", chrome.extension.getURL("/images/icon128.png"));
 
     this.left.appendChild(this.logo);
     this.wrapper.appendChild(this.left);
@@ -52,6 +49,7 @@ export class Notification {
       if (action.newTab) {
         actionLink.setAttribute("target", "_blank");
       }
+      actionLink.setAttribute("class", "notification-action-link");
       actionLink.innerText = action.text;
       this.actionContainer.appendChild(actionLink);
     }
@@ -64,6 +62,7 @@ export class Notification {
   }
 
   public show(): void {
+    // For now, we are manually loading the Noty JS file via the manifest.json (content script).
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     new Noty({
@@ -71,6 +70,7 @@ export class Notification {
       timeout: this.persistent ? false : 15000,
       progressBar: true,
       closeWith: ["button"],
+      theme: "relax",
     }).show();
   }
 }

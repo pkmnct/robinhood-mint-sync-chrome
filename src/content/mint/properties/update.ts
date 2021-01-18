@@ -9,7 +9,7 @@ const debug = new Debug("content", "Mint - Properties - Update");
 
 new Overlay("Updating Mint Properties...", "This window will automatically close when the sync is complete");
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((request) => {
   if (request.event === "robinhood-portfolio-scraped") {
     debug.log("Waiting for Property Tab View to load");
     waitForElement({
@@ -23,14 +23,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         let other = 0;
         const syncedLabels = [];
 
-        function closeWindow() {
+        const closeWindow = () => {
           if (document.querySelectorAll(".AccountView.open").length) {
             setTimeout(closeWindow, 50);
           } else {
             chrome.runtime.sendMessage({ event: "mint-sync-complete" });
             if (!debug.isEnabled()) window.close();
           }
-        }
+        };
 
         const callback = () => {
           if (syncedLabels.length === 4) {
@@ -45,7 +45,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           }
         };
 
-        function setRobinhoodAmount(label, amount) {
+        const setRobinhoodAmount = (label, amount) => {
           debug.log(`Attempting to set ${label} to ${amount}`);
           waitForElement({
             selector: ".OtherPropertyView",
@@ -69,9 +69,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 },
                 initialContainer: foundElement,
               });
-            }
+            },
           });
-        }
+        };
 
         if (request.uninvested_cash) {
           cash = parseFloat(request.uninvested_cash);
@@ -84,19 +84,19 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         setRobinhoodAmount("Crypto", crypto);
 
         if (request.equities) {
-          stocks = parseFloat(request.equities);
+          stocks = parseFloat(request.equities) - cash;
         }
         setRobinhoodAmount("Stocks", stocks);
 
-        if (request.total_market_value) {
+        if (request.total_equity) {
           const combined = stocks + cash + crypto;
-          const total = parseFloat(request.total_market_value);
+          const total = parseFloat(request.total_equity);
           if (total > combined) {
             other = total - combined;
           }
+          setRobinhoodAmount("Other", other);
         }
-        setRobinhoodAmount("Other", other);
-      }
+      },
     });
   }
 });
