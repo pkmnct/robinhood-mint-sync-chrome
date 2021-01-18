@@ -1,3 +1,34 @@
 input[type="checkbox"]:checked + label:before, input[type="radio"]:checked + label:before {
     content: '✓';
 }
+
+.mutiple-accounts-wrapper {
+  display: none;
+}
+#setting-multipleAccountsEnabled:checked ~ .mutiple-accounts-wrapper {
+  display: block;
+}
+
+.mutiple-accounts-input-wrapper:first-child .multipleAccounts-delete{
+  display: none;
+}
+
+.mutiple-accounts-input-wrapper {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 1.5em;
+}
+
+.mutiple-accounts-input-wrapper label {
+  width: calc(50% - 6em);
+  margin-right: 1em;
+  margin-bottom: 0;
+}
+
+.mutiple-accounts-input-wrapper label input {
+  width: 100%;
+}
+
+.multipleAccounts-delete {
+  width: 8em;
+}
