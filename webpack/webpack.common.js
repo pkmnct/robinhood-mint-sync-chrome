@@ -5,8 +5,8 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 const entryPoints = {};
 
-glob.sync("./src/**/*.ts").forEach((item) => {
-  const key = item.replace("./src/", "").replace(".ts", "");
+glob.sync("./src/extension/**/*.ts").forEach((item) => {
+  const key = item.replace("./src/extension/", "").replace(".ts", "");
   entryPoints[key] = item;
 });
 
@@ -14,7 +14,7 @@ module.exports = {
   entry: entryPoints,
   output: {
     filename: "[name].js",
-    path: path.join(__dirname, "../dist/js"),
+    path: path.join(__dirname, "../dist/extension/js"),
   },
   optimization: {
     splitChunks: {

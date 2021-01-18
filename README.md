@@ -27,7 +27,7 @@ You can also run a local version of the extension for development.
 3. Build the files: `npm run watch` in the repository.
 4. Open the Chrome Extensions Page (Chrome Menu > More Tools > Extensions).
 5. Turn on the Developer Mode switch on the top-right of the page.
-6. Choose the _Load unpacked_ button and navigate to the `dist` folder of the repository.
+6. Choose the _Load unpacked_ button and navigate to the `dist/extension` folder of the repository.
 
 ## How to use the Extension
 
