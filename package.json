@@ -39,6 +39,8 @@
     "prerelease": "npm run clean",
     "release": "npm run build",
     "zip": "cd dist && cross-var bestzip ../$npm_package_name@$npm_package_version.zip * && cd ..",
-    "postrelease": "rimraf *.zip && npm run zip"
+    "postrelease": "rimraf *.zip && npm run zip",
+    "eslint": "eslint --fix src/**",
+    "prettier": "prettier --write src/**"
   }
 }
