@@ -51,8 +51,7 @@
     "prettier": "prettier --check src/**",
     "prettier:fix": "prettier --write src/**",
     "get:stellar": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node ./get-stellar.js",
-    "postinstall": "npm run get:stellar",
-    "postci": "npm run get:stellar"
+    "postinstall": "npm run get:stellar"
   },
   "husky": {
     "hooks": {

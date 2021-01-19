@@ -2,9 +2,10 @@ const fs = require("fs");
 const https = require("https");
 const unzipper = require("unzipper");
 
+const directory = "./.stellar";
+
 const downloadStellar = async () => {
   return new Promise((resolve, reject) => {
-    const directory = "./.stellar";
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
 
     const output = directory + "/html5up-stellar.zip";
@@ -41,7 +42,7 @@ const downloadStellar = async () => {
 const unzipStellar = (stellar) => {
   return new Promise((resolve, reject) => {
     const stellarZip = fs.createReadStream(stellar);
-    stellarZip.pipe(unzipper.Extract({ path: "stellar" }));
+    stellarZip.pipe(unzipper.Extract({ path: directory }));
     stellarZip.on("finish", () => resolve(output));
     stellarZip.on("error", (err) => {
       fs.unlink(stellar, () => reject(err));
