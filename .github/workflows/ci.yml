@@ -36,6 +36,15 @@ jobs:
           name: compiled-extension
           path: dist/extension
 
+      - name: Build Documentation
+        run: npm run build:docs
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: dist/docs
+
   code-formatting:
     name: Check Code Formatting
     runs-on: ubuntu-latest
