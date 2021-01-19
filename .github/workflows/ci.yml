@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-extension:
     name: Build Extension Source
     runs-on: ubuntu-latest
 
@@ -35,6 +35,22 @@ jobs:
         with:
           name: compiled-extension
           path: dist/extension
+
+  build-docs:
+    name: Build Docs
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: "12"
+
+      - name: Setup Dependencies
+        run: npm ci
 
       - name: Build Documentation
         run: npm run build:docs
