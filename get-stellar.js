@@ -2,39 +2,37 @@ const fs = require("fs");
 const https = require("https");
 const unzipper = require("unzipper");
 
+const directory = "./.stellar";
+
 const downloadStellar = async () => {
   return new Promise((resolve, reject) => {
-    const directory = "./stellar";
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
 
     const output = directory + "/html5up-stellar.zip";
     const file = fs.createWriteStream(output);
 
-    const request = https.get(
-      "https://html5up.net/stellar/download",
-      (response) => {
-        if (response.statusCode !== 200) {
-          reject(
-            new Error(
-              `Failed to download Stellar. Try manually downloading from https://html5up.net/stellar. Place the html5up-stellar.zip in ./stellar' (${response.statusCode})`
-            )
-          );
-          return;
-        }
-
-        response.pipe(file);
+    const request = https.get("https://html5up.net/stellar/download", (response) => {
+      if (response.statusCode !== 200) {
+        reject(
+          new Error(
+            `Failed to download Stellar. Try manually downloading from https://html5up.net/stellar. Place the html5up-stellar.zip in ./.stellar' (${response.statusCode})`
+          )
+        );
+        return;
       }
-    );
+
+      response.pipe(file);
+    });
 
     // The destination stream is ended by the time it's called
     file.on("finish", () => resolve(output));
 
     request.on("error", (err) => {
-      fs.unlink("stellar/html5up-stellar.zip", () => reject(err));
+      fs.unlink(output, () => reject(err));
     });
 
     file.on("error", (err) => {
-      fs.unlink("stellar/html5up-stellar.zip", () => reject(err));
+      fs.unlink(output, () => reject(err));
     });
 
     request.end();
@@ -44,7 +42,7 @@ const downloadStellar = async () => {
 const unzipStellar = (stellar) => {
   return new Promise((resolve, reject) => {
     const stellarZip = fs.createReadStream(stellar);
-    stellarZip.pipe(unzipper.Extract({ path: "stellar" }));
+    stellarZip.pipe(unzipper.Extract({ path: directory }));
     stellarZip.on("finish", () => resolve(output));
     stellarZip.on("error", (err) => {
       fs.unlink(stellar, () => reject(err));

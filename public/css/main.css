@@ -1,15 +1,16 @@
 body {
-  background-color: #09afb2;
-  background-image: linear-gradient(45deg, #089c75 15%, #09afb2 85%);
+  background-color: #068284;
+  background-image: linear-gradient(45deg, #089c75 15%, #09a2a5 85%);
+  color: #fff;
 }
 
 select option {
-  background: #09afb2;
+  background: #068284;
 }
 
 input[type="checkbox"]:checked + label:before,
 input[type="radio"]:checked + label:before {
-  color: #09afb2;
+  color: #068284;
 }
 
 #header.alt .logo {
@@ -24,4 +25,68 @@ input[type="radio"]:checked + label:before {
 #header.alt .logo img {
   margin: 0;
   max-width: 100%;
+}
+
+#main input[type="submit"].primary,
+#main input[type="reset"].primary,
+#main input[type="button"].primary,
+#main button.primary,
+#main .button.primary {
+  background-color: #068284;
+}
+#main input[type="submit"].primary:hover,
+#main input[type="reset"].primary:hover,
+#main input[type="button"].primary:hover,
+#main button.primary:hover,
+#main .button.primary:hover {
+  background-color: #065a5b;
+}
+
+#main input[type="submit"].primary:active,
+#main input[type="reset"].primary:active,
+#main input[type="button"].primary:active,
+#main button.primary:active,
+#main .button.primary:active {
+  background-color: #065a5b;
+}
+
+ul.actions.special.special {
+  flex-wrap: wrap;
+  margin-bottom: -1em;
+}
+
+.actions.special li {
+  margin-bottom: 1em;
+}
+
+#main input[type="checkbox"] + label:before,
+#main input[type="radio"] + label:before {
+  border: 1px solid #949494;
+}
+
+#nav ul li a:hover {
+  background-color: rgba(222, 222, 222, 0.7);
+}
+
+#footer {
+  margin-left: 0;
+  width: 100%;
+}
+
+#footer h2 {
+  flex-basis: 100%;
+  margin-bottom: 1em;
+  margin-left: 0;
+}
+
+#footer > section:first-of-type {
+  margin-left: 0;
+}
+
+#footer > * {
+  min-width: calc(50% - 1em);
+}
+
+.version {
+  margin-bottom: 5em;
 }

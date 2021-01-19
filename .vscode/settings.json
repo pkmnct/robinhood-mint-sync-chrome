@@ -4,4 +4,8 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
     },
+    "search.exclude": {
+        ".stellar": true,
+        "dist": true
+    },
 }

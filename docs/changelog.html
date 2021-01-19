@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Robinhood Mint Sync for Chrome - Changelog</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="external/stellar/main.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="icon" type="image/png" href="images/icon128.png" />
+  </head>
+  <body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+      <!-- Header -->
+      <header id="header">
+        <h1>Changelog</h1>
+        <p>Robinhood Mint Sync for Chrome</p>
+      </header>
+
+      <!-- Nav -->
+      <nav id="nav">
+        <ul>
+          <li><a href="#whats-new" class="active">What's New</a></li>
+          <li><a href="#version-history">Version History</a></li>
+        </ul>
+      </nav>
+
+      <!-- Main -->
+      <main id="main">
+        <!-- What's New -->
+        <section id="whats-new" class="main special">
+          <div class="spotlight">
+            <div class="content">
+              <header class="major">
+                <h2>What's new in this release</h2>
+              </header>
+              <p>Accessibility improvements</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Version History Section -->
+        <section id="version-history" class="main">
+          <header class="major">
+            <h2>Version History</h2>
+          </header>
+          <div class="version">
+            <h3>Version 3.3.1</h3>
+            <h4>Bug Fixes</h4>
+            <ul>
+              <li>Increase color contrast on all text/links</li>
+              <li>Fix other accessibility issues</li>
+            </ul>
+          </div>
+          <div class="version">
+            <h3>Version 3.3.0</h3>
+            <h4>Bug Fixes</h4>
+            <ul>
+              <li>Fixes an issue where, if no properties had been set up on Mint, extension failed to create properties.</li>
+              <li>
+                Users with margin trading will now see the equity value of their stocks rather than their total market value when syncing. This ensures users
+                are seeing their accurate net worth reflected.
+              </li>
+              <li>Fixes an issue where buttons in the notifications were not showing correctly.</li>
+            </ul>
+          </div>
+          <div class="version">
+            <h3>Version 3.2.0</h3>
+            <h4>Bug Fixes</h4>
+            <ul>
+              <li>Fixes an issue where, during initial setup, the extension could cause the sync to happen before the properties have been set up in Mint.</li>
+              <li>Fixes an issue where extension would sometimes fail to open the tabs used for syncing.</li>
+              <li>Fixes an issue where the inputs for the values received from Mint could not be found sometimes.</li>
+            </ul>
+            <h4>New Features</h4>
+            <ul>
+              <li>
+                "Debug Mode" setting that enables logging. This can be used to diagnose issues in the future. This will also prevent the tabs the extension uses
+                for syncing from closing when they are finished.
+              </li>
+            </ul>
+          </div>
+          <div class="version">
+            <h3>Version 3.1.0</h3>
+            <p>
+              Fixed race condition in Mint update script where save callback could be called before it was initialized. Added a debug mode to facilitate
+              debugging and support. This mode will log to either the background script or the console on the pages where content scripts are running.
+            </p>
+          </div>
+          <div class="version">
+            <h3>Version 3.0.0</h3>
+            <p>
+              Robinhood scraping has been improved, and will now show up as separate properties in Mint for each type of asset. A bug with the Robinhood login
+              page detection has been resolved. Various code improvements to facilitate faster development in the future.
+            </p>
+          </div>
+          <div class="version">
+            <h3>Version 2.0.0</h3>
+            <p>Fixed an issue where the Robinhood portfolio balance scrape was not working due to updates to their site. Removed Google Analytics.</p>
+          </div>
+          <div class="version">
+            <h3>Version 1.3.0</h3>
+            <p>
+              Added a fix for the triangle indicator in some areas of Mint. See
+              <a href="https://github.com/pkmnct/robinhood-mint-sync-chrome/pull/7">pull request on GitHub</a>
+              for more info. The changelog no longer shows on update by default. Analytics are no longer collected by default.
+            </p>
+          </div>
+          <div class="version">
+            <h3>Version 1.2.0</h3>
+            <p>Switched notifications to use a new library. This fixes issues with notification buttons.</p>
+          </div>
+          <div class="version">
+            <h3>Version 1.1.3</h3>
+            <p>
+              Improved notification styles. Fixed grammar on changelog. Fix analytics console error when disabled. Add a prompt when Robinhood is not logged in,
+              and fix frozen page. Handle when Mint is not logged in.
+            </p>
+          </div>
+          <div class="version">
+            <h3>Version 1.1.2</h3>
+            <p>
+              Removed Fontawesome and overlay.png reference. Added licenses page. Changed update popup to changelog instead of welcome page. Welcome page now
+              only shows on first install, and when the button is pressed in the Chrome toolbar or menu.
+            </p>
+          </div>
+          <div class="version">
+            <h3>Version 1.1.1</h3>
+            <p>Fixed analytics. Fixed appearance of notifications.</p>
+          </div>
+          <div class="version">
+            <h3>Version 1.1.0</h3>
+            <p>Introduced welcome page and changelog.</p>
+          </div>
+          <div class="version">
+            <h3>Version 1.0.0</h3>
+            <p>This was the initial release of the extension. It was mostly a proof-of-concept.</p>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer id="footer">
+        <p class="copyright">
+          <a href="licenses.html">View extension and third-party licenses</a>
+        </p>
+      </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="external/jquery/jquery.min.js"></script>
+    <script src="external/stellar/jquery.scrollex.min.js"></script>
+    <script src="external/stellar/jquery.scrolly.min.js"></script>
+    <script src="external/stellar/browser.min.js"></script>
+    <script src="external/stellar/breakpoints.min.js"></script>
+    <script src="external/stellar/util.js"></script>
+    <script src="external/stellar/main.js"></script>
+  </body>
+</html>

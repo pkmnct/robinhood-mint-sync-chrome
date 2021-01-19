@@ -1,6 +1,6 @@
 {
   "name": "robinhood-mint-sync-chrome",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pkmnct/robinhood-mint-sync-chrome.git"
@@ -38,17 +38,22 @@
   },
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
+    "watch:docs": "webpack --config webpack/webpack.docs.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
+    "build:docs": "webpack --config webpack/webpack.docs.js",
     "clean": "rimraf dist",
     "prerelease": "npm run clean",
     "release": "npm run build",
-    "zip": "cd dist && cross-var bestzip ../$npm_package_name@$npm_package_version.zip * && cd ..",
+    "zip": "cd dist/extension && cross-var bestzip ../$npm_package_name@$npm_package_version.zip * && cd ../..",
     "postrelease": "rimraf *.zip && npm run zip",
     "eslint": "eslint src/**",
     "eslint:fix": "eslint --fix --max-warnings 0 src/**",
     "prettier": "prettier --check src/**",
     "prettier:fix": "prettier --write src/**",
-    "postinstall": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node ./get-stellar.js"
+    "get:stellar": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node ./get-stellar.js",
+    "postinstall": "npm run get:stellar",
+    "manifest:update": "node manifest-helper.js",
+    "postversion": "npm run manifest:update && git add . && git commit -m \"Update manifest.json\""
   },
   "husky": {
     "hooks": {
