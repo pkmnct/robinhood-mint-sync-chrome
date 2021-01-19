@@ -5,8 +5,8 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 const entryPoints = {};
 
-glob.sync("./src/extension/**/*.ts").forEach((item) => {
-  const key = item.replace("./src/extension/", "").replace(".ts", "");
+glob.sync("./src/**/*.ts").forEach((item) => {
+  const key = item.replace("./src/", "").replace(".ts", "");
   entryPoints[key] = item;
 });
 
@@ -36,8 +36,6 @@ module.exports = {
     modules: ["node_modules"],
   },
   plugins: [
-    // exclude locale files in moment
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new CopyPlugin({
       patterns: [
         { from: ".", to: "../", context: "public" },
