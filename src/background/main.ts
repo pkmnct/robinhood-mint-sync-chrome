@@ -237,7 +237,7 @@ const eventHandlers = {
 };
 
 chrome.runtime.onMessage.addListener((message, sender) => {
-  if (message && message.event && typeof eventHandlers[message.event] === 'function') {
+  if (message && message.event && typeof eventHandlers[message.event] === "function") {
     eventHandlers[message.event]({ message, sender });
   } else {
     throw new Error(message.event);

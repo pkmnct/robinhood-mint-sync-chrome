@@ -85,7 +85,7 @@ const scrapeData = async () => {
     }
 
     // TODO: maybe there's an API for this?
-    const accountName = document.querySelector('.main-container > h1') as HTMLElement;
+    const accountName = document.querySelector(".main-container > h1") as HTMLElement;
     if (accountName && accountName.innerText) {
       returnValue.accountName = accountName.innerText;
     }
