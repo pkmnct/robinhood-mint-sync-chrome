@@ -32,3 +32,7 @@ input[type="checkbox"]:checked + label:before, input[type="radio"]:checked + lab
 .multipleAccounts-delete {
   width: 8em;
 }
+
+#main input[type="text"].error {
+  border-color: #762206;
+}

@@ -18,6 +18,7 @@ chrome.runtime.onMessage.addListener((request) => {
       onError: handleError,
       callback: (propertyViewElement) => {
         debug.log("Property Tab View loaded.", propertyViewElement);
+        debug.log("Account Name: ", request.accountName);
 
         let crypto = 0;
         let stocks = 0;

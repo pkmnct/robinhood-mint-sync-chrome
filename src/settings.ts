@@ -47,7 +47,6 @@ chrome.storage.sync.get(
       });
     });
 
-    // TODO: Validations
     // Multiple Accounts Checkbox
     if (multipleAccountsEnabled) {
       checkboxMultipleAccounts.setAttribute("checked", "true");
@@ -97,23 +96,43 @@ function populateMultipleAccountFields(multipleAccounts) {
     const clonedRobinhoodInput = clonedInputWrapper.querySelector(`.setting-multipleAccounts-robinHoodInput`) as HTMLInputElement;
     clonedRobinhoodInput.id = `setting-multipleAccounts-robinHoodInput-${index}`;
     clonedRobinhoodInput.name = `setting-multipleAccounts-robinHoodInput-${index}`;
-    clonedRobinhoodInput.value = account.robinHoodValue ? account.robinHoodValue : ""; // TODO: sanitize
+    clonedRobinhoodInput.value = account.robinHoodValue ? sanitizeInput(account.robinHoodValue) : "";
+    if (!passedValidation(clonedRobinhoodInput.value)) {
+      clonedRobinhoodInput.classList.add("error");
+    }
 
     const clonedMintInput = clonedInputWrapper.querySelector(`.setting-multipleAccounts-mintInput`) as HTMLInputElement;
     clonedMintInput.id = `setting-multipleAccounts-mintInput-${index}`;
     clonedMintInput.name = `setting-multipleAccounts-mintInput-${index}`;
-    clonedMintInput.value = account.mintValue ? account.mintValue : ""; // TODO: sanitize
+    clonedMintInput.value = account.mintValue ? sanitizeInput(account.mintValue) : "";
+    if (!passedValidation(clonedMintInput.value)) {
+      clonedMintInput.classList.add("error");
+    }
 
     // Attach to row holder
     wrapperMultipleAccountsRows.appendChild(clonedInputWrapper);
 
     // Attach event listeners
     clonedRobinhoodInput.addEventListener("change", function () {
-      multipleAccountInputChange(index, "robinHoodValue", this.value); // TODO: sanitize
+      const value = this.value;
+      if (!passedValidation(value)) {
+        this.classList.add("error");
+        return;
+      }
+
+      this.classList.remove("error");
+      multipleAccountInputChange(index, "robinHoodValue", value);
     });
 
     clonedMintInput.addEventListener("change", function () {
-      multipleAccountInputChange(index, "mintValue", this.value); // TODO: sanitize
+      const value = this.value;
+      if (!passedValidation(value)) {
+        this.classList.add("error");
+        return;
+      }
+
+      this.classList.remove("error");
+      multipleAccountInputChange(index, "mintValue", this.value);
     });
   });
 
@@ -164,17 +183,45 @@ function multipleAccountsAddAction() {
 
   // Attach event listeners
   thisRobinHoodInput.addEventListener("change", function () {
-    multipleAccountInputChange(index, "robinHoodValue", this.value); // TODO: sanitize
+    const value = this.value;
+    if (!passedValidation(value)) {
+      this.classList.add("error");
+      return;
+    }
+
+    this.classList.remove("error");
+    multipleAccountInputChange(index, "robinHoodValue", value);
   });
 
   thisMintInput.addEventListener("change", function () {
-    multipleAccountInputChange(index, "mintValue", this.value); // TODO: sanitize
+    const value = this.value;
+    if (!passedValidation(value)) {
+      this.classList.add("error");
+      return;
+    }
+
+    this.classList.remove("error");
+    multipleAccountInputChange(index, "mintValue", value);
   });
 
   thisDeleteButton.addEventListener("click", multipleAccountsDeleteAction);
 
   // Reenable add button
   buttonMultipleAccountsAdd.removeAttribute("disabled");
+}
+
+// TODO
+function passedValidation(value) {
+  if (!value) {
+    return false;
+  }
+
+  return true;
+}
+
+// TODO
+function sanitizeInput(input) {
+  return input.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
 }
 
 /**
@@ -228,7 +275,7 @@ function multipleAccountsDeleteAction() {
 function multipleAccountInputChange(index, key, value) {
   chrome.storage.sync.get({ multipleAccounts: [] }, (result) => {
     // Bail with bad data
-    if (!value || typeof value !== "string" || !key || typeof key !== "string" || !Number.isInteger(index) || index < 0) {
+    if (typeof value !== "string" || !key || typeof key !== "string" || !Number.isInteger(index) || index < 0) {
       return;
     }
 
@@ -236,7 +283,7 @@ function multipleAccountInputChange(index, key, value) {
     const updatedMultipleAccounts = multipleAccounts;
     updatedMultipleAccounts[index] = {
       ...updatedMultipleAccounts[index],
-      [key]: value, // TODO: sanitize
+      [key]: sanitizeInput(value),
     };
     chrome.storage.sync.set({
       multipleAccounts: updatedMultipleAccounts,

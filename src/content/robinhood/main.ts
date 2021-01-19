@@ -41,6 +41,7 @@ export interface Message {
   error?: boolean;
   newProperties?: string;
   property?: string;
+  accountName?: string;
 }
 
 /**
@@ -81,6 +82,12 @@ const scrapeData = async () => {
 
     if (json && json.total_equity && json.total_equity.amount) {
       returnValue.total_equity = json.total_equity.amount;
+    }
+
+    // TODO: maybe there's an API for this?
+    const accountName = document.querySelector('.main-container > h1') as HTMLElement;
+    if (accountName && accountName.innerText) {
+      returnValue.accountName = accountName.innerText;
     }
 
     return returnValue;
