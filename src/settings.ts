@@ -12,7 +12,7 @@ chrome.storage.sync.get(
     fixTriangle: true,
     debugMode: false,
     multipleAccountsEnabled: false,
-    multipleAccounts: [{ robinHoodValue: "", mintValue: "" }],
+    multipleAccounts: [{ robinHoodValue: "" }],
   },
   (result) => {
     const { changelogOnUpdate, fixTriangle, debugMode, multipleAccountsEnabled, multipleAccounts } = result;
@@ -101,14 +101,6 @@ function populateMultipleAccountFields(multipleAccounts) {
       clonedRobinhoodInput.classList.add("error");
     }
 
-    const clonedMintInput = clonedInputWrapper.querySelector(`.setting-multipleAccounts-mintInput`) as HTMLInputElement;
-    clonedMintInput.id = `setting-multipleAccounts-mintInput-${index}`;
-    clonedMintInput.name = `setting-multipleAccounts-mintInput-${index}`;
-    clonedMintInput.value = account.mintValue ? sanitizeInput(account.mintValue) : "";
-    if (!passedValidation(clonedMintInput.value)) {
-      clonedMintInput.classList.add("error");
-    }
-
     // Attach to row holder
     wrapperMultipleAccountsRows.appendChild(clonedInputWrapper);
 
@@ -122,17 +114,6 @@ function populateMultipleAccountFields(multipleAccounts) {
 
       this.classList.remove("error");
       multipleAccountInputChange(index, "robinHoodValue", value);
-    });
-
-    clonedMintInput.addEventListener("change", function () {
-      const value = this.value;
-      if (!passedValidation(value)) {
-        this.classList.add("error");
-        return;
-      }
-
-      this.classList.remove("error");
-      multipleAccountInputChange(index, "mintValue", this.value);
     });
   });
 
@@ -171,11 +152,6 @@ function multipleAccountsAddAction() {
   thisRobinHoodInput.name = `setting-multipleAccounts-robinHoodInput-${index}`;
   thisRobinHoodInput.value = "";
 
-  const thisMintInput = clonedInputWrapper.querySelector(`.setting-multipleAccounts-mintInput`) as HTMLInputElement;
-  thisMintInput.id = `setting-multipleAccounts-mintInput-${index}`;
-  thisMintInput.name = `setting-multipleAccounts-mintInput-${index}`;
-  thisMintInput.value = "";
-
   const thisDeleteButton = clonedInputWrapper.querySelector(`.multipleAccounts-delete`) as HTMLButtonElement;
 
   // Attach to row holder
@@ -191,17 +167,6 @@ function multipleAccountsAddAction() {
 
     this.classList.remove("error");
     multipleAccountInputChange(index, "robinHoodValue", value);
-  });
-
-  thisMintInput.addEventListener("change", function () {
-    const value = this.value;
-    if (!passedValidation(value)) {
-      this.classList.add("error");
-      return;
-    }
-
-    this.classList.remove("error");
-    multipleAccountInputChange(index, "mintValue", value);
   });
 
   thisDeleteButton.addEventListener("click", multipleAccountsDeleteAction);

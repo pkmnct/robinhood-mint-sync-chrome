@@ -20,7 +20,7 @@ input[type="checkbox"]:checked + label:before, input[type="radio"]:checked + lab
 }
 
 .mutiple-accounts-input-wrapper label {
-  width: calc(50% - 6em);
+  width: calc(100% - 9em);
   margin-right: 1em;
   margin-bottom: 0;
 }
