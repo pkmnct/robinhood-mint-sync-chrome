@@ -65,6 +65,7 @@ const init = async () => {
   const unzip = await unzipStellar(stellar);
   handleError(unzip);
   console.log(`Stellar unzipped to ${stellar}`);
+  process.exit();
 };
 
 init();
