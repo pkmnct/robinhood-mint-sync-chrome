@@ -12,16 +12,21 @@ jobs:
     name: Deploy docs to GitHub Pages
     runs-on: ubuntu-18.04
     steps:
-      - name: Download compiled docs Artifact
-        uses: actions/download-artifact@v2.0.8
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
         with:
-          name: compiled-docs
+          node-version: "12"
 
-      - name: Display artifact files
-        run: ls -l
+      - name: Setup Dependencies
+        run: npm ci
 
-      # - name: Deploy
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: .
+      - name: Build Documentation
+        run: npm run build:docs
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/docs
