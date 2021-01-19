@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Robinhood Mint Sync for Chrome</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="external/stellar/main.css" />
     <link rel="stylesheet" href="css/main.css" />
     <link rel="icon" type="image/png" href="images/icon128.png" />
@@ -35,7 +35,7 @@
       </nav>
 
       <!-- Main -->
-      <div id="main">
+      <main id="main">
         <!-- Introduction -->
         <section id="intro" class="main">
           <div class="spotlight">
@@ -155,32 +155,27 @@
             </ul>
           </footer>
         </section>
-      </div>
+      </main>
 
       <!-- Footer -->
       <footer id="footer">
-        <section>
-          <h2>Version History</h2>
-          <aside class="version">
-            <h4>Version 3.3.0</h4>
-            <p>
-              Fixes an issue where, if no properties had been set up on Mint, extension failed to create properties. Users with margin trading will now see the
-              equity value of their stocks rather than their total market value when syncing. Fixes an issue where buttons in the notifications were not showing
-              correctly.
-            </p>
-          </aside>
+        <h2>Version History</h2>
+        <section class="version">
+          <h3>Version 3.3.0</h3>
+          <p>
+            Fixes an issue where, if no properties had been set up on Mint, extension failed to create properties. Users with margin trading will now see the
+            equity value of their stocks rather than their total market value when syncing. Fixes an issue where buttons in the notifications were not showing
+            correctly.
+          </p>
           <ul class="actions">
             <li>
               <a href="changelog.html" class="button">View Full Changelog</a>
             </li>
           </ul>
         </section>
-        <section>
-          <h2>&nbsp;</h2>
-          <aside class="version">
-            <h4>Version 3.2.0</h4>
-            <p>Fixes additional bugs from 3.0.0. Introduces Debug Mode setting.</p>
-          </aside>
+        <section class="version secondary">
+          <h3>Version 3.2.0</h3>
+          <p>Fixes additional bugs from 3.0.0. Introduces Debug Mode setting.</p>
         </section>
         <p class="copyright">
           <a href="licenses.html">View extension and third-party licenses</a>

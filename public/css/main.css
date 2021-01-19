@@ -67,3 +67,22 @@ ul.actions.special.special {
 #nav ul li a:hover {
   background-color: rgba(222, 222, 222, 0.7);
 }
+
+#footer {
+  margin-left: 0;
+  width: 100%;
+}
+
+#footer h2 {
+  flex-basis: 100%;
+  margin-bottom: 1em;
+  margin-left: 0;
+}
+
+#footer > section:first-of-type {
+  margin-left: 0;
+}
+
+#footer > * {
+  min-width: calc(50% - 1em);
+}
