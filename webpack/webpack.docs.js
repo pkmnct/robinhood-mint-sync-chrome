@@ -35,4 +35,9 @@ module.exports = {
       ],
     }),
   ],
+  devServer: {
+    contentBase: path.resolve(__dirname, "../docs"),
+    port: 24763, // Spells CHRME on a phone key pad
+    open: true,
+  },
 };
