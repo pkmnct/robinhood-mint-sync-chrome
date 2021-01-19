@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Robinhood Mint Sync for Chrome - Welcome</title>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, user-scalable=no"
-    />
     <link rel="stylesheet" href="/js/external/stellar/main.css" />
     <link rel="stylesheet" href="/css/main.css" />
+    <link rel="icon" type="image/png" href="/images/icon128.png" />
   </head>
 
   <body class="is-preload">
@@ -16,9 +13,7 @@
     <div id="wrapper">
       <!-- Header -->
       <header id="header" class="alt">
-        <span class="logo"
-          ><img src="/images/icon512.png" style="width: 128px" alt=""
-        /></span>
+        <span class="logo"><img src="/images/icon512.png" style="width: 128px" alt="" /></span>
         <h1>Robinhood Mint Sync for Chrome</h1>
         <p>Add your Robinhood portfolio value to Mint automatically.</p>
       </header>
@@ -27,14 +22,14 @@
       <nav id="nav">
         <ul>
           <li><a href="#intro" class="active">Welcome</a></li>
-          <li><a href="#first">How to use</a></li>
-          <li><a href="#second">FAQs</a></li>
-          <li><a href="#cta">Reporting a Problem</a></li>
+          <li><a href="#how-to-use">How to use</a></li>
+          <li><a href="#faqs">FAQs</a></li>
+          <li><a href="#report-problem">Reporting a Problem</a></li>
         </ul>
       </nav>
 
       <!-- Main -->
-      <div id="main">
+      <main id="main">
         <!-- Introduction -->
         <section id="intro" class="main special">
           <div class="spotlight">
@@ -43,46 +38,30 @@
                 <h2>Welcome</h2>
               </header>
               <p>
-                Thank you for using this extension. I work on it in my free time
-                and am glad to see so many people find it as helpful as I do. If
-                you're interested in contributing to the project, check it out
-                on GitHub.
+                Thank you for using this extension. I work on it in my free time and am glad to see so many people find it as helpful as I do. If you're
+                interested in contributing to the project, check it out on GitHub.
               </p>
               <ul class="actions special">
                 <li>
-                  <a
-                    href="https://github.com/pkmnct/robinhood-mint-sync-chrome"
-                    target="_blank"
-                    class="button primary"
-                    >View Project</a
-                  >
+                  <a href="https://github.com/pkmnct/robinhood-mint-sync-chrome" target="_blank" class="button primary">View Project</a>
                 </li>
                 <li>
-                  <a
-                    href="https://paypal.me/pkmnct"
-                    target="_blank"
-                    class="button"
-                    >Support the Extension via Donation</a
-                  >
+                  <a href="https://paypal.me/pkmnct" target="_blank" class="button">Support the Extension via Donation</a>
                 </li>
               </ul>
             </div>
           </div>
         </section>
 
-        <!-- First Section -->
-        <section id="first" class="main">
+        <!-- how-to-use Section -->
+        <section id="how-to-use" class="main">
           <header class="major">
             <h2>How to use the extension</h2>
           </header>
-          <span class="image right"
-            ><img src="/images/screenshot1.png" alt=""
-          /></span>
+          <span class="image right"><img src="/images/screenshot1.png" alt="" /></span>
           <p>
-            The extension is very simple to use. Just visit your Mint overview
-            page to automatically initiate a sync. If you have not performed a
-            sync before, you will be directed to set up the item in Mint to
-            track your Robinhood portfolio to.
+            The extension is very simple to use. Just visit your Mint overview page to automatically initiate a sync. If you have not performed a sync before,
+            you will be directed to set up the item in Mint to track your Robinhood portfolio to.
           </p>
           <p>
             You can also adjust settings for the extension by viewing the
@@ -91,82 +70,76 @@
           <footer class="major">
             <ul class="actions">
               <li>
-                <a
-                  href="https://mint.intuit.com/overview.event"
-                  target="_blank"
-                  class="button primary"
-                  >Perform sync now</a
-                >
+                <a href="https://mint.intuit.com/overview.event" target="_blank" class="button primary">Perform sync now</a>
               </li>
               <li>
-                <a href="settings.html" target="_blank" class="button"
-                  >Change Settings</a
-                >
+                <a href="settings.html" target="_blank" class="button">Change Settings</a>
               </li>
             </ul>
           </footer>
         </section>
 
-        <!-- Second Section -->
-        <section id="second" class="main">
+        <!-- faqs Section -->
+        <section id="faqs" class="main">
           <header class="major">
             <h2>Frequently Asked Questions</h2>
           </header>
-          <h2>How does the extension work?</h2>
-          <p>
-            The extension works by opening your Robinhood Account page in the
-            background to read the portfolio value. After reading that value, it
-            passes it to Mint in another new page in the background. Both of
-            these background pages will close automatically when they are done
-            with their job. You may switch to these pages while the sync is
-            being performed, but if they are closed the sync will not complete.
-          </p>
-          <p>
-            Due to how the extension gets data from Robinhood and inputs data
-            into Mint, it is possible for changes in either of these services to
-            break the functionality of the extension. If you have any issues
-            with the extension, see the
-            <a href="#cta">Reporting a Problem</a> section below.
-          </p>
-          <h2>How do I know my information is safe?</h2>
-          <p>
-            This extension is completely open source and its code is available
-            on GitHub. This means anybody can
-            <a href="https://github.com/pkmnct/robinhood-mint-sync-chrome"
-              >review the code</a
-            >
-            and confirm that it is safe.
-          </p>
+          <div>
+            <h2>My balance is duplicated, how do I fix this?</h2>
+            <p>
+              If you previously had your Robinhood account set up natively on Mint, you should mark that account as inactive. This will prevent its value from
+              counting towards your net worth, while keeping your history related to the account. If native support is added again in the future, you can
+              re-activate the account.
+            </p>
+          </div>
+          <div>
+            <h2>How does the extension work?</h2>
+            <p>The extension starts from your Mint Overview page. You will see a notification in the top-right corner to initiate the setup or a sync.</p>
+            <p>
+              First, the extension will open a few Mint tabs to check for and add any needed properties to your account. These properties are used to store your
+              Robinhood balance, and show up a collectible in Mint. Once the properties set up, the extension will initiate a sync with Robinhood from Mint.
+            </p>
+            <p>
+              The extension works by opening your Robinhood page in the background and using its API to read the equities. Those values are passed to a new Mint
+              page in the background, which sets the property values to the equity amounts. Both of these background pages will close automatically when they
+              are done with their job. You may switch to these pages while the sync is being performed, but if they are closed manually the sync will not
+              complete.
+            </p>
+            <p>
+              Due to how the extension gets data from Robinhood and inputs data into Mint, it is possible for changes in either of these services to break the
+              functionality of the extension. If you have any issues with the extension, see the
+              <a href="#report-problem">Reporting a Problem</a> section below.
+            </p>
+          </div>
+          <div>
+            <h2>How do I know my information is safe?</h2>
+            <p>
+              This extension is completely open source and its code is available on GitHub. This means anybody can
+              <a href="https://github.com/pkmnct/robinhood-mint-sync-chrome">review the code</a>
+              and confirm that it is safe.
+            </p>
+          </div>
         </section>
 
         <!-- Get Started -->
-        <section id="cta" class="main">
+        <section id="report-problem" class="main">
           <header class="major">
             <h2>Reporting a Problem</h2>
           </header>
           <p>
             If you run into any issues with the extension, please
-            <a
-              href="https://github.com/pkmnct/robinhood-mint-sync-chrome/issues"
-              >check to see if any other people are having the same issue</a
-            >
-            on GitHub. If they are not, please open a new issue. Describe in
-            detail the problem you are having when reporting an issue.
+            <a href="https://github.com/pkmnct/robinhood-mint-sync-chrome/issues">check to see if any other people are having the same issue</a>
+            on GitHub. If they are not, please open a new issue. Describe in detail the problem you are having when reporting an issue.
           </p>
           <footer class="major">
             <ul class="actions">
               <li>
-                <a
-                  href="https://github.com/pkmnct/robinhood-mint-sync-chrome/issues"
-                  target="_blank"
-                  class="button primary"
-                  >View Known Issues</a
-                >
+                <a href="https://github.com/pkmnct/robinhood-mint-sync-chrome/issues" target="_blank" class="button primary">View Known Issues</a>
               </li>
             </ul>
           </footer>
         </section>
-      </div>
+      </main>
 
       <!-- Footer -->
       <footer id="footer">
@@ -174,11 +147,7 @@
           <h2>Version History</h2>
           <ul class="actions">
             <li>
-              <a
-                href="https://pkmnct.github.io/robinhood-mint-sync-chrome/changelog.html"
-                class="button"
-                >View Changelog</a
-              >
+              <a href="https://pkmnct.github.io/robinhood-mint-sync-chrome/changelog.html" class="button">View Changelog</a>
             </li>
           </ul>
         </section>

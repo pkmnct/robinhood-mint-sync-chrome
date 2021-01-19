@@ -6,7 +6,7 @@
         "sourceMap": true,
         "inlineSources": true,
         "rootDir": "src",
-        "outDir": "dist/js",
+        "outDir": "dist/extension/js",
         "noEmitOnError": true,
         "typeRoots": [ "node_modules/@types" ],
         "moduleResolution": "node"

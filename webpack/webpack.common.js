@@ -14,7 +14,7 @@ module.exports = {
   entry: entryPoints,
   output: {
     filename: "[name].js",
-    path: path.join(__dirname, "../dist/js"),
+    path: path.join(__dirname, "../dist/extension/js"),
   },
   optimization: {
     splitChunks: {
@@ -36,22 +36,20 @@ module.exports = {
     modules: ["node_modules"],
   },
   plugins: [
-    // exclude locale files in moment
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new CopyPlugin({
       patterns: [
         { from: ".", to: "../", context: "public" },
         { from: "node_modules/jquery/dist", to: "external/jquery" },
         { from: "node_modules/noty/lib", to: "external/noty" },
         {
-          from: "stellar/assets/js",
+          from: ".stellar/assets/js",
           globOptions: {
             ignore: ["**/jquery.min.js*"],
           },
           to: "external/stellar",
         },
         {
-          from: "stellar/assets/css",
+          from: ".stellar/assets/css",
           globOptions: {
             ignore: ["**/fontawesome*", "**/images/*"],
           },

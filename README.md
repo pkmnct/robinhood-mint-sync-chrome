@@ -1,7 +1,3 @@
-## Note on Mint's native Robinhood support
-
-Support had been added to Mint for Robinhood, however [Mint is reporting that Robinhood is blocking their app](https://help.mint.com/Featured-Questions/2090847861/Known-Issue-Robinhood-Error-102-105-155.htm). This extension will add the Robinhood balance as _collectibles_ in Mint. If you had previously added your account natively, you should mark the account as inactive to prevent duplication of balances.
-
 <img src="https://raw.githubusercontent.com/pkmnct/robinhood-mint-sync-chrome/master/public/images/icon512.png" alt="Mint and Robinhood Sync Icon" width="128" height="128">
 
 # Robinhood Mint Sync for Chrome
@@ -27,8 +23,12 @@ You can also run a local version of the extension for development.
 3. Build the files: `npm run watch` in the repository.
 4. Open the Chrome Extensions Page (Chrome Menu > More Tools > Extensions).
 5. Turn on the Developer Mode switch on the top-right of the page.
-6. Choose the _Load unpacked_ button and navigate to the `dist` folder of the repository.
+6. Choose the _Load unpacked_ button and navigate to the `dist/extension` folder of the repository.
 
 ## How to use the Extension
 
 The extension is very simple to use. Just visit your [Mint overview page](https://mint.intuit.com/overview.event) to automatically initiate a sync. If you have not performed a sync before, you will be directed to set up the item in Mint to track your Robinhood portfolio to.
+
+## Note on Mint's native Robinhood support
+
+Mint previously introduced native support for Robinhood shortly after this extension was released, however [Mint is reporting that Robinhood is blocking their app](https://help.mint.com/Featured-Questions/2090847861/Known-Issue-Robinhood-Error-102-105-155.htm). While the extension had previously been deprecated, it is now back under active development. This extension will add the Robinhood balance as _collectibles_ in Mint. If you had previously added your account natively, you should mark the account as inactive to prevent duplication of balances.
