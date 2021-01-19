@@ -20,87 +20,102 @@ chrome.runtime.onMessage.addListener((request) => {
         debug.log("Property Tab View loaded.", propertyViewElement);
         debug.log("Account Name: ", request.accountName);
 
-        let crypto = 0;
-        let stocks = 0;
-        let cash = 0;
-        let other = 0;
-        const syncedLabels = [];
-
-        const closeWindow = () => {
-          if (document.querySelectorAll(".AccountView.open").length) {
-            setTimeout(closeWindow, 50);
-          } else {
-            chrome.runtime.sendMessage({ event: "mint-sync-complete" });
-            if (!debug.isEnabled()) window.close();
-          }
-        };
-
-        const callback = () => {
-          if (syncedLabels.length === 4) {
-            debug.log(`Fields updated. Attempting to save.`);
-            const saveButtons = document.querySelectorAll(".saveButton");
-            saveButtons.forEach((button) => {
-              debug.log(`Clicking save`, button);
-              button.removeAttribute("disabled");
-              (button as HTMLInputElement).click();
+        chrome.storage.sync.get({ multipleAccountsEnabled: false, multipleAccounts: [] }, (result) => {
+          const { multipleAccountsEnabled, multipleAccounts } = result;
+          let match = false;
+          if (multipleAccountsEnabled && multipleAccounts && multipleAccounts.length) {
+            // Try to find a match
+            match = multipleAccounts.some((account) => {
+              if (account.robinHoodValue === request.accountName) {
+                return true;
+              }
+              return false;
             });
-            closeWindow();
           }
-        };
+          const subLabel = match ? ` - ${request.accountName}` : "";
 
-        const setRobinhoodAmount = (label, amount) => {
-          debug.log(`Attempting to set ${label} to ${amount}`);
-          waitForElement({
-            selector: ".OtherPropertyView",
-            onError: handleError,
-            withText: `Robinhood ${label}`,
-            callback: (foundElement) => {
-              debug.log(`Expanding property ${label}`, foundElement);
-              foundElement.querySelector("span").click();
+          let crypto = 0;
+          let stocks = 0;
+          let cash = 0;
+          let other = 0;
+          const syncedLabels = [];
 
-              waitForElement({
-                selector: "input",
-                onError: handleError,
-                callback: () => {
-                  const inputs = foundElement.querySelectorAll("input");
-                  inputs.forEach((foundInput) => {
-                    if (foundInput.getAttribute("name") === "value") {
-                      debug.log(`Found ${label} input, setting amount`, foundInput);
-                      foundInput.value = amount;
-                      syncedLabels.push(label);
-                      callback();
-                    }
-                  });
-                },
-                initialContainer: foundElement,
+          const closeWindow = () => {
+            if (document.querySelectorAll(".AccountView.open").length) {
+              setTimeout(closeWindow, 50);
+            } else {
+              chrome.runtime.sendMessage({ event: "mint-sync-complete" });
+              if (!debug.isEnabled()) window.close();
+            }
+          };
+
+          const callback = () => {
+            if (syncedLabels.length === 4) {
+              debug.log(`Fields updated. Attempting to save.`);
+              const saveButtons = document.querySelectorAll(".saveButton");
+              saveButtons.forEach((button) => {
+                debug.log(`Clicking save`, button);
+                button.removeAttribute("disabled");
+                (button as HTMLInputElement).click();
               });
-            },
-          });
-        };
+              closeWindow();
+            }
+          };
 
-        if (request.uninvested_cash) {
-          cash = parseFloat(request.uninvested_cash);
-        }
-        setRobinhoodAmount("Cash", cash);
+          const setRobinhoodAmount = (label, amount) => {
+            debug.log(`Attempting to set ${label} to ${amount}`);
+            waitForElement({
+              selector: ".OtherPropertyView",
+              onError: handleError,
+              withText: `Robinhood ${label}`,
+              callback: (foundElement) => {
+                debug.log(`Expanding property ${label}`, foundElement);
+                foundElement.querySelector("span").click();
 
-        if (request.crypto) {
-          crypto = parseFloat(request.crypto);
-        }
-        setRobinhoodAmount("Crypto", crypto);
+                waitForElement({
+                  selector: "input",
+                  onError: handleError,
+                  callback: () => {
+                    const inputs = foundElement.querySelectorAll("input");
+                    inputs.forEach((foundInput) => {
+                      if (foundInput.getAttribute("name") === "value") {
+                        debug.log(`Found ${label} input, setting amount`, foundInput);
+                        foundInput.value = amount;
+                        syncedLabels.push(label);
+                        callback();
+                      }
+                    });
+                  },
+                  initialContainer: foundElement,
+                });
+              },
+            });
+          };
 
-        if (request.equities) {
-          stocks = parseFloat(request.equities) - cash;
-        }
-        setRobinhoodAmount("Stocks", stocks);
-
-        if (request.total_equity) {
-          const combined = stocks + cash + crypto;
-          const total = parseFloat(request.total_equity);
-          if (total > combined) {
-            other = total - combined;
+          if (request.uninvested_cash) {
+            cash = parseFloat(request.uninvested_cash);
           }
-          setRobinhoodAmount("Other", other);
-        }
+          setRobinhoodAmount("Cash" + subLabel, cash);
+
+          if (request.crypto) {
+            crypto = parseFloat(request.crypto);
+          }
+          setRobinhoodAmount("Crypto" + subLabel, crypto);
+
+          if (request.equities) {
+            stocks = parseFloat(request.equities) - cash;
+          }
+          setRobinhoodAmount("Stocks" + subLabel, stocks);
+
+          if (request.total_equity) {
+            const combined = stocks + cash + crypto;
+            const total = parseFloat(request.total_equity);
+            if (total > combined) {
+              other = total - combined;
+            }
+            setRobinhoodAmount("Other" + subLabel, other);
+          }
+        });
       },
     });
   }
