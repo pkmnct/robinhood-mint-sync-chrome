@@ -238,6 +238,34 @@ const eventHandlers = {
     chrome.storage.sync.set({ needsOldPropertyRemoved: true });
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
+  // This event is emitted by the Mint property check content script.
+  "mint-property-non-multiple-remove": ({ sender }: eventHandler) => {
+    debug.log("mint-property-non-multiple-remove event");
+    chrome.tabs.sendMessage(mintTab, {
+      status:
+        "Your account appears to have data from a non multiple account setup. Please remove the old 'Robinhood Cash', 'Robinhood Stocks', 'Robinhood Crypto' & 'Robinhood Other' properties from Mint to prevent duplication of your portfolio balance. Reload the overview to sync after removing the property.",
+      persistent: true,
+      link: "https://mint.intuit.com/settings.event?filter=property",
+      linkText: "Mint Properties",
+      newTab: true,
+    });
+    chrome.storage.sync.set({ needsOldPropertyRemoved: true });
+    if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
+  },
+  // This event is emitted by the Mint property check content script.
+  "mint-property-non-single-remove": ({ sender }: eventHandler) => {
+    debug.log("mint-property-non-multiple-remove event");
+    chrome.tabs.sendMessage(mintTab, {
+      status:
+        "Your account appears to have data from a multiple account setup. Please remove the old 'Robinhood Cash - [ACCOUNT_ NAME]', 'Robinhood Stocks - [ACCOUNT_ NAME]', 'Robinhood Crypto - [ACCOUNT_ NAME]' & 'Robinhood Other - [ACCOUNT_ NAME]' properties from Mint to prevent duplication of your portfolio balance. Reload the overview to sync after removing the property.",
+      persistent: true,
+      link: "https://mint.intuit.com/settings.event?filter=property",
+      linkText: "Mint Properties",
+      newTab: true,
+    });
+    chrome.storage.sync.set({ needsOldPropertyRemoved: true });
+    if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
+  },
 };
 
 chrome.runtime.onMessage.addListener((message, sender) => {

@@ -54,6 +54,7 @@ chrome.storage.sync.get(
     checkboxMultipleAccounts.addEventListener("change", () => {
       chrome.storage.sync.set({
         multipleAccountsEnabled: checkboxMultipleAccounts.checked,
+        propertiesSetup: false,
       });
 
       // Clear out wrapper && re populate if needed.
