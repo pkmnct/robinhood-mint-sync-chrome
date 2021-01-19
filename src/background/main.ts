@@ -149,11 +149,15 @@ const eventHandlers = {
     }
   },
   // This event is emitted by the Mint property update content script.
-  "mint-sync-complete": () => {
+  "mint-sync-complete": ({ message }) => {
     debug.log("mint-sync-complete event");
     chrome.storage.sync.set({ syncTime: new Date().toString() });
+    let account = "";
+    if (message.account) {
+      account = " " + message.account; // TODO: sanitize
+    }
     chrome.tabs.sendMessage(mintTab, {
-      status: "Sync Complete! Reload to see the change.",
+      status: "Sync Complete! Reload to see the change." + account,
       link: "/overview.event",
       linkText: "Reload",
       persistent: true,

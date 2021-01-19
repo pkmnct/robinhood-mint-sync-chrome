@@ -44,7 +44,10 @@ chrome.runtime.onMessage.addListener((request) => {
             if (document.querySelectorAll(".AccountView.open").length) {
               setTimeout(closeWindow, 50);
             } else {
-              chrome.runtime.sendMessage({ event: "mint-sync-complete" });
+              chrome.runtime.sendMessage({
+                event: "mint-sync-complete",
+                account: match ? request.accountName : null,
+              });
               if (!debug.isEnabled()) window.close();
             }
           };
