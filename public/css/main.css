@@ -86,3 +86,7 @@ ul.actions.special.special {
 #footer > * {
   min-width: calc(50% - 1em);
 }
+
+.version {
+  margin-bottom: 5em;
+}
