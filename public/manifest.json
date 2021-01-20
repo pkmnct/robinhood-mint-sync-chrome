@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "Robinhood Mint Sync for Chrome",
+  "name": "Robinhood Mint Sync",
   "description": "Automatically add your Robinhood portfolio to Mint",
   "version": "3.3.1",
   "author": "George Walker",
@@ -24,7 +24,7 @@
       "128": "images/icon128.png",
       "512": "images/icon512.png"
     },
-    "default_title": "Robinhood Mint Sync for Chrome"
+    "default_title": "Robinhood Mint Sync"
   },
   "content_scripts": [
     {

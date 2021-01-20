@@ -155,7 +155,7 @@ const eventHandlers = {
       ({ syncTime, propertiesSetup, needsOldPropertyRemoved, updated }) => {
         if (updated) {
           chrome.tabs.sendMessage(mintTab, {
-            status: "Robinhood Mint Sync for Chrome has updated.",
+            status: "Robinhood Mint Sync has updated.",
             persistent: true,
             link: urls.extension.changelog,
             linkText: "View Changelog",

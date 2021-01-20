@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/pkmnct/robinhood-mint-sync-chrome/master/public/images/icon512.png" alt="Mint and Robinhood Sync Icon" width="128" height="128">
 
-# Robinhood Mint Sync for Chrome
+# Robinhood Mint Sync
 
 A Chrome Extension that allows you to automatically sync your Robinhood portfolio balance with your Mint account. It will add the balance as a _collectible_ in Mint.
 
