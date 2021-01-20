@@ -59,32 +59,43 @@ const eventHandlers = {
   // This event is emitted by the main Robinhood content script.
   "robinhood-portfolio-scraped": ({ sender, message }: eventHandler) => {
     debug.log("robinhood-portfolio-scraped event");
-    // Trigger the Mint portfolio update content script
-    chrome.tabs.create(
-      {
-        url: urls.mint.properties.update,
-        active: false,
-      },
-      (tab) => {
-        debug.log("waiting for Mint tab to load");
-        const checkIfLoaded = () => {
-          if (!tab) {
-            clearInterval(sendMessageInterval);
-            debug.log("Unexpected: Tab was not found. Clearing interval to prevent endless loop. Did the tab get closed?");
-          } else {
-            chrome.tabs.get(tab.id, (tab) => {
-              if (tab.status === "complete") {
-                // Once the tab is loaded, pass the message to it
-                chrome.tabs.sendMessage(tab.id, message);
-                clearInterval(sendMessageInterval);
-                debug.log("Mint tab loaded");
-              }
-            });
-          }
-        };
-        const sendMessageInterval = setInterval(checkIfLoaded, 200);
-      }
-    );
+
+    if (message.error) {
+      debug.error(message.error);
+      chrome.tabs.sendMessage(mintTab, {
+        status: "Error getting your portfolio from Robinhood. Please reload and try to sync again.",
+        link: "/overview.event",
+        linkText: "Reload",
+        persistent: true,
+      });
+    } else {
+      // Trigger the Mint portfolio update content script
+      chrome.tabs.create(
+        {
+          url: urls.mint.properties.update,
+          active: false,
+        },
+        (tab) => {
+          debug.log("waiting for Mint tab to load");
+          const checkIfLoaded = () => {
+            if (!tab) {
+              clearInterval(sendMessageInterval);
+              debug.log("Unexpected: Tab was not found. Clearing interval to prevent endless loop. Did the tab get closed?");
+            } else {
+              chrome.tabs.get(tab.id, (tab) => {
+                if (tab.status === "complete") {
+                  // Once the tab is loaded, pass the message to it
+                  chrome.tabs.sendMessage(tab.id, message);
+                  clearInterval(sendMessageInterval);
+                  debug.log("Mint tab loaded");
+                }
+              });
+            }
+          };
+          const sendMessageInterval = setInterval(checkIfLoaded, 200);
+        }
+      );
+    }
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the Mint property create content script.
