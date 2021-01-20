@@ -95,26 +95,24 @@ const scrapeData = async () => {
  * Initialize the content script on Robinhood
  */
 const init = () => {
-  window.addEventListener("load", () => {
-    new Overlay("Getting data from Robinhood...", "This window will automatically close when the sync is complete");
-    const checkIfLoggedIn = async () => {
-      debug.log("Waiting for page to load");
-      if (document.location.pathname.includes("/account")) {
-        clearInterval(checkIfLoggedInInterval);
-        debug.log("Page loaded. Appears to be logged in.");
-        const data = await scrapeData();
-        debug.log("Scraped data", data);
-        chrome.runtime.sendMessage(data);
-      } else if (document.location.pathname.includes("/login")) {
-        clearInterval(checkIfLoggedInInterval);
-        debug.log("Page loaded. Appears to be logged out.");
-        chrome.runtime.sendMessage({
-          event: "robinhood-login-needed",
-        });
-      }
-    };
-    const checkIfLoggedInInterval = setInterval(checkIfLoggedIn, 500);
-  });
+  new Overlay("Getting data from Robinhood...", "This window will automatically close when the sync is complete");
+  const checkIfLoggedIn = async () => {
+    debug.log("Waiting for page to load");
+    if (document.location.pathname.includes("/account")) {
+      clearInterval(checkIfLoggedInInterval);
+      debug.log("Page loaded. Appears to be logged in.");
+      const data = await scrapeData();
+      debug.log("Scraped data", data);
+      chrome.runtime.sendMessage(data);
+    } else if (document.location.pathname.includes("/login")) {
+      clearInterval(checkIfLoggedInInterval);
+      debug.log("Page loaded. Appears to be logged out.");
+      chrome.runtime.sendMessage({
+        event: "robinhood-login-needed",
+      });
+    }
+  };
+  const checkIfLoggedInInterval = setInterval(checkIfLoggedIn, 500);
 };
 
 init();

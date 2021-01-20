@@ -6,7 +6,7 @@ export class Overlay {
       "position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.75); text-align: center; padding-top: 25vh; color: #fff; z-index: 9999999999;"
     );
     this.wrapper.setAttribute("role", "dialog");
-    this.wrapper.setAttribute("aria-label", "Robinhood Mint Sync for Chrome");
+    this.wrapper.setAttribute("aria-label", "Robinhood Mint Sync");
   };
 
   constructor(headerText: string, messageText: string) {

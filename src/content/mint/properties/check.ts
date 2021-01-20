@@ -63,26 +63,24 @@ const setupProperties = () => {
   });
 };
 
-window.addEventListener("load", () => {
-  debug.log("Waiting for .OtherPropertyView");
-  waitForElement({
-    selector: ".OtherPropertyView",
-    failureAttempts: 20,
-    callback: (result) => {
-      debug.log("Found Property View. Setting up properties.", result);
-      setupProperties();
-    },
-    onError: () => {
-      // If we don't find the OtherPropertyView, check if no properties are set up
-      debug.log("Did not find property view. Checking for zeroState");
-      waitForElement({
-        selector: ".zeroState",
-        callback: () => {
-          setupProperties();
-        },
-        onError: (error) => debug.error("Did not find zero state", error),
-        failureAttempts: 1, // We should fail right away if it doesn't exist. It's already waited many seconds for OtherPropertyView
-      });
-    },
-  });
+debug.log("Waiting for .OtherPropertyView");
+waitForElement({
+  selector: ".OtherPropertyView",
+  failureAttempts: 20,
+  callback: (result) => {
+    debug.log("Found Property View. Setting up properties.", result);
+    setupProperties();
+  },
+  onError: () => {
+    // If we don't find the OtherPropertyView, check if no properties are set up
+    debug.log("Did not find property view. Checking for zeroState");
+    waitForElement({
+      selector: ".zeroState",
+      callback: () => {
+        setupProperties();
+      },
+      onError: (error) => debug.error("Did not find zero state", error),
+      failureAttempts: 1, // We should fail right away if it doesn't exist. It's already waited many seconds for OtherPropertyView
+    });
+  },
 });
