@@ -1,5 +1,6 @@
 import { Overlay } from "../../utilities/overlay";
 import { Debug } from "../../utilities/debug";
+import { urls } from "../../urls";
 
 const debug = new Debug("content", "Robinhood - Main");
 
@@ -54,9 +55,8 @@ const scrapeData = async () => {
 
   try {
     const access_token = await getBearerToken();
-    const api_url = "https://phoenix.robinhood.com/accounts/unified";
 
-    const response = await fetch(api_url, {
+    const response = await fetch(urls.robinhood.api, {
       method: "GET",
       headers: new Headers({
         authorization: `Bearer ${access_token}`,
