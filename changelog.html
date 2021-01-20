@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Robinhood Mint Sync for Chrome - Changelog</title>
+    <title>Robinhood Mint Sync - Changelog</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="external/stellar/main.css" />
@@ -14,7 +14,7 @@
       <!-- Header -->
       <header id="header">
         <h1>Changelog</h1>
-        <p>Robinhood Mint Sync for Chrome</p>
+        <p>Robinhood Mint Sync</p>
       </header>
 
       <!-- Nav -->
@@ -34,7 +34,7 @@
               <header class="major">
                 <h2>What's new in this release</h2>
               </header>
-              <p>Accessibility improvements</p>
+              <p>Fixed some issues that could cause sync to fail. Add support for Firefox. Add a button to manually perform initial setup.</p>
             </div>
           </div>
         </section>
@@ -44,6 +44,19 @@
           <header class="major">
             <h2>Version History</h2>
           </header>
+          <div class="version">
+            <h3>Version 3.4.0</h3>
+            <h4>Bug Fixes</h4>
+            <ul>
+              <li>Fixed an issue where the "Other" Robinhood balance may not set, causing the save to not occur./li></li>
+              <li>Fixed an issue where, if the Robinhood scrape failed, the Mint properties would be set to $0.</li>
+            </ul>
+            <h4>New Features</h4>
+            <ul>
+              <li>Support for Firefox added.</li>
+              <li>Settings page now has a button to manually trigger an initial Mint setup (and sync).</li>
+            </ul>
+          </div>
           <div class="version">
             <h3>Version 3.3.1</h3>
             <h4>Bug Fixes</h4>
