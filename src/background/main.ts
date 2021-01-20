@@ -145,7 +145,7 @@ const eventHandlers = {
     }
   },
   // This event is emitted by the Mint property update content script.
-  "mint-sync-complete": () => {
+  "mint-sync-complete": ({ sender }: eventHandler) => {
     debug.log("mint-sync-complete event");
     chrome.storage.sync.set({ syncTime: new Date().toString() });
     chrome.tabs.sendMessage(mintTab, {
@@ -154,6 +154,7 @@ const eventHandlers = {
       linkText: "Reload",
       persistent: true,
     });
+    if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the main Mint content script
   "mint-opened": ({ sender }: eventHandler) => {

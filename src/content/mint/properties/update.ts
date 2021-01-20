@@ -25,12 +25,12 @@ chrome.runtime.onMessage.addListener((request) => {
         let other = 0;
         const syncedLabels = [];
 
-        const closeWindow = () => {
+        const onComplete = () => {
+          // Wait for the saves to complete
           if (document.querySelectorAll(".AccountView.open").length) {
-            setTimeout(closeWindow, 50);
+            setTimeout(onComplete, 50);
           } else {
             chrome.runtime.sendMessage({ event: "mint-sync-complete" });
-            if (!debug.isEnabled()) window.close();
           }
         };
 
@@ -43,7 +43,7 @@ chrome.runtime.onMessage.addListener((request) => {
               button.removeAttribute("disabled");
               (button as HTMLInputElement).click();
             });
-            closeWindow();
+            onComplete();
           }
         };
 
@@ -98,8 +98,8 @@ chrome.runtime.onMessage.addListener((request) => {
           if (total > combined) {
             other = total - combined;
           }
-          setRobinhoodAmount("Other", other);
         }
+        setRobinhoodAmount("Other", other);
       },
     });
   }
