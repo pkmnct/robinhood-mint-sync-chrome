@@ -7,7 +7,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "robinhood-mint-sync@georgewwalker.com",
-      "strict_min_version": "42.0"
+      "strict_min_version": "48"
     }
   },
   "icons": {
@@ -17,11 +17,7 @@
     "512": "images/icon512.png"
   },
   "background": {
-    "scripts": [
-      "js/background/main.js",
-      "js/background/update_install_listener.js",
-      "js/background/browser_action.js"
-    ]
+    "scripts": ["js/background/main.js", "js/background/update_install_listener.js", "js/background/browser_action.js"]
   },
   "browser_action": {
     "default_icon": {
@@ -42,31 +38,21 @@
       "js": ["js/content/robinhood/login.js"]
     },
     {
-      "matches": [
-        "https://mint.intuit.com/settings.event?filter=property&addRobinhood=true"
-      ],
+      "matches": ["https://mint.intuit.com/settings.event?filter=property&addRobinhood=true"],
       "js": ["js/content/mint/properties/update.js"]
     },
     {
-      "matches": [
-        "https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true"
-      ],
+      "matches": ["https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true"],
       "js": ["js/content/mint/properties/check.js"]
     },
     {
-      "matches": [
-        "https://mint.intuit.com/settings.event?filter=property&createProperty=true&property=*"
-      ],
+      "matches": ["https://mint.intuit.com/settings.event?filter=property&createProperty=true&property=*"],
       "js": ["js/content/mint/properties/create.js"]
     },
     {
       "matches": ["https://mint.intuit.com/overview.event*"],
       "js": ["js/external/noty/noty.min.js", "js/content/mint/main.js"],
-      "css": [
-        "css/notification.css",
-        "js/external/noty/noty.css",
-        "js/external/noty/themes/relax.css"
-      ]
+      "css": ["css/notification.css", "js/external/noty/noty.css", "js/external/noty/themes/relax.css"]
     },
     {
       "matches": ["https://mint.intuit.com/*"],
