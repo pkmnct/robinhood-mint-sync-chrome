@@ -90,3 +90,11 @@ ul.actions.special.special {
 .version {
   margin-bottom: 5em;
 }
+
+#footer .actions {
+  margin: 0;
+}
+
+#footer .actions li {
+  padding: 0;
+}
