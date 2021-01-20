@@ -2,6 +2,7 @@ export const urls = {
   robinhood: {
     login: "https://robinhood.com/login?redirectMint=true",
     scrape: "https://robinhood.com/account?syncMint=true",
+    api: "https://phoenix.robinhood.com/accounts/unified",
   },
   mint: {
     overview: "https://mint.intuit.com/overview.event",
