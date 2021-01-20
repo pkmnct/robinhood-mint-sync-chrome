@@ -2,7 +2,7 @@
 
 # Robinhood Mint Sync
 
-A Browser Extension that allows you to automatically sync your Robinhood portfolio balance with your Mint account. It will add the balance as a _collectible_ in Mint.
+A browser extension that allows you to automatically sync your Robinhood portfolio balance with your Mint account. It will add the balance as a _collectible_ in Mint.
 
 [View the project site](https://pkmnct.github.io/robinhood-mint-sync-chrome/)
 
@@ -10,7 +10,11 @@ A Browser Extension that allows you to automatically sync your Robinhood portfol
 
 The extension is offered through the [Chrome Web Store](https://chrome.google.com/webstore/detail/robinhood-mint-integratio/mogflmdandlpjobbddhopcggkjoggpdo):
 
-[<img src="https://raw.githubusercontent.com/pkmnct/robinhood-mint-sync-chrome/master/images/chrome-web-store.png" alt="Available in the Chrome Web Store" width="248" height="75">](https://chrome.google.com/webstore/detail/robinhood-mint-integratio/mogflmdandlpjobbddhopcggkjoggpdo)
+[<img src="https://raw.githubusercontent.com/pkmnct/robinhood-mint-sync-chrome/master/images/chrome-web-store.png" alt="" width="248" height="75">](https://chrome.google.com/webstore/detail/robinhood-mint-integratio/mogflmdandlpjobbddhopcggkjoggpdo)
+
+The extension is available through the [Firefox Browser Add-ons website](https://addons.mozilla.org/en-US/firefox/addon/robinhood-mint-sync/):
+
+[<img src="https://raw.githubusercontent.com/pkmnct/robinhood-mint-sync-chrome/master/images/firefox-button.png" alt="">](https://addons.mozilla.org/en-US/firefox/addon/robinhood-mint-sync/)
 
 ## How to use the Extension
 

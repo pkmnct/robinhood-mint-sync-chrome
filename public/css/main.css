@@ -98,3 +98,11 @@ ul.actions.special.special {
 #footer .actions li {
   padding: 0;
 }
+
+.install-source {
+  margin-bottom: 5em;
+}
+
+.install-source:last-of-type {
+  margin-bottom: 0;
+}
