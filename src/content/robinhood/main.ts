@@ -1,5 +1,6 @@
 import { Overlay } from "../../utilities/overlay";
 import { Debug } from "../../utilities/debug";
+import { urls } from "../../urls";
 
 const debug = new Debug("content", "Robinhood - Main");
 
@@ -38,7 +39,7 @@ export interface Message {
   crypto?: string;
   equities?: string;
   total_equity?: string;
-  error?: boolean;
+  error?: Error;
   newProperties?: string;
   property?: string;
 }
@@ -54,9 +55,8 @@ const scrapeData = async () => {
 
   try {
     const access_token = await getBearerToken();
-    const api_url = "https://phoenix.robinhood.com/accounts/unified";
 
-    const response = await fetch(api_url, {
+    const response = await fetch(urls.robinhood.api, {
       method: "GET",
       headers: new Headers({
         authorization: `Bearer ${access_token}`,
@@ -85,7 +85,8 @@ const scrapeData = async () => {
 
     return returnValue;
   } catch (error) {
-    returnValue.error = true;
+    returnValue.error = error;
+    console.error(error);
     return returnValue;
   }
 };
@@ -101,6 +102,7 @@ const init = () => {
       clearInterval(checkIfLoggedInInterval);
       debug.log("Page loaded. Appears to be logged in.");
       const data = await scrapeData();
+      debug.log("Scraped data", data);
       chrome.runtime.sendMessage(data);
     } else if (document.location.pathname.includes("/login")) {
       clearInterval(checkIfLoggedInInterval);
