@@ -1,6 +1,11 @@
-import { Message } from "../content/robinhood/main";
-import { urls } from "../urls";
+// Constants.
+import { URLS } from "../constants/urls";
+import { EventHandler } from "../constants/interfaces";
+
+// Utilities.
 import { Debug } from "../utilities/debug";
+
+// -------------------------------------------------------------------------------
 
 const debug = new Debug("background", "Main");
 
@@ -8,11 +13,6 @@ const debug = new Debug("background", "Main");
 let mintTab: undefined | number;
 let newProperties = 0;
 let newPropertiesComplete = 0;
-
-interface eventHandler {
-  message: Message;
-  sender: chrome.runtime.MessageSender;
-}
 
 // The key of the handler should match the message.event value
 const eventHandlers = {
@@ -26,7 +26,7 @@ const eventHandlers = {
 
     // Trigger the sync
     chrome.tabs.create({
-      url: urls.robinhood.scrape,
+      url: URLS.robinhood.scrape,
       active: false,
     });
   },
@@ -41,16 +41,16 @@ const eventHandlers = {
 
     // Trigger the sync
     chrome.tabs.create({
-      url: urls.robinhood.scrape,
+      url: URLS.robinhood.scrape,
       active: false,
     });
   },
   // This event is emitted by the main Robinhood content script.
-  "robinhood-login-needed": ({ sender }: eventHandler) => {
+  "robinhood-login-needed": ({ sender }: EventHandler) => {
     debug.log("robinhood-login-needed event");
     chrome.tabs.sendMessage(mintTab, {
       status: "You need to log in to Robinhood",
-      link: urls.robinhood.login,
+      link: URLS.robinhood.login,
       linkText: "Login",
       persistent: true,
       newTab: true,
@@ -58,7 +58,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the login Robinhood content script.
-  "robinhood-login-success": ({ sender }: eventHandler) => {
+  "robinhood-login-success": ({ sender }: EventHandler) => {
     debug.log("robinhood-login-success event");
 
     // Close the Robinhood tab logged in from
@@ -72,7 +72,7 @@ const eventHandlers = {
     });
   },
   // This event is emitted by the main Robinhood content script.
-  "robinhood-portfolio-scraped": ({ sender, message }: eventHandler) => {
+  "robinhood-portfolio-scraped": ({ sender, message }: EventHandler) => {
     debug.log("robinhood-portfolio-scraped event");
 
     if (message.error) {
@@ -87,7 +87,7 @@ const eventHandlers = {
       // Trigger the Mint portfolio update content script
       chrome.tabs.create(
         {
-          url: urls.mint.properties.update,
+          url: URLS.mint.properties.update,
           active: false,
         },
         (tab) => {
@@ -114,7 +114,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the Mint property create content script.
-  "mint-property-added": ({ sender }: eventHandler) => {
+  "mint-property-added": ({ sender }: EventHandler) => {
     debug.log("mint-property-added event");
     newPropertiesComplete++;
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
@@ -142,7 +142,7 @@ const eventHandlers = {
     });
   },
   // This event is emitted by the Mint property check content script.
-  "mint-property-setup-complete": ({ sender, message }: eventHandler) => {
+  "mint-property-setup-complete": ({ sender, message }: EventHandler) => {
     debug.log("mint-property-setup-complete event");
 
     debug.log("mint-property-setup-complete setting storage");
@@ -160,7 +160,7 @@ const eventHandlers = {
     }
   },
   // This event is emitted by the Mint property update content script.
-  "mint-sync-complete": ({ message, sender }: eventHandler) => {
+  "mint-sync-complete": ({ message, sender }: EventHandler) => {
     debug.log("mint-sync-complete event");
     chrome.storage.sync.set({ syncTime: new Date().toString() });
     let account = "";
@@ -176,7 +176,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the main Mint content script
-  "mint-opened": ({ sender }: eventHandler) => {
+  "mint-opened": ({ sender }: EventHandler) => {
     debug.log("mint-opened event");
     // Store a reference to the mint tab to be able to show the notifications
     mintTab = sender.tab.id;
@@ -188,7 +188,7 @@ const eventHandlers = {
           chrome.tabs.sendMessage(mintTab, {
             status: "Robinhood Mint Sync has updated.",
             persistent: true,
-            link: urls.extension.changelog,
+            link: URLS.extension.changelog,
             linkText: "View Changelog",
             newTab: true,
           });
@@ -197,7 +197,7 @@ const eventHandlers = {
         }
         if (needsOldPropertyRemoved) {
           chrome.tabs.create({
-            url: urls.mint.properties.check,
+            url: URLS.mint.properties.check,
             active: false,
           });
         } else if (!propertiesSetup || !syncTime) {
@@ -205,7 +205,7 @@ const eventHandlers = {
           chrome.tabs.sendMessage(mintTab, {
             status: "You have not yet performed a sync on this device. You must run an initial setup.",
             persistent: false,
-            link: urls.mint.properties.check,
+            link: URLS.mint.properties.check,
             linkText: "Set up",
             newTab: true,
           });
@@ -219,7 +219,7 @@ const eventHandlers = {
           } else {
             chrome.tabs.sendMessage(mintTab, {
               status: "Sync performed in the last hour. Not syncing.",
-              link: urls.mint.forceSync,
+              link: URLS.mint.forceSync,
               linkText: "Sync",
               persistent: false,
             });
@@ -229,15 +229,15 @@ const eventHandlers = {
     );
   },
   // This event is emitted by the Mint property check content script.
-  "mint-create": ({ message }: eventHandler) => {
+  "mint-create": ({ message }: EventHandler) => {
     debug.log("mint-create event");
     chrome.tabs.create({
-      url: urls.mint.properties.create + "&property=" + message.property,
+      url: URLS.mint.properties.create + "&property=" + message.property,
       active: false,
     });
   },
   // This event is emitted by the Mint property check content script.
-  "mint-property-remove": ({ sender }: eventHandler) => {
+  "mint-property-remove": ({ sender }: EventHandler) => {
     debug.log("mint-property-remove event");
     chrome.tabs.sendMessage(mintTab, {
       status:
@@ -251,7 +251,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the Mint property check content script.
-  "mint-property-non-multiple-remove": ({ sender }: eventHandler) => {
+  "mint-property-non-multiple-remove": ({ sender }: EventHandler) => {
     debug.log("mint-property-non-multiple-remove event");
     chrome.tabs.sendMessage(mintTab, {
       status:
@@ -265,7 +265,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the Mint property check content script.
-  "mint-property-non-single-remove": ({ sender }: eventHandler) => {
+  "mint-property-non-single-remove": ({ sender }: EventHandler) => {
     debug.log("mint-property-non-multiple-remove event");
     chrome.tabs.sendMessage(mintTab, {
       status:

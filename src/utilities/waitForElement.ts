@@ -1,31 +1,14 @@
+// Constants.
+import { WaitForElementOptions } from '../constants/interfaces';
+
+// -------------------------------------------------------------------------------
+
 /**
  * waitForElement - Tries to wait for an element to appear on the page and then calls
  * the callback function. If it fails too many times, calls the onError callback function
  * 
  * TODO: Refactor this to return a promise
  */
-export interface WaitForElementOptions {
-  // Selector to search for
-  selector: string;
-  // Text that must be in the selector (Optional)
-  withText?: string | null;
-  // Callback
-  callback: (result: HTMLElement, callbackData: object) => void;
-  // A way to pass some additonal data to the callback
-  callbackData?: object;
-  // Error Callback
-  onError: (result: Error) => void;
-  // Container to limit search to (Optional)
-  initialContainer?: Element;
-  // How often (in ms) to check for the new element. Defaults to 500ms
-  checkInterval?: number;
-  // Allowed number of failure attempts. Default is 50. (Optional)
-  failureAttempts?: number;
-  // Internal - How many loops we've run through (Optional)
-  // TODO: perhaps convert waitForElement to class so this can be private
-  _timesRun?: number;
-}
-
 export const waitForElement = (options: WaitForElementOptions): void => {
   const { selector, withText, onError, callback, initialContainer, failureAttempts = 50, _timesRun = 0, checkInterval = 500, callbackData = {} } = options;
 
@@ -43,7 +26,7 @@ export const waitForElement = (options: WaitForElementOptions): void => {
   if (elements.length) {
     // If we don't need specific text to have appeared, we can just return the first of what we found.
     if (!withText) {
-      callback(elements[0] as HTMLElement);
+      callback(elements[0] as HTMLElement, callbackData);
       return;
     }
 

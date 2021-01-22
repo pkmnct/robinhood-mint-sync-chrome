@@ -1,6 +1,12 @@
+// Constants.
+import { Message } from '../../constants/interfaces';
+import { URLS } from "../../constants/urls";
+
+// Utilities.
 import { Overlay } from "../../utilities/overlay";
 import { Debug } from "../../utilities/debug";
-import { urls } from "../../urls";
+
+// -------------------------------------------------------------------------------
 
 const debug = new Debug("content", "Robinhood - Main");
 
@@ -32,19 +38,6 @@ const getBearerToken = () =>
     };
   });
 
-export interface Message {
-  event: string;
-  debug?: unknown;
-  uninvested_cash?: string;
-  crypto?: string;
-  equities?: string;
-  total_equity?: string;
-  error?: Error;
-  newProperties?: string;
-  property?: string;
-  accountName?: string;
-}
-
 /**
  * Function to scrape the portfolio and cash values
  */
@@ -57,7 +50,7 @@ const scrapeData = async () => {
   try {
     const access_token = await getBearerToken();
 
-    const response = await fetch(urls.robinhood.api, {
+    const response = await fetch(URLS.robinhood.api, {
       method: "GET",
       headers: new Headers({
         authorization: `Bearer ${access_token}`,

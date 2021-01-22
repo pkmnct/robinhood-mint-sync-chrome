@@ -1,6 +1,10 @@
 // Update
 // https://mint.intuit.com/settings.event?filter=property
 
+// Constants.
+import { callbackDataOptions } from "../../../constants/interfaces";
+
+// Utilities.
 import { Overlay } from "../../../utilities/overlay";
 import { Debug } from "../../../utilities/debug";
 import { waitForElement } from "../../../utilities/waitForElement";
@@ -22,7 +26,7 @@ const onMesageListener = (request) => {
   waitForElement({
     selector: ".PropertyTabView",
     onError: handleError,
-    callback: propertyTabViewCallback,
+    callback: syncProperties,
     callbackData: { request },
   });
 }
@@ -30,7 +34,7 @@ const onMesageListener = (request) => {
 const setRobinhoodAmount = ({ label, amount, syncedLabels, match, request }) => {
   debug.log(`Attempting to set ${label} to ${amount}`);
   // Bail if amount is null, means we got bad data.
-  if(amount === null) {
+  if(amount === null || amount === NaN) {
     debug.log(`${amount} Null for ${label}. Bailing.`);
     syncedLabels.push(label);
     // TODO: could call this with an arg that informs the user not everything was synced.
@@ -95,8 +99,13 @@ const updatesComplete = ({ match, request }) => {
     account: match ? request.accountName : null,
   });
 };
-
-const propertyTabViewCallback = (propertyViewElement,  { request }) => {
+/**
+ * 
+ * @param propertyViewElement 
+ * @param callbackData 
+ */
+const syncProperties = (propertyViewElement: HTMLElement,  callbackData: callbackDataOptions) => {
+  const { request = {} } = callbackData;
   debug.log("Property Tab View loaded.", propertyViewElement);
   debug.log("Account Name: ", request.accountName);
 
@@ -164,10 +173,14 @@ const propertyTabViewCallback = (propertyViewElement,  { request }) => {
     });
 
     // Everything else
-    if (request.total_equity && stocks !== null && cash !== null && crypto!== null) {
+    if (request.total_equity && 
+      stocks !== null && stocks !== NaN &&
+      cash !== null  &&  cash !== NaN  &&  
+      crypto!== null && crypto!== NaN
+    ) {
       const combined = stocks + cash + crypto;
       const total = parseFloat(request.total_equity);
-      if (total > combined) {
+      if (total !== NaN && total > combined) {
         other = total - combined;
       }
     }
