@@ -72,7 +72,7 @@ waitForElement({
         if (multipleAccountsEnabled && multipleAccounts && multipleAccounts.length) {
           let newProperties = 0;
           multipleAccounts.forEach((account) => {
-            const subLabel = ` - ${account.robinHoodValue}`;
+            const subLabel = ` - ${account.robinHoodAccountName}`;
             newProperties += setupProperties(subLabel);
           });
 

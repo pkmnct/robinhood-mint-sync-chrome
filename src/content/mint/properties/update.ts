@@ -139,7 +139,7 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
     if (multipleAccountsEnabled && multipleAccounts && multipleAccounts.length) {
       // Try to find a match
       isMultipleAccounts = multipleAccounts.some((account) => {
-        if (account.robinHoodValue === request.accountName) {
+        if (account.robinHoodAccountName === request.accountName) {
           return true;
         }
         return false;

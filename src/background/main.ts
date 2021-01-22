@@ -4,6 +4,7 @@ import { EventHandler } from "../constants/interfaces";
 
 // Utilities.
 import { Debug } from "../utilities/debug";
+import { sanitizeInput } from '../utilities/sanitizeInput';
 
 // -------------------------------------------------------------------------------
 
@@ -11,8 +12,10 @@ const debug = new Debug("background", "Main");
 
 // Need to be able to access this regardless of the message.
 let mintTab: undefined | number;
-let newProperties = 0;
-let newPropertiesComplete = 0;
+let newProperties: number = 0;
+let newPropertiesComplete: number = 0;
+
+// -------------------------------------------------------------------------------
 
 // The key of the handler should match the message.event value
 const eventHandlers = {
@@ -150,7 +153,7 @@ const eventHandlers = {
     chrome.storage.sync.set({ syncTime: new Date().toString() });
     let account = "";
     if (message.accountName) {
-      account = message.accountName; // TODO: sanitize
+      account = sanitizeInput(message.accountName); // TODO: sanitize
     }
     chrome.tabs.sendMessage(mintTab, {
       status: `Sync Complete! Synced with ${account}. Reload to see the change.`,
