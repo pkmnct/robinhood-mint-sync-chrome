@@ -12,7 +12,7 @@ export interface Message {
 }
 
 export interface callbackDataOptions {
-  request?: Message,
+  request?: Message;
 }
 
 export interface WaitForElementOptions {
@@ -21,7 +21,7 @@ export interface WaitForElementOptions {
   // Text that must be in the selector (Optional)
   withText?: string | null;
   // Callback
-  callback: (result: HTMLElement, callbackData: object) => void;
+  callback: (result: HTMLElement, callbackData: callbackDataOptions) => void;
   // A way to pass some additonal data to the callback
   callbackData?: callbackDataOptions;
   // Error Callback

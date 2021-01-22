@@ -1,5 +1,5 @@
 // Constants.
-import { Message } from '../../constants/interfaces';
+import { Message } from "../../constants/interfaces";
 import { URLS } from "../../constants/urls";
 
 // Utilities.

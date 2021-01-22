@@ -1,12 +1,12 @@
 // Constants.
-import { WaitForElementOptions } from '../constants/interfaces';
+import { WaitForElementOptions } from "../constants/interfaces";
 
 // -------------------------------------------------------------------------------
 
 /**
  * waitForElement - Tries to wait for an element to appear on the page and then calls
  * the callback function. If it fails too many times, calls the onError callback function
- * 
+ *
  * TODO: Refactor this to return a promise
  */
 export const waitForElement = (options: WaitForElementOptions): void => {

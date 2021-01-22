@@ -29,12 +29,12 @@ const onMesageListener = (request) => {
     callback: syncProperties,
     callbackData: { request },
   });
-}
+};
 
 const setRobinhoodAmount = ({ label, amount, syncedLabels, match, request }) => {
   debug.log(`Attempting to set ${label} to ${amount}`);
   // Bail if amount is null, means we got bad data.
-  if(amount === null || amount === NaN) {
+  if (amount === null || amount === NaN) {
     debug.log(`${amount} Null for ${label}. Bailing.`);
     syncedLabels.push(label);
     // TODO: could call this with an arg that informs the user not everything was synced.
@@ -100,18 +100,18 @@ const updatesComplete = ({ match, request }) => {
   });
 };
 /**
- * 
- * @param propertyViewElement 
- * @param callbackData 
+ *
+ * @param propertyViewElement
+ * @param callbackData
  */
-const syncProperties = (propertyViewElement: HTMLElement,  callbackData: callbackDataOptions) => {
-  const { request = {} } = callbackData;
+const syncProperties = (propertyViewElement: HTMLElement, callbackData: callbackDataOptions) => {
+  const { request } = callbackData;
   debug.log("Property Tab View loaded.", propertyViewElement);
   debug.log("Account Name: ", request.accountName);
 
   chrome.storage.sync.get({ multipleAccountsEnabled: false, multipleAccounts: [] }, (result) => {
     const { multipleAccountsEnabled, multipleAccounts } = result;
-    
+
     // Detect if Multiple Accounts && found a matching account to update
     let match = false;
     if (multipleAccountsEnabled && multipleAccounts && multipleAccounts.length) {
@@ -140,11 +140,11 @@ const syncProperties = (propertyViewElement: HTMLElement,  callbackData: callbac
     if (request.uninvested_cash) {
       cash = parseFloat(request.uninvested_cash);
     }
-    setRobinhoodAmount({ 
-      label: "Cash" + subLabel, 
-      amount: cash, 
+    setRobinhoodAmount({
+      label: "Cash" + subLabel,
+      amount: cash,
       syncedLabels,
-      match, 
+      match,
       request,
     });
 
@@ -152,11 +152,11 @@ const syncProperties = (propertyViewElement: HTMLElement,  callbackData: callbac
     if (request.crypto) {
       crypto = parseFloat(request.crypto);
     }
-    setRobinhoodAmount({ 
-      label: "Crypto" + subLabel, 
-      amount: crypto, 
+    setRobinhoodAmount({
+      label: "Crypto" + subLabel,
+      amount: crypto,
       syncedLabels,
-      match, 
+      match,
       request,
     });
 
@@ -164,20 +164,16 @@ const syncProperties = (propertyViewElement: HTMLElement,  callbackData: callbac
     if (request.equities && cash !== null) {
       stocks = parseFloat(request.equities) - cash;
     }
-    setRobinhoodAmount({ 
-      label: "Stocks" + subLabel, 
-      amount: stocks, 
-      syncedLabels, 
-      match, 
-      request, 
+    setRobinhoodAmount({
+      label: "Stocks" + subLabel,
+      amount: stocks,
+      syncedLabels,
+      match,
+      request,
     });
 
     // Everything else
-    if (request.total_equity && 
-      stocks !== null && stocks !== NaN &&
-      cash !== null  &&  cash !== NaN  &&  
-      crypto!== null && crypto!== NaN
-    ) {
+    if (request.total_equity && stocks !== null && stocks !== NaN && cash !== null && cash !== NaN && crypto !== null && crypto !== NaN) {
       const combined = stocks + cash + crypto;
       const total = parseFloat(request.total_equity);
       if (total !== NaN && total > combined) {
@@ -185,17 +181,16 @@ const syncProperties = (propertyViewElement: HTMLElement,  callbackData: callbac
       }
     }
     setRobinhoodAmount({
-      label: "Other" + subLabel, 
-      amount: other, 
-      syncedLabels, 
-      match, 
-      request, 
+      label: "Other" + subLabel,
+      amount: other,
+      syncedLabels,
+      match,
+      request,
     });
   });
-}
+};
 
-
-// Pop overlay 
+// Pop overlay
 new Overlay("Updating Mint Properties...", "This window will automatically close when the sync is complete");
 
-chrome.runtime.onMessage.addListener( onMesageListener );
+chrome.runtime.onMessage.addListener(onMesageListener);
