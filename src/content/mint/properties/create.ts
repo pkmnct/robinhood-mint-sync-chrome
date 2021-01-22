@@ -1,12 +1,19 @@
+// Utilities.
 import { Overlay } from "../../../utilities/overlay";
 import { waitForElement } from "../../../utilities/waitForElement";
 import { Debug } from "../../../utilities/debug";
+
+// -------------------------------------------------------------------------------
 
 const debug = new Debug("content", "Mint - Properties - Create");
 const handleError = (error: Error) => debug.error(error);
 
 const params = new URLSearchParams(document.location.search);
 const property = params.get("property");
+
+// -------------------------------------------------------------------------------
+
+// TODO: async await to get out of callback hell
 
 if (property) {
   new Overlay(`Adding Robinhood ${property} property to Mint...`, "This window will automatically close when complete.");

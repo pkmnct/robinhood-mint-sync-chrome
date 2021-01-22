@@ -9,6 +9,7 @@ import { callbackDataOptions } from "../constants/interfaces";
  *
  * TODO: Refactor this to return a promise
  * TODO: selector should be set to allow an array of values, and return if any return true.
+ * TODO: perhaps convert to class so _timesRun can be private
  */
 interface WaitForElementOptions {
   // Selector to search for
@@ -28,7 +29,6 @@ interface WaitForElementOptions {
   // Allowed number of failure attempts. Default is 50. (Optional)
   failureAttempts?: number;
   // Internal - How many loops we've run through (Optional)
-  // TODO: perhaps convert waitForElement to class so this can be private
   _timesRun?: number;
 }
 export const waitForElement = (options: WaitForElementOptions): void => {

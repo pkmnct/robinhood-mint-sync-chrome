@@ -1,6 +1,7 @@
 // Check to see if properties are set up, and trigger set up if they are not
 // https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true
 
+// Utilities.
 import { Overlay } from "../../../utilities/overlay";
 import { waitForElement } from "../../../utilities/waitForElement";
 import { Debug } from "../../../utilities/debug";
