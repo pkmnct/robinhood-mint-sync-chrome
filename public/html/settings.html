@@ -85,9 +85,11 @@
             <h2>Multiple Accounts</h2>
           </header>
           <p>
-            TODO: all this text. Probably a warning about not changing these values after the fact or risking data
-            loss.<br />
-            Robinhood Name will probably have to be the Name (First Lase) on the robinhood Account. <br />
+            If you would like to enable syncing for multiple accounts, you can enable it here. <br />
+            Note that this will require you to delete any propeties created before turning on this feature. <br />
+            Similarly, turning off this feature will require you to delete any properties created while it was on. <br />
+            Each row should be the name EXACTLY as it appears on top of the <a href="https://robinhood.com/account">Robinhood Accounts</a> page. <br />
+            Whichever account is logged in at the time of syncing will be updated if found. Only one account can update at a time.
           </p>
           <input type="checkbox" id="setting-multipleAccountsEnabled" name="setting-multipleAccountsEnabled" />
           <label for="setting-multipleAccountsEnabled">Allow Multiple Accounts</label>
@@ -128,5 +130,4 @@
     <script src="/js/external/stellar/main.js"></script>
     <script src="/js/settings.js"></script>
   </body>
-
 </html>
