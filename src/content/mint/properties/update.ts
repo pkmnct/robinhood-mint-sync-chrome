@@ -17,7 +17,7 @@ const onMesageListener = (request) => {
   if (request.event !== "robinhood-portfolio-scraped") {
     return;
   }
-  
+
   debug.log("Waiting for Property Tab View to load");
   waitForElement({
     selector: ".PropertyTabView",
@@ -27,12 +27,83 @@ const onMesageListener = (request) => {
   });
 }
 
+const setRobinhoodAmount = ({ label, amount, syncedLabels, match, request }) => {
+  debug.log(`Attempting to set ${label} to ${amount}`);
+  // Bail if amount is null, means we got bad data.
+  if(amount === null) {
+    debug.log(`${amount} Null for ${label}. Bailing.`);
+    syncedLabels.push(label);
+    // TODO: could call this with an arg that informs the user not everything was synced.
+    checkForUpdateComplete({ syncedLabels, match, request });
+    return;
+  }
+
+  waitForElement({
+    selector: ".OtherPropertyView",
+    onError: handleError,
+    withText: `Robinhood ${label}`,
+    callback: (foundElement) => {
+      debug.log(`Expanding property ${label}`, foundElement);
+      foundElement.querySelector("span").click();
+
+      waitForElement({
+        selector: "input",
+        onError: handleError,
+        callback: () => {
+          const inputs = foundElement.querySelectorAll("input");
+          inputs.forEach((foundInput) => {
+            if (foundInput.getAttribute("name") === "value") {
+              debug.log(`Found ${label} input, setting amount`, foundInput);
+              foundInput.value = amount;
+              syncedLabels.push(label);
+              checkForUpdateComplete({ syncedLabels, match, request });
+            }
+          });
+        },
+        initialContainer: foundElement,
+      });
+    },
+  });
+};
+
+const checkForUpdateComplete = ({ syncedLabels, match, request }) => {
+  // Bail if we haven't synced enough labels yet.
+  if (syncedLabels.length !== 4) {
+    return;
+  }
+
+  debug.log(`Fields updated. Attempting to save.`);
+  const saveButtons = document.querySelectorAll(".saveButton");
+  saveButtons.forEach((button) => {
+    debug.log(`Clicking save`, button);
+    button.removeAttribute("disabled");
+    (button as HTMLInputElement).click();
+  });
+  updatesComplete({ match, request });
+};
+
+const updatesComplete = ({ match, request }) => {
+  // Bail & Recur if no account view
+  if (document.querySelectorAll(".AccountView.open").length) {
+    setTimeout(updatesComplete, 50);
+    return;
+  }
+
+  // Sync complete!
+  chrome.runtime.sendMessage({
+    event: "mint-sync-complete",
+    account: match ? request.accountName : null,
+  });
+};
+
 const propertyTabViewCallback = (propertyViewElement,  { request }) => {
   debug.log("Property Tab View loaded.", propertyViewElement);
   debug.log("Account Name: ", request.accountName);
 
   chrome.storage.sync.get({ multipleAccountsEnabled: false, multipleAccounts: [] }, (result) => {
     const { multipleAccountsEnabled, multipleAccounts } = result;
+    
+    // Detect if Multiple Accounts && found a matching account to update
     let match = false;
     if (multipleAccountsEnabled && multipleAccounts && multipleAccounts.length) {
       // Try to find a match
@@ -44,92 +115,69 @@ const propertyTabViewCallback = (propertyViewElement,  { request }) => {
       });
     }
 
+    // If we have multiple accounts, our label will get it added to the end.
     const subLabel = match ? ` - ${request.accountName}` : "";
 
-    let crypto = 0;
-    let stocks = 0;
-    let cash = 0;
-    let other = 0;
+    // Running label amount.
     const syncedLabels = [];
 
-    const onComplete = () => {
-      if (document.querySelectorAll(".AccountView.open").length) {
-        setTimeout(onComplete, 50);
-      } else {
-        chrome.runtime.sendMessage({
-          event: "mint-sync-complete",
-          account: match ? request.accountName : null,
-        });
-        if (!debug.isEnabled()) window.close();
-      }
-    };
+    // Amounts to set
+    let crypto = null;
+    let stocks = null;
+    let cash = null;
+    let other = null;
 
-    const callback = () => {
-      if (syncedLabels.length === 4) {
-        debug.log(`Fields updated. Attempting to save.`);
-        const saveButtons = document.querySelectorAll(".saveButton");
-        saveButtons.forEach((button) => {
-          debug.log(`Clicking save`, button);
-          button.removeAttribute("disabled");
-          (button as HTMLInputElement).click();
-        });
-        onComplete();
-      }
-    };
-
-    const setRobinhoodAmount = (label, amount) => {
-      debug.log(`Attempting to set ${label} to ${amount}`);
-      waitForElement({
-        selector: ".OtherPropertyView",
-        onError: handleError,
-        withText: `Robinhood ${label}`,
-        callback: (foundElement) => {
-          debug.log(`Expanding property ${label}`, foundElement);
-          foundElement.querySelector("span").click();
-
-          waitForElement({
-            selector: "input",
-            onError: handleError,
-            callback: () => {
-              const inputs = foundElement.querySelectorAll("input");
-              inputs.forEach((foundInput) => {
-                if (foundInput.getAttribute("name") === "value") {
-                  debug.log(`Found ${label} input, setting amount`, foundInput);
-                  foundInput.value = amount;
-                  syncedLabels.push(label);
-                  callback();
-                }
-              });
-            },
-            initialContainer: foundElement,
-          });
-        },
-      });
-    };
-
+    // Cash
     if (request.uninvested_cash) {
       cash = parseFloat(request.uninvested_cash);
     }
-    setRobinhoodAmount("Cash" + subLabel, cash);
+    setRobinhoodAmount({ 
+      label: "Cash" + subLabel, 
+      amount: cash, 
+      syncedLabels,
+      match, 
+      request,
+    });
 
+    // Crypto
     if (request.crypto) {
       crypto = parseFloat(request.crypto);
     }
-    setRobinhoodAmount("Crypto" + subLabel, crypto);
+    setRobinhoodAmount({ 
+      label: "Crypto" + subLabel, 
+      amount: crypto, 
+      syncedLabels,
+      match, 
+      request,
+    });
 
-    if (request.equities) {
+    // Equities
+    if (request.equities && cash !== null) {
       stocks = parseFloat(request.equities) - cash;
     }
-    setRobinhoodAmount("Stocks" + subLabel, stocks);
+    setRobinhoodAmount({ 
+      label: "Stocks" + subLabel, 
+      amount: stocks, 
+      syncedLabels, 
+      match, 
+      request, 
+    });
 
-    if (request.total_equity) {
+    // Everything else
+    if (request.total_equity && stocks !== null && cash !== null && crypto!== null) {
       const combined = stocks + cash + crypto;
       const total = parseFloat(request.total_equity);
       if (total > combined) {
         other = total - combined;
       }
-      setRobinhoodAmount("Other" + subLabel, other);
     }
+    setRobinhoodAmount({
+      label: "Other" + subLabel, 
+      amount: other, 
+      syncedLabels, 
+      match, 
+      request, 
+    });
   });
 }
 
