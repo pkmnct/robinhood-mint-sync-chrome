@@ -2,7 +2,7 @@
 // https://mint.intuit.com/settings.event?filter=property
 
 // Constants.
-import { callbackDataOptions } from "../../../constants/interfaces";
+import { callbackDataOptions, Message } from "../../../constants/interfaces";
 
 // Utilities.
 import { Overlay } from "../../../utilities/overlay";
@@ -16,6 +16,9 @@ const handleError = (error: Error) => debug.error(error);
 
 // -------------------------------------------------------------------------------
 
+/**
+ * Binds to chrome runtime to begin the sync if we have scraped data.
+ */
 const onMesageListener = (request) => {
   // Only run if we've scraped some data
   if (request.event !== "robinhood-portfolio-scraped") {
@@ -31,8 +34,27 @@ const onMesageListener = (request) => {
   });
 };
 
-const setRobinhoodAmount = ({ label, amount, syncedLabels, match, request }) => {
+/**
+ * Runs once all the properties have been synced.
+ * Sends message upon succeful completion
+ */
+interface SetRobinhoodAmountOptions {
+  // Property to search for
+  label: string;
+  // Amount to set property to
+  amount: number | null;
+  // Labels synced so far
+  syncedLabels: Array<string>;
+  // If we have a
+  match: boolean; // TODO
+  // Request from Robinhood scraper
+  request: Message;
+}
+const setRobinhoodAmount = (options: SetRobinhoodAmountOptions) => {
+  const { label, amount, syncedLabels, match, request } = options;
+
   debug.log(`Attempting to set ${label} to ${amount}`);
+
   // Bail if amount is null, means we got bad data.
   if (amount === null || amount === NaN) {
     debug.log(`${amount} Null for ${label}. Bailing.`);
@@ -70,6 +92,10 @@ const setRobinhoodAmount = ({ label, amount, syncedLabels, match, request }) => 
   });
 };
 
+/**
+ * Checks if we've synced enough properties,
+ * if we have, save them and run the completion event
+ */
 const checkForUpdateComplete = ({ syncedLabels, match, request }) => {
   // Bail if we haven't synced enough labels yet.
   if (syncedLabels.length !== 4) {
@@ -86,7 +112,11 @@ const checkForUpdateComplete = ({ syncedLabels, match, request }) => {
   updatesComplete({ match, request });
 };
 
-const updatesComplete = ({ match, request }) => {
+/**
+ * Runs once all the properties have been synced.
+ * Sends message upon succeful completion
+ */
+const updatesComplete = ({ match, request }: { match: boolean; request: Message }) => {
   // Bail & Recur if no account view
   if (document.querySelectorAll(".AccountView.open").length) {
     setTimeout(updatesComplete, 50);
@@ -99,7 +129,9 @@ const updatesComplete = ({ match, request }) => {
     account: match ? request.accountName : null,
   });
 };
+
 /**
+ * Syncs the 4 created properties.
  *
  * @param propertyViewElement
  * @param callbackData
