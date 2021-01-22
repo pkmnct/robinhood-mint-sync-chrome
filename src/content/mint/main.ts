@@ -8,11 +8,8 @@ waitForElement({
   selector: "#mintNavigation",
   callback: () => {
     debug.log("Detected Mint Overview Page");
-    chrome.runtime.sendMessage({ event: "mint-opened" });
-    if (window.location.href.indexOf("forceRobinhoodSync=true") !== -1) {
-      debug.log("Forcing sync");
-      chrome.runtime.sendMessage({ event: "trigger-sync" });
-    }
+    const forceUpdate = window.location.href.indexOf("forceRobinhoodSync=true") !== -1;
+    chrome.runtime.sendMessage({ event: "mint-opened", forceUpdate });
   },
   onError: (error) => debug.error("It appears Mint has not signed in", error),
 });

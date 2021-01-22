@@ -9,6 +9,7 @@ export interface Message {
   newProperties?: string;
   property?: string;
   accountName?: string;
+  forceUpdate?: boolean;
 }
 
 export interface callbackDataOptions {

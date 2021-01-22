@@ -81,12 +81,18 @@ interface SetRobinhoodAmountOptions {
 const setRobinhoodAmount = (options: SetRobinhoodAmountOptions) => {
   const { label, amount, syncedLabels, isMultipleAccounts, request } = options;
 
-  debug.log(`Attempting to set ${label} to ${amount}`);
+  const fullLabel = `Robinhood ${label}`;
+
+  debug.log(`Attempting to set ${fullLabel} to ${amount}`);
 
   // Bail if amount is null, means we got bad data.
   if (amount === null || amount === NaN) {
-    debug.log(`${amount} Null for ${label}. Bailing.`);
+    debug.log(`amount null for ${fullLabel}. Bailing.`);
     syncedLabels.push(label);
+    chrome.runtime.sendMessage({
+      event: "mint-unable-to-update-property",
+      property: fullLabel,
+    });
     // TODO: could call this with an arg that informs the user not everything was synced.
     checkForUpdateComplete({ syncedLabels, isMultipleAccounts, request });
     return;
@@ -94,8 +100,14 @@ const setRobinhoodAmount = (options: SetRobinhoodAmountOptions) => {
 
   waitForElement({
     selector: ".OtherPropertyView",
-    onError: handleError,
-    withText: `Robinhood ${label}`,
+    onError: (error) => {
+      debug.error(error);
+      chrome.runtime.sendMessage({
+        event: "mint-missing-property",
+        property: fullLabel,
+      });
+    },
+    withText: fullLabel,
     callback: (foundElement) => {
       debug.log(`Expanding property ${label}`, foundElement);
       foundElement.querySelector("span").click();
@@ -129,7 +141,7 @@ const setRobinhoodAmount = (options: SetRobinhoodAmountOptions) => {
 const syncProperties = (propertyViewElement: HTMLElement, callbackData: callbackDataOptions) => {
   const { request } = callbackData;
   debug.log("Property Tab View loaded.", propertyViewElement);
-  debug.log("Account Name: ", request.accountName);
+  debug.log("Request: ", request);
 
   chrome.storage.sync.get({ multipleAccountsEnabled: false, multipleAccounts: [] }, (result) => {
     const { multipleAccountsEnabled, multipleAccounts } = result;

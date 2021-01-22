@@ -164,7 +164,8 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the main Mint content script
-  "mint-opened": ({ sender }: EventHandler) => {
+  "mint-opened": ({ sender, message }: EventHandler) => {
+    const { forceUpdate } = message;
     debug.log("mint-opened event");
     // Store a reference to the mint tab to be able to show the notifications
     mintTab = sender.tab.id;
@@ -202,7 +203,7 @@ const eventHandlers = {
           const currentTime = new Date();
           const differenceMilliseconds = currentTime.valueOf() - syncTimeParsed.valueOf();
           const differenceHours = Math.floor((differenceMilliseconds % 86400000) / 3600000);
-          if (differenceHours >= 1) {
+          if (differenceHours >= 1 || forceUpdate) {
             eventHandlers["trigger-sync"]();
           } else {
             chrome.tabs.sendMessage(mintTab, {
@@ -264,6 +265,29 @@ const eventHandlers = {
       newTab: true,
     });
     chrome.storage.sync.set({ needsOldPropertyRemoved: true });
+    if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
+  },
+  // This event is emitted when a property is missing for the updater
+  "mint-missing-property": ({ sender, message }: EventHandler) => {
+    debug.log("mint-missing-property event");
+    const property = message.property ? sanitizeInput(message.property) : "NOT FOUND";
+    chrome.tabs.sendMessage(mintTab, {
+      status: `The property "${property}" could not be found for updating. Set up needs to be run again to fix.`,
+      persistent: true,
+      link: URLS.mint.properties.check,
+      linkText: "Set up",
+      newTab: true,
+    });
+    chrome.storage.sync.set({ propertiesSetup: false });
+    if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
+  },
+  // This event is emitted when a property could not be updated as a result of bad data from the scraper
+  "mint-unable-to-update-property": ({ sender, message }: EventHandler) => {
+    debug.log("mint-unable-to-update-property event");
+    const property = message.property ? sanitizeInput(message.property) : "NOT FOUND";
+    chrome.tabs.sendMessage(mintTab, {
+      status: `The property "${property}" could not be updated.`,
+    });
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
 };
