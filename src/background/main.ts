@@ -30,21 +30,6 @@ const eventHandlers = {
       active: false,
     });
   },
-  "mint-force-sync": () => {
-    // TODO: This got removed in an earlier commit. Check if replaced?
-    debug.log("trigger-sync event");
-    // Send notification
-    chrome.tabs.sendMessage(mintTab, {
-      status: "Syncing Mint with Robinhood.",
-      persistent: true,
-    });
-
-    // Trigger the sync
-    chrome.tabs.create({
-      url: URLS.robinhood.scrape,
-      active: false,
-    });
-  },
   // This event is emitted by the main Robinhood content script.
   "robinhood-login-needed": ({ sender }: EventHandler) => {
     debug.log("robinhood-login-needed event");
