@@ -230,7 +230,10 @@ const onMesageListener = (request) => {
   });
 };
 
+// -------------------------------------------------------------------------------
+
 // Pop overlay
 new Overlay("Updating Mint Properties...", "This window will automatically close when the sync is complete");
 
+// Bind Listener
 chrome.runtime.onMessage.addListener(onMesageListener);
