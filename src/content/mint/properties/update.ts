@@ -17,21 +17,49 @@ const handleError = (error: Error) => debug.error(error);
 // -------------------------------------------------------------------------------
 
 /**
- * Binds to chrome runtime to begin the sync if we have scraped data.
+ * Runs once all the properties have been synced.
+ * Sends message upon succeful completion
  */
-const onMesageListener = (request) => {
-  // Only run if we've scraped some data
-  if (request.event !== "robinhood-portfolio-scraped") {
+const updatesComplete = ({ isMultipleAccounts, request }: { isMultipleAccounts: boolean; request: Message }) => {
+  // Bail & Recur if no account view
+  if (document.querySelectorAll(".AccountView.open").length) {
+    setTimeout(updatesComplete, 50);
     return;
   }
 
-  debug.log("Waiting for Property Tab View to load");
-  waitForElement({
-    selector: ".PropertyTabView",
-    onError: handleError,
-    callback: syncProperties,
-    callbackData: { request },
+  // Sync complete!
+  chrome.runtime.sendMessage({
+    event: "mint-sync-complete",
+    account: isMultipleAccounts ? request.accountName : null,
   });
+};
+
+/**
+ * Checks if we've synced enough properties,
+ * if we have, save them and run the completion event
+ */
+const checkForUpdateComplete = ({
+  syncedLabels,
+  isMultipleAccounts,
+  request,
+}: {
+  syncedLabels: Array<string>;
+  isMultipleAccounts: boolean;
+  request: Message;
+}) => {
+  // Bail if we haven't synced enough labels yet.
+  if (syncedLabels.length !== 4) {
+    return;
+  }
+
+  debug.log(`Fields updated. Attempting to save.`);
+  const saveButtons = document.querySelectorAll(".saveButton");
+  saveButtons.forEach((button) => {
+    debug.log(`Clicking save`, button);
+    button.removeAttribute("disabled");
+    (button as HTMLInputElement).click();
+  });
+  updatesComplete({ isMultipleAccounts, request });
 };
 
 /**
@@ -45,13 +73,13 @@ interface SetRobinhoodAmountOptions {
   amount: number | null;
   // Labels synced so far
   syncedLabels: Array<string>;
-  // If we have a
-  match: boolean; // TODO
+  // If multiple accounts is active
+  isMultipleAccounts: boolean; // TODO
   // Request from Robinhood scraper
   request: Message;
 }
 const setRobinhoodAmount = (options: SetRobinhoodAmountOptions) => {
-  const { label, amount, syncedLabels, match, request } = options;
+  const { label, amount, syncedLabels, isMultipleAccounts, request } = options;
 
   debug.log(`Attempting to set ${label} to ${amount}`);
 
@@ -60,7 +88,7 @@ const setRobinhoodAmount = (options: SetRobinhoodAmountOptions) => {
     debug.log(`${amount} Null for ${label}. Bailing.`);
     syncedLabels.push(label);
     // TODO: could call this with an arg that informs the user not everything was synced.
-    checkForUpdateComplete({ syncedLabels, match, request });
+    checkForUpdateComplete({ syncedLabels, isMultipleAccounts, request });
     return;
   }
 
@@ -76,57 +104,19 @@ const setRobinhoodAmount = (options: SetRobinhoodAmountOptions) => {
         selector: "input",
         onError: handleError,
         callback: () => {
-          const inputs = foundElement.querySelectorAll("input");
+          const inputs = foundElement.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
           inputs.forEach((foundInput) => {
             if (foundInput.getAttribute("name") === "value") {
               debug.log(`Found ${label} input, setting amount`, foundInput);
-              foundInput.value = amount;
+              foundInput.value = `${amount}`;
               syncedLabels.push(label);
-              checkForUpdateComplete({ syncedLabels, match, request });
+              checkForUpdateComplete({ syncedLabels, isMultipleAccounts, request });
             }
           });
         },
         initialContainer: foundElement,
       });
     },
-  });
-};
-
-/**
- * Checks if we've synced enough properties,
- * if we have, save them and run the completion event
- */
-const checkForUpdateComplete = ({ syncedLabels, match, request }) => {
-  // Bail if we haven't synced enough labels yet.
-  if (syncedLabels.length !== 4) {
-    return;
-  }
-
-  debug.log(`Fields updated. Attempting to save.`);
-  const saveButtons = document.querySelectorAll(".saveButton");
-  saveButtons.forEach((button) => {
-    debug.log(`Clicking save`, button);
-    button.removeAttribute("disabled");
-    (button as HTMLInputElement).click();
-  });
-  updatesComplete({ match, request });
-};
-
-/**
- * Runs once all the properties have been synced.
- * Sends message upon succeful completion
- */
-const updatesComplete = ({ match, request }: { match: boolean; request: Message }) => {
-  // Bail & Recur if no account view
-  if (document.querySelectorAll(".AccountView.open").length) {
-    setTimeout(updatesComplete, 50);
-    return;
-  }
-
-  // Sync complete!
-  chrome.runtime.sendMessage({
-    event: "mint-sync-complete",
-    account: match ? request.accountName : null,
   });
 };
 
@@ -145,10 +135,10 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
     const { multipleAccountsEnabled, multipleAccounts } = result;
 
     // Detect if Multiple Accounts && found a matching account to update
-    let match = false;
+    let isMultipleAccounts = false;
     if (multipleAccountsEnabled && multipleAccounts && multipleAccounts.length) {
       // Try to find a match
-      match = multipleAccounts.some((account) => {
+      isMultipleAccounts = multipleAccounts.some((account) => {
         if (account.robinHoodValue === request.accountName) {
           return true;
         }
@@ -157,7 +147,7 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
     }
 
     // If we have multiple accounts, our label will get it added to the end.
-    const subLabel = match ? ` - ${request.accountName}` : "";
+    const subLabel = isMultipleAccounts ? ` - ${request.accountName}` : "";
 
     // Running label amount.
     const syncedLabels = [];
@@ -176,7 +166,7 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
       label: "Cash" + subLabel,
       amount: cash,
       syncedLabels,
-      match,
+      isMultipleAccounts,
       request,
     });
 
@@ -188,7 +178,7 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
       label: "Crypto" + subLabel,
       amount: crypto,
       syncedLabels,
-      match,
+      isMultipleAccounts,
       request,
     });
 
@@ -200,7 +190,7 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
       label: "Stocks" + subLabel,
       amount: stocks,
       syncedLabels,
-      match,
+      isMultipleAccounts,
       request,
     });
 
@@ -216,9 +206,27 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
       label: "Other" + subLabel,
       amount: other,
       syncedLabels,
-      match,
+      isMultipleAccounts,
       request,
     });
+  });
+};
+
+/**
+ * Binds to chrome runtime to begin the sync if we have scraped data.
+ */
+const onMesageListener = (request) => {
+  // Only run if we've scraped some data
+  if (request.event !== "robinhood-portfolio-scraped") {
+    return;
+  }
+
+  debug.log("Waiting for Property Tab View to load");
+  waitForElement({
+    selector: ".PropertyTabView",
+    onError: handleError,
+    callback: syncProperties,
+    callbackData: { request },
   });
 };
 
