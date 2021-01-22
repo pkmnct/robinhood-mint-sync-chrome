@@ -10,8 +10,9 @@ node_modules
 dist
 *.zip
 
-.vscode/
+.vscode/**/*
 !.vscode/settings.json.default
+!.vscode/extensions.json
 
 .stellar
 stellar
