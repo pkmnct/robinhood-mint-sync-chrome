@@ -23,7 +23,7 @@ const handleError = (error: Error) => debug.error(error);
 const updatesComplete = ({ isMultipleAccounts, request }: { isMultipleAccounts: boolean; request: Message }) => {
   // Bail & Recur if no account view
   if (document.querySelectorAll(".AccountView.open").length) {
-    setTimeout(updatesComplete, 50);
+    setTimeout(() => updatesComplete({ isMultipleAccounts, request }), 50);
     return;
   }
 
