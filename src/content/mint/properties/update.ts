@@ -195,12 +195,16 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
     });
 
     // Everything else
+    debug.log("Pre Other:", { stocks, cash, crypto, other });
     if (request.total_equity && stocks !== null && stocks !== NaN && cash !== null && cash !== NaN && crypto !== null && crypto !== NaN) {
       const combined = stocks + cash + crypto;
       const total = parseFloat(request.total_equity);
       if (total !== NaN && total > combined) {
         other = total - combined;
+      } else if (total === combined) {
+        other = 0;
       }
+      debug.log("Other calcs:", { combined, total, other });
     }
     setRobinhoodAmount({
       label: "Other" + subLabel,
