@@ -8,6 +8,7 @@ import { callbackDataOptions } from "../constants/interfaces";
  * the callback function. If it fails too many times, calls the onError callback function
  *
  * TODO: Refactor this to return a promise
+ * TODO: selector should be set to allow an array of values, and return if any return true.
  */
 interface WaitForElementOptions {
   // Selector to search for
@@ -15,7 +16,7 @@ interface WaitForElementOptions {
   // Text that must be in the selector (Optional)
   withText?: string | null;
   // Callback
-  callback: (result: HTMLElement, callbackData: callbackDataOptions) => void;
+  callback: (foundElement: HTMLElement, callbackData: callbackDataOptions) => void;
   // A way to pass some additonal data to the callback
   callbackData?: callbackDataOptions;
   // Error Callback

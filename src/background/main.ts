@@ -1,6 +1,6 @@
 // Constants.
 import { URLS } from "../constants/urls";
-import { EventHandler } from "../constants/interfaces";
+import { EventHandler, Message } from "../constants/interfaces";
 
 // Utilities.
 import { Debug } from "../utilities/debug";
@@ -153,10 +153,10 @@ const eventHandlers = {
     chrome.storage.sync.set({ syncTime: new Date().toString() });
     let account = "";
     if (message.accountName) {
-      account = sanitizeInput(message.accountName); // TODO: sanitize
+      account = sanitizeInput(message.accountName);
     }
     chrome.tabs.sendMessage(mintTab, {
-      status: `Sync Complete! Synced with ${account}. Reload to see the change.`,
+      status: `Sync Complete! ${account ? "Synced with account " + account + ". " : ""}Reload to see the change.`,
       link: "/overview.event",
       linkText: "Reload",
       persistent: true,
@@ -268,7 +268,7 @@ const eventHandlers = {
   },
 };
 
-chrome.runtime.onMessage.addListener((message, sender) => {
+chrome.runtime.onMessage.addListener((message: Message, sender: chrome.runtime.MessageSender) => {
   if (message && message.event && typeof eventHandlers[message.event] === "function") {
     eventHandlers[message.event]({ message, sender });
   } else {
