@@ -1,5 +1,6 @@
 import { Overlay } from "../../utilities/overlay";
 import { Debug } from "../../utilities/debug";
+import { urls } from "../../urls";
 
 const debug = new Debug("content", "Robinhood - Main");
 
@@ -38,7 +39,7 @@ export interface Message {
   crypto?: string;
   equities?: string;
   total_equity?: string;
-  error?: boolean;
+  error?: Error;
   newProperties?: string;
   property?: string;
   accountName?: string;
@@ -55,9 +56,8 @@ const scrapeData = async () => {
 
   try {
     const access_token = await getBearerToken();
-    const api_url = "https://phoenix.robinhood.com/accounts/unified";
 
-    const response = await fetch(api_url, {
+    const response = await fetch(urls.robinhood.api, {
       method: "GET",
       headers: new Headers({
         authorization: `Bearer ${access_token}`,
@@ -92,7 +92,8 @@ const scrapeData = async () => {
 
     return returnValue;
   } catch (error) {
-    returnValue.error = true;
+    returnValue.error = error;
+    console.error(error);
     return returnValue;
   }
 };
@@ -101,25 +102,24 @@ const scrapeData = async () => {
  * Initialize the content script on Robinhood
  */
 const init = () => {
-  window.addEventListener("load", () => {
-    new Overlay("Getting data from Robinhood...", "This window will automatically close when the sync is complete");
-    const checkIfLoggedIn = async () => {
-      debug.log("Waiting for page to load");
-      if (document.location.pathname.includes("/account")) {
-        clearInterval(checkIfLoggedInInterval);
-        debug.log("Page loaded. Appears to be logged in.");
-        const data = await scrapeData();
-        chrome.runtime.sendMessage(data);
-      } else if (document.location.pathname.includes("/login")) {
-        clearInterval(checkIfLoggedInInterval);
-        debug.log("Page loaded. Appears to be logged out.");
-        chrome.runtime.sendMessage({
-          event: "robinhood-login-needed",
-        });
-      }
-    };
-    const checkIfLoggedInInterval = setInterval(checkIfLoggedIn, 500);
-  });
+  new Overlay("Getting data from Robinhood...", "This window will automatically close when the sync is complete");
+  const checkIfLoggedIn = async () => {
+    debug.log("Waiting for page to load");
+    if (document.location.pathname.includes("/account")) {
+      clearInterval(checkIfLoggedInInterval);
+      debug.log("Page loaded. Appears to be logged in.");
+      const data = await scrapeData();
+      debug.log("Scraped data", data);
+      chrome.runtime.sendMessage(data);
+    } else if (document.location.pathname.includes("/login")) {
+      clearInterval(checkIfLoggedInInterval);
+      debug.log("Page loaded. Appears to be logged out.");
+      chrome.runtime.sendMessage({
+        event: "robinhood-login-needed",
+      });
+    }
+  };
+  const checkIfLoggedInInterval = setInterval(checkIfLoggedIn, 500);
 };
 
 init();

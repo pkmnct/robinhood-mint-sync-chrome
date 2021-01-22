@@ -23,7 +23,7 @@ export class Notification {
     this.wrapper.appendChild(this.left);
 
     this.title.setAttribute("class", "notification-title");
-    this.title.innerText = "Robinhood Mint Sync for Chrome";
+    this.title.innerText = "Robinhood Mint Sync";
 
     this.right.appendChild(this.title);
 

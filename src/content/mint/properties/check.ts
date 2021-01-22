@@ -56,61 +56,25 @@ const setupProperties = (subLabel = "") => {
   return newProperties;
 };
 
-window.addEventListener("load", () => {
-  debug.log("Waiting for .OtherPropertyView");
-  waitForElement({
-    selector: ".OtherPropertyView",
-    failureAttempts: 20,
-    callback: (result) => {
-      debug.log("Found Property View. Setting up properties.", result);
-      chrome.storage.sync.get(
-        {
-          multipleAccountsEnabled: false,
-          multipleAccounts: [],
-        },
-        (result) => {
-          const { multipleAccountsEnabled, multipleAccounts } = result;
-          if (multipleAccountsEnabled && multipleAccounts && multipleAccounts.length) {
-            let newProperties = 0;
-            multipleAccounts.forEach((account) => {
-              const subLabel = ` - ${account.robinHoodValue}`;
-              newProperties += setupProperties(subLabel);
-            });
-
-            // Check for old version
-            if (checkIfPropertyExists("Account")) {
-              debug.log("Found old Robinhood Account property. This must be removed to finish setup.");
-              chrome.runtime.sendMessage({
-                event: "mint-property-remove",
-              });
-              return;
-            }
-
-            // Check for old non multiple account version
-            // Check for old multiple account version
-            let singleCheck = false;
-            robinhoodProperties.forEach((property) => {
-              if (checkIfPropertyExists(`${property}`)) {
-                singleCheck = true;
-              }
-            });
-            if (singleCheck) {
-              debug.log("Found old Robinhood Non Multiple Account property. This must be removed to finish setup.");
-              chrome.runtime.sendMessage({
-                event: "mint-property-non-multiple-remove",
-              });
-              return;
-            }
-
-            // Success.
-            debug.log("Finishing Setup");
-            chrome.runtime.sendMessage({
-              event: "mint-property-setup-complete",
-              newProperties,
-            });
-            return;
-          }
-          const newProperties = setupProperties();
+debug.log("Waiting for .OtherPropertyView");
+waitForElement({
+  selector: ".OtherPropertyView",
+  failureAttempts: 20,
+  callback: (result) => {
+    debug.log("Found Property View. Setting up properties.", result);
+    chrome.storage.sync.get(
+      {
+        multipleAccountsEnabled: false,
+        multipleAccounts: [],
+      },
+      (result) => {
+        const { multipleAccountsEnabled, multipleAccounts } = result;
+        if (multipleAccountsEnabled && multipleAccounts && multipleAccounts.length) {
+          let newProperties = 0;
+          multipleAccounts.forEach((account) => {
+            const subLabel = ` - ${account.robinHoodValue}`;
+            newProperties += setupProperties(subLabel);
+          });
 
           // Check for old version
           if (checkIfPropertyExists("Account")) {
@@ -121,17 +85,18 @@ window.addEventListener("load", () => {
             return;
           }
 
+          // Check for old non multiple account version
           // Check for old multiple account version
-          let multipleCheck = false;
+          let singleCheck = false;
           robinhoodProperties.forEach((property) => {
-            if (checkIfPropertyExists(`${property} -`, true)) {
-              multipleCheck = true;
+            if (checkIfPropertyExists(`${property}`)) {
+              singleCheck = true;
             }
           });
-          if (multipleCheck) {
-            debug.log("Found old Robinhood Multiple Account property. This must be removed to finish setup.");
+          if (singleCheck) {
+            debug.log("Found old Robinhood Non Multiple Account property. This must be removed to finish setup.");
             chrome.runtime.sendMessage({
-              event: "mint-property-non-single-remove",
+              event: "mint-property-non-multiple-remove",
             });
             return;
           }
@@ -142,20 +107,53 @@ window.addEventListener("load", () => {
             event: "mint-property-setup-complete",
             newProperties,
           });
+          return;
         }
-      );
-    },
-    onError: () => {
-      // If we don't find the OtherPropertyView, check if no properties are set up
-      debug.log("Did not find property view. Checking for zeroState");
-      waitForElement({
-        selector: ".zeroState",
-        callback: () => {
-          setupProperties();
-        },
-        onError: (error) => debug.error("Did not find zero state", error),
-        failureAttempts: 1, // We should fail right away if it doesn't exist. It's already waited many seconds for OtherPropertyView
-      });
-    },
-  });
+        const newProperties = setupProperties();
+
+        // Check for old version
+        if (checkIfPropertyExists("Account")) {
+          debug.log("Found old Robinhood Account property. This must be removed to finish setup.");
+          chrome.runtime.sendMessage({
+            event: "mint-property-remove",
+          });
+          return;
+        }
+
+        // Check for old multiple account version
+        let multipleCheck = false;
+        robinhoodProperties.forEach((property) => {
+          if (checkIfPropertyExists(`${property} -`, true)) {
+            multipleCheck = true;
+          }
+        });
+        if (multipleCheck) {
+          debug.log("Found old Robinhood Multiple Account property. This must be removed to finish setup.");
+          chrome.runtime.sendMessage({
+            event: "mint-property-non-single-remove",
+          });
+          return;
+        }
+
+        // Success.
+        debug.log("Finishing Setup");
+        chrome.runtime.sendMessage({
+          event: "mint-property-setup-complete",
+          newProperties,
+        });
+      }
+    );
+  },
+  onError: () => {
+    // If we don't find the OtherPropertyView, check if no properties are set up
+    debug.log("Did not find property view. Checking for zeroState");
+    waitForElement({
+      selector: ".zeroState",
+      callback: () => {
+        setupProperties();
+      },
+      onError: (error) => debug.error("Did not find zero state", error),
+      failureAttempts: 1, // We should fail right away if it doesn't exist. It's already waited many seconds for OtherPropertyView
+    });
+  },
 });

@@ -1,6 +1,8 @@
 /**
  * waitForElement - Tries to wait for an element to appear on the page and then calls
  * the callback function. If it fails too many times, calls the onError callback function
+ * 
+ * TODO: Refactor this to return a promise
  */
 export interface WaitForElementOptions {
   // Selector to search for
@@ -8,7 +10,9 @@ export interface WaitForElementOptions {
   // Text that must be in the selector (Optional)
   withText?: string | null;
   // Callback
-  callback: (result: HTMLElement) => void;
+  callback: (result: HTMLElement, callbackData: object) => void;
+  // A way to pass some additonal data to the callback
+  callbackData?: object;
   // Error Callback
   onError: (result: Error) => void;
   // Container to limit search to (Optional)
@@ -23,7 +27,7 @@ export interface WaitForElementOptions {
 }
 
 export const waitForElement = (options: WaitForElementOptions): void => {
-  const { selector, withText, onError, callback, initialContainer, failureAttempts = 50, _timesRun = 0, checkInterval = 500 } = options;
+  const { selector, withText, onError, callback, initialContainer, failureAttempts = 50, _timesRun = 0, checkInterval = 500, callbackData = {} } = options;
 
   // Bail and callback with Error if we've reached out fail limit
   if (_timesRun >= failureAttempts) {
@@ -49,7 +53,7 @@ export const waitForElement = (options: WaitForElementOptions): void => {
       if ((element as HTMLElement).innerText.toLowerCase().includes(withText.toLowerCase())) {
         // Success! Call the callback function with our found item
         foundText = true;
-        callback(element as HTMLElement);
+        callback(element as HTMLElement, callbackData);
         // Stop searching for elements
         break;
       }

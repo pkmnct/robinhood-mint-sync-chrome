@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Robinhood Mint Sync for Chrome</title>
+    <title>Robinhood Mint Sync</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="external/stellar/main.css" />
@@ -14,11 +14,14 @@
       <!-- Header -->
       <header id="header" class="alt">
         <span class="logo"><img src="images/icon512.png" style="width: 128px" alt="" /></span>
-        <h1>Robinhood Mint Sync for Chrome</h1>
+        <h1>Robinhood Mint Sync</h1>
         <p>Add your Robinhood portfolio value to Mint automatically.</p>
         <ul class="actions special">
           <li>
-            <a href="https://chrome.google.com/webstore/detail/robinhood-mint-sync-for-c/mogflmdandlpjobbddhopcggkjoggpdo" class="button">Add to Chrome</a>
+            <a href="https://chrome.google.com/webstore/detail/robinhood-mint-sync-for-c/mogflmdandlpjobbddhopcggkjoggpdo" class="button">Add to Chrome/Edge</a>
+          </li>
+          <li>
+            <a href="https://addons.mozilla.org/en-US/firefox/addon/robinhood-mint-sync/" class="button">Add to Firefox</a>
           </li>
         </ul>
       </header>
@@ -28,9 +31,9 @@
         <ul>
           <li><a href="#intro" class="active">Installation</a></li>
           <li><a href="#contributing">Contributing</a></li>
-          <li><a href="#first">How to use</a></li>
-          <li><a href="#second">FAQs</a></li>
-          <li><a href="#cta">Reporting a Problem</a></li>
+          <li><a href="#how-to-use">How to use</a></li>
+          <li><a href="#faqs">FAQs</a></li>
+          <li><a href="#report-problem">Reporting a Problem</a></li>
         </ul>
       </nav>
 
@@ -43,17 +46,30 @@
               <header class="major">
                 <h2>Installation</h2>
               </header>
-              <a style="border: none" href="https://chrome.google.com/webstore/detail/robinhood-mint-sync-for-c/mogflmdandlpjobbddhopcggkjoggpdo"
-                ><img src="images/chrome-web-store.png" style="width: 300px; max-width: 100%" alt="Available in the Chrome Web Store badge"
-              /></a>
-              <p>The extension is offered thorugh the Chrome Web Store.</p>
-              <ul class="actions">
-                <li>
-                  <a href="https://chrome.google.com/webstore/detail/robinhood-mint-sync-for-c/mogflmdandlpjobbddhopcggkjoggpdo" class="button primary"
-                    >Add to Chrome</a
-                  >
-                </li>
-              </ul>
+              <div class="install-source">
+                <a style="border: none" href="https://chrome.google.com/webstore/detail/robinhood-mint-sync-for-c/mogflmdandlpjobbddhopcggkjoggpdo"
+                  ><img src="images/chrome-web-store.png" style="width: 300px; max-width: 100%" alt=""
+                /></a>
+                <p>The extension is offered through the Chrome Web Store.</p>
+                <ul class="actions">
+                  <li>
+                    <a href="https://chrome.google.com/webstore/detail/robinhood-mint-sync-for-c/mogflmdandlpjobbddhopcggkjoggpdo" class="button primary"
+                      >Add to Chrome/Edge</a
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div class="install-source">
+                <a style="border: none" href="https://addons.mozilla.org/en-US/firefox/addon/robinhood-mint-sync/"
+                  ><img src="images/firefox-button.png" alt=""
+                /></a>
+                <p>The extension is available through the Firefox Browser Add-ons website.</p>
+                <ul class="actions">
+                  <li>
+                    <a href="https://addons.mozilla.org/en-US/firefox/addon/robinhood-mint-sync/" class="button primary">Add to Firefox</a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
@@ -89,8 +105,8 @@
           </div>
         </section>
 
-        <!-- First Section -->
-        <section id="first" class="main">
+        <!-- how-to-use Section -->
+        <section id="how-to-use" class="main">
           <header class="major">
             <h2>How to use the Extension</h2>
           </header>
@@ -113,39 +129,58 @@
           </footer>
         </section>
 
-        <!-- Second Section -->
-        <section id="second" class="main">
+        <!-- faqs Section -->
+        <section id="faqs" class="main">
           <header class="major">
             <h2>Frequently Asked Questions</h2>
           </header>
-          <h2>How does the extension work?</h2>
-          <p>
-            The extension works by opening your Robinhood Account page in the background to read the portfolio value. After reading that value, it passes it to
-            Mint in another new page in the background. Both of these background pages will close automatically when they are done with their job. You may
-            switch to these pages while the sync is being performed, but if they are closed the sync will not complete.
-          </p>
-          <p>
-            Due to how the extension gets data from Robinhood and inputs data into Mint, it is possible for changes in either of these services to break the
-            functionality of the extension. If you have any issues with the extension, see the
-            <a href="#cta">Reporting a Problem</a> section below.
-          </p>
-          <h2>How do I know my information is safe?</h2>
-          <p>
-            This extension is completely open source and its code is available on GitHub. This means anybody can
-            <a href="https://github.com/pkmnct/robinhood-mint-sync-chrome">review the code</a>
-            and confirm that it is safe.
-          </p>
+          <div>
+            <h2>My balance is duplicated, how do I fix this?</h2>
+            <p>
+              If you previously had your Robinhood account set up natively on Mint, you should mark that account as inactive. This will prevent its value from
+              counting towards your net worth, while keeping your history related to the account. If native support is added again in the future, you can
+              re-activate the account.
+            </p>
+          </div>
+          <div>
+            <h2>How does the extension work?</h2>
+            <p>The extension starts from your Mint Overview page. You will see a notification in the top-right corner to initiate the setup or a sync.</p>
+            <p>
+              First, the extension will open a few Mint tabs to check for and add any needed properties to your account. These properties are used to store your
+              Robinhood balance, and show up a collectible in Mint. Once the properties set up, the extension will initiate a sync with Robinhood from Mint.
+            </p>
+            <p>
+              The extension works by opening your Robinhood page in the background and using its API to read the equities. Those values are passed to a new Mint
+              page in the background, which sets the property values to the equity amounts. Both of these background pages will close automatically when they
+              are done with their job. You may switch to these pages while the sync is being performed, but if they are closed manually the sync will not
+              complete.
+            </p>
+            <p>
+              Due to how the extension gets data from Robinhood and inputs data into Mint, it is possible for changes in either of these services to break the
+              functionality of the extension. If you have any issues with the extension, see the
+              <a href="#report-problem">Reporting a Problem</a> section below.
+            </p>
+          </div>
+          <div>
+            <h2>How do I know my information is safe?</h2>
+            <p>
+              This extension is completely open source and its code is available on GitHub. This means anybody can
+              <a href="https://github.com/pkmnct/robinhood-mint-sync-chrome">review the code</a>
+              and confirm that it is safe.
+            </p>
+          </div>
         </section>
 
         <!-- Get Started -->
-        <section id="cta" class="main">
+        <section id="report-problem" class="main">
           <header class="major">
             <h2>Reporting a Problem</h2>
           </header>
           <p>
             If you run into any issues with the extension, please
             <a href="https://github.com/pkmnct/robinhood-mint-sync-chrome/issues">check to see if any other people are having the same issue</a>
-            on GitHub. If they are not, please open a new issue. Describe in detail the problem you are having when reporting an issue.
+            on GitHub. If it has not been reported (make sure to search closed issues too), please open a new issue. Describe in detail the problem you are
+            having when reporting an issue.
           </p>
           <footer class="major">
             <ul class="actions">
@@ -161,22 +196,18 @@
       <footer id="footer">
         <h2>Version History</h2>
         <section>
-          <h3>Version 3.3.1</h3>
-          <p>Accessibility improvements</p>
-          <ul class="actions">
-            <li>
-              <a href="changelog.html" class="button">View Full Changelog</a>
-            </li>
-          </ul>
+          <h3>Version 3.4.0</h3>
+          <p>Fixed some issues that could cause sync to fail. Add support for Firefox. Add a button to manually perform initial setup.</p>
         </section>
         <section class="secondary">
-          <h3>Version 3.3.0</h3>
-          <p>
-            Fixes an issue where, if no properties had been set up on Mint, extension failed to create properties. Users with margin trading will now see the
-            equity value of their stocks rather than their total market value when syncing. Fixes an issue where buttons in the notifications were not showing
-            correctly.
-          </p>
+          <h3>Version 3.3.1</h3>
+          <p>Accessibility improvements</p>
         </section>
+        <ul class="actions">
+          <li>
+            <a href="changelog.html" class="button">View Full Changelog</a>
+          </li>
+        </ul>
         <p class="copyright">
           <a href="licenses.html">View extension and third-party licenses</a>
         </p>
