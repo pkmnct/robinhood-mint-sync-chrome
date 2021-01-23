@@ -150,45 +150,55 @@ const multipleAccountPropertiesSetup = (multipleAccounts: Array<{ robinHoodAccou
 /**
  * Determines account configuration and calls correct setup
  */
-const setupProperties = (): void => {
-  chrome.storage.sync.get(
-    {
-      multipleAccountsEnabled: false,
-      multipleAccounts: [],
-    },
-    (data) => {
-      const { multipleAccountsEnabled, multipleAccounts } = data;
-      const isMultipleAccount = multipleAccountsEnabled && multipleAccounts && multipleAccounts.length;
-
-      // Run setup based on our account configuration type
-      isMultipleAccount ? multipleAccountPropertiesSetup(multipleAccounts) : singleAccountPropertiesSetup();
-    }
-  );
+const setupProperties = (multipleAccountsEnabled, multipleAccounts): void => {
+  const isMultipleAccount = multipleAccountsEnabled && multipleAccounts && multipleAccounts.length;
+  isMultipleAccount ? multipleAccountPropertiesSetup(multipleAccounts) : singleAccountPropertiesSetup();
 };
 
 // Pop overlay
 new Overlay("Performing Initial Setup. Please Wait...", "This window will automatically close when complete.");
 
-// Wait for Properties view, with fallback if we are in a 0 state
-debug.log("Waiting for .OtherPropertyView");
-waitForElement({
-  selector: ".OtherPropertyView",
-  failureAttempts: 20,
-  callback: () => {
-    debug.log("Found Property View. Setting up properties.");
-    setupProperties();
+chrome.storage.sync.get(
+  {
+    multipleAccountsEnabled: false,
+    multipleAccounts: [],
   },
-  onError: () => {
-    // If we don't find the OtherPropertyView, check if no properties are set up
-    debug.log("Did not find property view. Checking for zeroState");
+  (data) => {
+    const { multipleAccountsEnabled, multipleAccounts } = data;
+    // If we are on the check on page with multiple account enabled,
+    // but don't actually have any accounts set, we need to bail out and move to the sync flow
+    // Which should let us retreive our account name, set it, and then return here to set up.
+    if ((multipleAccountsEnabled && !multipleAccounts) || !multipleAccounts.length) {
+      chrome.runtime.sendMessage({
+        event: "trigger-sync-no-message",
+      });
+      return;
+    }
+    const isMultipleAccount = multipleAccountsEnabled && multipleAccounts && multipleAccounts.length;
+    isMultipleAccount ? multipleAccountPropertiesSetup(multipleAccounts) : singleAccountPropertiesSetup();
+
+    // Wait for Properties view, with fallback if we are in a 0 state
+    debug.log("Waiting for .OtherPropertyView");
     waitForElement({
-      selector: ".zeroState",
+      selector: ".OtherPropertyView",
+      failureAttempts: 20,
       callback: () => {
-        debug.log("Found Zero State. Setting up properties.");
-        setupProperties();
+        debug.log("Found Property View. Setting up properties.");
+        setupProperties(multipleAccountsEnabled, multipleAccounts);
       },
-      onError: (error) => debug.error("Did not find zero state", error),
-      failureAttempts: 1, // We should fail right away if it doesn't exist. It's already waited many seconds for OtherPropertyView
+      onError: () => {
+        // If we don't find the OtherPropertyView, check if no properties are set up
+        debug.log("Did not find property view. Checking for zeroState");
+        waitForElement({
+          selector: ".zeroState",
+          callback: () => {
+            debug.log("Found Zero State. Setting up properties.");
+            setupProperties(multipleAccountsEnabled, multipleAccounts);
+          },
+          onError: (error) => debug.error("Did not find zero state", error),
+          failureAttempts: 1, // We should fail right away if it doesn't exist. It's already waited many seconds for OtherPropertyView
+        });
+      },
     });
-  },
-});
+  }
+);

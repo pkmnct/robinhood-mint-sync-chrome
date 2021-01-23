@@ -140,14 +140,30 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
 
     // Detect if Multiple Accounts && found a matching account to update
     let isMultipleAccounts = false;
-    if (multipleAccountsEnabled && multipleAccounts && multipleAccounts.length) {
-      // Try to find a match
-      isMultipleAccounts = multipleAccounts.some((account) => {
-        if (account.robinHoodAccountName === request.accountName) {
-          return true;
-        }
-        return false;
-      });
+    if (multipleAccountsEnabled) {
+      // Try to find a match in our existing accounts
+      if (multipleAccounts && multipleAccounts.length) {
+        isMultipleAccounts = multipleAccounts.some((account) => {
+          if (account.robinHoodAccountName === request.accountName) {
+            return true;
+          }
+          return false;
+        });
+      }
+
+      // If no match, but we do have an account name, lets add it and bail out to the create step.
+      if (!isMultipleAccounts && request.accountName) {
+        chrome.storage.sync.set({
+          multipleAccounts: [...multipleAccounts, { robinHoodAccountName: request.accountName }],
+        });
+
+        // Open a setup page
+        chrome.runtime.sendMessage({
+          event: "mint-mutliple-account-trigger-setup",
+          accountName: request.accountName,
+        });
+        return;
+      }
     }
 
     // If we have multiple accounts, our label will get it added to the end.

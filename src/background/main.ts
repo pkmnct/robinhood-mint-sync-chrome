@@ -26,6 +26,14 @@ const eventHandlers: {
       active: false,
     });
   },
+  "trigger-sync-no-message": ({ sender }) => {
+    // Trigger the sync
+    chrome.tabs.create({
+      url: URLS.robinhood.scrape,
+      active: false,
+    });
+    if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
+  },
   // This event is emitted by the main Robinhood content script.
   "robinhood-login-needed": ({ sender }) => {
     chrome.tabs.sendMessage(mintTab, {
@@ -96,6 +104,7 @@ const eventHandlers: {
 
     debug.log(`Setup ${newPropertiesComplete} of ${newProperties} properties.`);
     if (newPropertiesComplete === newProperties) {
+      newPropertiesComplete = 0;
       eventHandlers["setup-complete"]();
     }
   },
@@ -198,6 +207,17 @@ const eventHandlers: {
         }
       }
     );
+  },
+  // This event tells us to open a new check content page
+  "mint-mutliple-account-trigger-setup": ({ sender, message }) => {
+    chrome.tabs.sendMessage(mintTab, {
+      status: `New Account Detected: "${sanitizeInput(message.accountName)}". Creating new properties.`,
+    });
+    chrome.tabs.create({
+      url: URLS.mint.properties.check,
+      active: false,
+    });
+    if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the Mint property check content script.
   "mint-create": ({ message }) => {

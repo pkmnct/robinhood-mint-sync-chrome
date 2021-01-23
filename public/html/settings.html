@@ -88,27 +88,10 @@
             If you would like to enable syncing for multiple accounts, you can enable it here. <br />
             Note that this will require you to delete any propeties created before turning on this feature. <br />
             Similarly, turning off this feature will require you to delete any properties created while it was on. <br />
-            Each row should be the name EXACTLY as it appears on top of the <a href="https://robinhood.com/account">Robinhood Accounts</a> page. <br />
             Whichever account is logged in at the time of syncing will be updated if found. Only one account can update at a time.
           </p>
           <input type="checkbox" id="setting-multipleAccountsEnabled" name="setting-multipleAccountsEnabled" />
           <label for="setting-multipleAccountsEnabled">Allow Multiple Accounts</label>
-
-          <div class="mutiple-accounts-wrapper">
-            <div id="mutiple-account-rows"></div>
-            <template id="mutiple-accounts-input-wrapper-template">
-              <div class="mutiple-accounts-input-wrapper">
-                <label>
-                  RobinHood Account Name
-                  <input required type="text" class="setting-multipleAccounts-robinHoodInput" />
-                </label>
-                <button class="multipleAccounts-delete">Delete</button>
-              </div>
-            </template>
-            <button id="multipleAccounts-add">
-              Add Account
-            </button>
-          </div>
         </section>
       </main>
 
