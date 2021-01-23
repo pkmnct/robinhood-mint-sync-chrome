@@ -1,7 +1,6 @@
 /**
  * Removes dangerous html characters from a variable that will output as HTML.
- * Could potentially be replaced by a sanitization librrary.
- *
+ * Could potentially be replaced by a sanitization library.
  */
 export const sanitizeInput = (input: string): string => {
   if (typeof input !== "string") {

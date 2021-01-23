@@ -1,7 +1,4 @@
-// Constants.
 import { callbackDataOptions } from "../constants/interfaces";
-
-// -------------------------------------------------------------------------------
 
 /**
  * waitForElement - Tries to wait for an element to appear on the page and then calls

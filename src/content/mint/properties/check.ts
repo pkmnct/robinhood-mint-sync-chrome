@@ -1,24 +1,16 @@
-// Check to see if properties are set up, and trigger set up if they are not
-// https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true
-
-// Utilities.
 import { Overlay } from "../../../utilities/overlay";
 import { waitForElement } from "../../../utilities/waitForElement";
 import { Debug } from "../../../utilities/debug";
-
-// -------------------------------------------------------------------------------
 
 const debug = new Debug("content", "Mint - Properties - Check");
 
 // The properties to set up/check for
 export const robinhoodProperties = ["Cash", "Stocks", "Crypto", "Other"];
 
-// -------------------------------------------------------------------------------
-
 /**
  *
- * @param propertyName - roperty name to look for
- * @param exactMatch - if true the propery can not contain any other extra characters
+ * @param propertyName - Property name to look for
+ * @param exactMatch - if true the property can not contain any other extra characters
  */
 const checkIfPropertyExists = (propertyName: string, exactMatch = true): boolean => {
   debug.log("Checking if property exists:", propertyName);
@@ -44,7 +36,7 @@ const checkIfPropertyExists = (propertyName: string, exactMatch = true): boolean
 };
 
 /**
- * Loops through and checks if each propery needs to be created or not.
+ * Loops through and checks if each property needs to be created or not.
  *
  * @param subLabel - string to add to the end of the property name
  */

@@ -1,13 +1,7 @@
-// Constants.
 import { URLS } from "../constants/urls";
-import { EventHandler, Message } from "../constants/interfaces";
-
-// Utilities.
+import { Message } from "../constants/interfaces";
 import { Debug } from "../utilities/debug";
 import { sanitizeInput } from "../utilities/sanitizeInput";
-
-// -------------------------------------------------------------------------------
-
 const debug = new Debug("background", "Main");
 
 // Need to be able to access this regardless of the message.
@@ -15,12 +9,11 @@ let mintTab: undefined | number;
 let newProperties = 0;
 let newPropertiesComplete = 0;
 
-// -------------------------------------------------------------------------------
-
 // The key of the handler should match the message.event value
-const eventHandlers = {
+const eventHandlers: {
+  [key: string]: (options?: { message: Message; sender: chrome.runtime.MessageSender }) => void;
+} = {
   "trigger-sync": () => {
-    debug.log("trigger-sync event");
     // Send notification
     chrome.tabs.sendMessage(mintTab, {
       status: "Syncing Mint with Robinhood.",
@@ -34,8 +27,7 @@ const eventHandlers = {
     });
   },
   // This event is emitted by the main Robinhood content script.
-  "robinhood-login-needed": ({ sender }: EventHandler) => {
-    debug.log("robinhood-login-needed event");
+  "robinhood-login-needed": ({ sender }) => {
     chrome.tabs.sendMessage(mintTab, {
       status: "You need to log in to Robinhood",
       link: URLS.robinhood.login,
@@ -46,9 +38,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the login Robinhood content script.
-  "robinhood-login-success": ({ sender }: EventHandler) => {
-    debug.log("robinhood-login-success event");
-
+  "robinhood-login-success": ({ sender }) => {
     // Close the Robinhood tab logged in from
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
 
@@ -60,9 +50,7 @@ const eventHandlers = {
     });
   },
   // This event is emitted by the main Robinhood content script.
-  "robinhood-portfolio-scraped": ({ sender, message }: EventHandler) => {
-    debug.log("robinhood-portfolio-scraped event");
-
+  "robinhood-portfolio-scraped": ({ sender, message }) => {
     if (message.error) {
       debug.error(message.error);
       chrome.tabs.sendMessage(mintTab, {
@@ -102,8 +90,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the Mint property create content script.
-  "mint-property-added": ({ sender }: EventHandler) => {
-    debug.log("mint-property-added event");
+  "mint-property-added": ({ sender }) => {
     newPropertiesComplete++;
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
 
@@ -114,7 +101,6 @@ const eventHandlers = {
   },
   // This event is emitted by the mint-property-added and/or the mint-property-setup-complete event handlers
   "setup-complete": () => {
-    debug.log("setup-complete event");
     debug.log("setup-complete sending notification");
     chrome.tabs.sendMessage(mintTab, {
       status: "Setup complete!",
@@ -130,9 +116,7 @@ const eventHandlers = {
     });
   },
   // This event is emitted by the Mint property check content script.
-  "mint-property-setup-complete": ({ sender, message }: EventHandler) => {
-    debug.log("mint-property-setup-complete event");
-
+  "mint-property-setup-complete": ({ sender, message }) => {
     debug.log("mint-property-setup-complete setting storage");
     chrome.storage.sync.set({
       propertiesSetup: true,
@@ -148,8 +132,7 @@ const eventHandlers = {
     }
   },
   // This event is emitted by the Mint property update content script.
-  "mint-sync-complete": ({ message, sender }: EventHandler) => {
-    debug.log("mint-sync-complete event");
+  "mint-sync-complete": ({ message, sender }) => {
     chrome.storage.sync.set({ syncTime: new Date().toString() });
     let account = "";
     if (message.accountName) {
@@ -164,9 +147,8 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the main Mint content script
-  "mint-opened": ({ sender, message }: EventHandler) => {
+  "mint-opened": ({ sender, message }) => {
     const { forceUpdate } = message;
-    debug.log("mint-opened event");
     // Store a reference to the mint tab to be able to show the notifications
     mintTab = sender.tab.id;
 
@@ -218,16 +200,14 @@ const eventHandlers = {
     );
   },
   // This event is emitted by the Mint property check content script.
-  "mint-create": ({ message }: EventHandler) => {
-    debug.log("mint-create event");
+  "mint-create": ({ message }) => {
     chrome.tabs.create({
       url: URLS.mint.properties.create + "&property=" + message.property,
       active: false,
     });
   },
   // This event is emitted by the Mint property check content script.
-  "mint-property-remove": ({ sender }: EventHandler) => {
-    debug.log("mint-property-remove event");
+  "mint-property-remove": ({ sender }) => {
     chrome.tabs.sendMessage(mintTab, {
       status:
         "Your account was set up prior to version 3 of this extension. Version 3 introduced separation of asset types when syncing. Please remove the old 'Robinhood Account' property from Mint to prevent duplication of your portfolio balance. Reload the overview to sync after removing the property.",
@@ -240,8 +220,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the Mint property check content script.
-  "mint-property-non-multiple-remove": ({ sender }: EventHandler) => {
-    debug.log("mint-property-non-multiple-remove event");
+  "mint-property-non-multiple-remove": ({ sender }) => {
     chrome.tabs.sendMessage(mintTab, {
       status:
         "Your account appears to have data from a non multiple account setup. Please remove the old 'Robinhood Cash', 'Robinhood Stocks', 'Robinhood Crypto' & 'Robinhood Other' properties from Mint to prevent duplication of your portfolio balance. Reload the overview to sync after removing the property.",
@@ -254,8 +233,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted by the Mint property check content script.
-  "mint-property-non-single-remove": ({ sender }: EventHandler) => {
-    debug.log("mint-property-non-multiple-remove event");
+  "mint-property-non-single-remove": ({ sender }) => {
     chrome.tabs.sendMessage(mintTab, {
       status:
         "Your account appears to have data from a multiple account setup. Please remove the old 'Robinhood Cash - [ACCOUNT_ NAME]', 'Robinhood Stocks - [ACCOUNT_ NAME]', 'Robinhood Crypto - [ACCOUNT_ NAME]' & 'Robinhood Other - [ACCOUNT_ NAME]' properties from Mint to prevent duplication of your portfolio balance. Reload the overview to sync after removing the property.",
@@ -268,8 +246,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted when a property is missing for the updater
-  "mint-missing-property": ({ sender, message }: EventHandler) => {
-    debug.log("mint-missing-property event");
+  "mint-missing-property": ({ sender, message }) => {
     const property = message.property ? sanitizeInput(message.property) : "NOT FOUND";
     chrome.tabs.sendMessage(mintTab, {
       status: `The property "${property}" could not be found for updating. Set up needs to be run again to fix.`,
@@ -282,8 +259,7 @@ const eventHandlers = {
     if (!debug.isEnabled()) chrome.tabs.remove(sender.tab.id);
   },
   // This event is emitted when a property could not be updated as a result of bad data from the scraper
-  "mint-unable-to-update-property": ({ sender, message }: EventHandler) => {
-    debug.log("mint-unable-to-update-property event");
+  "mint-unable-to-update-property": ({ sender, message }) => {
     const property = message.property ? sanitizeInput(message.property) : "NOT FOUND";
     chrome.tabs.sendMessage(mintTab, {
       status: `The property "${property}" could not be updated.`,
@@ -294,8 +270,10 @@ const eventHandlers = {
 
 chrome.runtime.onMessage.addListener((message: Message, sender: chrome.runtime.MessageSender) => {
   if (message && message.event && typeof eventHandlers[message.event] === "function") {
+    debug.log(`${message.event} event`);
     eventHandlers[message.event]({ message, sender });
   } else {
+    debug.error("Event Handler for event not found.", message.event, message);
     throw new Error(message.event);
   }
 });

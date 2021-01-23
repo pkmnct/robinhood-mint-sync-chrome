@@ -1,29 +1,26 @@
-// Update
-// https://mint.intuit.com/settings.event?filter=property
-
-// Constants.
 import { callbackDataOptions, Message } from "../../../constants/interfaces";
-
-// Utilities.
 import { Overlay } from "../../../utilities/overlay";
 import { Debug } from "../../../utilities/debug";
 import { waitForElement } from "../../../utilities/waitForElement";
 
-// -------------------------------------------------------------------------------
-
 const debug = new Debug("content", "Mint - Properties - Update");
-const handleError = (error: Error) => debug.error(error);
 
-// -------------------------------------------------------------------------------
+/**
+ * Handle errors by logging the error to the debug console.
+ * @param error The error to handle
+ */
+const handleError = (error: Error) => debug.error(error);
 
 /**
  * Runs once all the properties have been synced.
- * Sends message upon succeful completion
+ * Sends message upon successful completion
  */
-const updatesComplete = ({ isMultipleAccounts, request }: { isMultipleAccounts: boolean; request: Message }) => {
-  // Bail & Recur if no account view
+const updatesComplete = (params: { isMultipleAccounts: boolean; request: Message }) => {
+  const { isMultipleAccounts, request } = params;
+
+  // If an Account View is still open, the save has not yet completed.
   if (document.querySelectorAll(".AccountView.open").length) {
-    setTimeout(() => updatesComplete({ isMultipleAccounts, request }), 50);
+    setTimeout(() => updatesComplete(params), 50);
     return;
   }
 
@@ -38,17 +35,12 @@ const updatesComplete = ({ isMultipleAccounts, request }: { isMultipleAccounts: 
  * Checks if we've synced enough properties,
  * if we have, save them and run the completion event
  */
-const checkForUpdateComplete = ({
-  syncedLabels,
-  isMultipleAccounts,
-  request,
-}: {
-  syncedLabels: Array<string>;
-  isMultipleAccounts: boolean;
-  request: Message;
-}) => {
+const checkForUpdateComplete = (params: { syncedLabels: Array<string>; isMultipleAccounts: boolean; request: Message }) => {
+  const { syncedLabels, isMultipleAccounts, request } = params;
+
   // Bail if we haven't synced enough labels yet.
   if (syncedLabels.length !== 4) {
+    debug.log(`Synced ${syncedLabels.length} out of 4 properties`);
     return;
   }
 
@@ -64,7 +56,7 @@ const checkForUpdateComplete = ({
 
 /**
  * Runs once all the properties have been synced.
- * Sends message upon succeful completion
+ * Sends message upon successful completion
  */
 interface SetRobinhoodAmountOptions {
   // Property to search for
@@ -231,9 +223,10 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
 /**
  * Binds to chrome runtime to begin the sync if we have scraped data.
  */
-const onMesageListener = (request) => {
+const onMessageListener = (request) => {
   // Only run if we've scraped some data
   if (request.event !== "robinhood-portfolio-scraped") {
+    debug.error(`Received unexpected event`, request.event, request);
     return;
   }
 
@@ -246,10 +239,8 @@ const onMesageListener = (request) => {
   });
 };
 
-// -------------------------------------------------------------------------------
-
 // Pop overlay
 new Overlay("Updating Mint Properties...", "This window will automatically close when the sync is complete");
 
 // Bind Listener
-chrome.runtime.onMessage.addListener(onMesageListener);
+chrome.runtime.onMessage.addListener(onMessageListener);
