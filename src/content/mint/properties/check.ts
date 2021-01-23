@@ -169,6 +169,7 @@ chrome.storage.sync.get(
     // but don't actually have any accounts set, we need to bail out and move to the sync flow
     // Which should let us retreive our account name, set it, and then return here to set up.
     if ((multipleAccountsEnabled && !multipleAccounts) || !multipleAccounts.length) {
+      debug.log("Multiple Accounts is enabled, but no accounts found. Bailing and calling the updater.");
       chrome.runtime.sendMessage({
         event: "trigger-sync-no-message",
       });

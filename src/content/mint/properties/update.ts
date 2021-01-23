@@ -141,6 +141,7 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
     // Detect if Multiple Accounts && found a matching account to update
     let isMultipleAccounts = false;
     if (multipleAccountsEnabled) {
+      debug.log("Multiple Accounts is enabled.");
       // Try to find a match in our existing accounts
       if (multipleAccounts && multipleAccounts.length) {
         isMultipleAccounts = multipleAccounts.some((account) => {
@@ -153,6 +154,7 @@ const syncProperties = (propertyViewElement: HTMLElement, callbackData: callback
 
       // If no match, but we do have an account name, lets add it and bail out to the create step.
       if (!isMultipleAccounts && request.accountName) {
+        debug.log("New Account found. Triggering setup for new account.");
         chrome.storage.sync.set({
           multipleAccounts: [...multipleAccounts, { robinHoodAccountName: request.accountName }],
         });
