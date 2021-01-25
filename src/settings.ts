@@ -3,8 +3,6 @@ const checkboxTriangle = document.querySelector("#setting-fixTriangle") as HTMLI
 const checkboxDebug = document.querySelector("#setting-debugMode") as HTMLInputElement;
 const checkboxMultipleAccounts = document.querySelector("#setting-multipleAccountsEnabled") as HTMLInputElement;
 
-// -------------------------------------------------------------------------------
-
 /**
  * Bind all of our Elemnents
  *
