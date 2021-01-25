@@ -4,8 +4,7 @@ const checkboxDebug = document.querySelector("#setting-debugMode") as HTMLInputE
 const checkboxMultipleAccounts = document.querySelector("#setting-multipleAccountsEnabled") as HTMLInputElement;
 
 /**
- * Bind all of our Elemnents
- *
+ * Bind all of our Elements
  */
 chrome.storage.sync.get(
   {
