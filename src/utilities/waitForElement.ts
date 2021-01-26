@@ -25,7 +25,7 @@ interface WaitForElementOptions {
   _timesRun?: number;
 }
 export const waitForElement = (options: WaitForElementOptions): void => {
-  const { selector, withText, onError, callback, initialContainer, failureAttempts = 50, _timesRun = 0, checkInterval = 500, callbackData = {} } = options;
+  const { selector, withText, onError, callback, initialContainer, failureAttempts = 50, _timesRun = 0, checkInterval = 500 } = options;
 
   // Bail and callback with Error if we've reached out fail limit
   if (_timesRun >= failureAttempts) {
@@ -41,7 +41,7 @@ export const waitForElement = (options: WaitForElementOptions): void => {
   if (elements.length) {
     // If we don't need specific text to have appeared, we can just return the first of what we found.
     if (!withText) {
-      callback(elements[0] as HTMLElement, callbackData);
+      callback(elements[0] as HTMLElement);
       return;
     }
 
@@ -51,7 +51,7 @@ export const waitForElement = (options: WaitForElementOptions): void => {
       if ((element as HTMLElement).innerText.toLowerCase().includes(withText.toLowerCase())) {
         // Success! Call the callback function with our found item
         foundText = true;
-        callback(element as HTMLElement, callbackData);
+        callback(element as HTMLElement);
         // Stop searching for elements
         break;
       }

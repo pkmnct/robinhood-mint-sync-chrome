@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Robinhood Mint Sync",
   "description": "Automatically add your Robinhood portfolio to Mint",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "author": "George Walker",
   "browser_specific_settings": {
     "gecko": {
