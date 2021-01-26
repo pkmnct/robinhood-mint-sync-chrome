@@ -10,7 +10,3 @@ export interface Message {
   accountName?: string;
   forceUpdate?: boolean;
 }
-
-export interface callbackDataOptions {
-  request?: Message;
-}

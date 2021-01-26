@@ -1,4 +1,4 @@
-import { callbackDataOptions, Message } from "../../../constants/interfaces";
+import { Message } from "../../../constants/interfaces";
 import { Overlay } from "../../../utilities/overlay";
 import { Debug } from "../../../utilities/debug";
 import { waitForElement } from "../../../utilities/waitForElement";
@@ -130,8 +130,7 @@ const setRobinhoodAmount = (options: SetRobinhoodAmountOptions) => {
  * @param propertyViewElement
  * @param callbackData
  */
-const syncProperties = (propertyViewElement: HTMLElement, callbackData: callbackDataOptions) => {
-  const { request } = callbackData;
+const syncProperties = (propertyViewElement: HTMLElement, request: Message) => {
   debug.log("Property Tab View loaded.", propertyViewElement);
   debug.log("Request: ", request);
 
@@ -252,8 +251,7 @@ const onMessageListener = (request) => {
   waitForElement({
     selector: ".PropertyTabView",
     onError: handleError,
-    callback: syncProperties,
-    callbackData: { request },
+    callback: (foundElement) => syncProperties(foundElement, request),
   });
 };
 

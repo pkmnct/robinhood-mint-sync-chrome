@@ -1,5 +1,3 @@
-import { callbackDataOptions } from "../constants/interfaces";
-
 /**
  * waitForElement - Tries to wait for an element to appear on the page and then calls
  * the callback function. If it fails too many times, calls the onError callback function
@@ -14,9 +12,7 @@ interface WaitForElementOptions {
   // Text that must be in the selector (Optional)
   withText?: string | null;
   // Callback
-  callback: (foundElement: HTMLElement, callbackData: callbackDataOptions) => void;
-  // A way to pass some additonal data to the callback
-  callbackData?: callbackDataOptions;
+  callback: (foundElement: HTMLElement) => void;
   // Error Callback
   onError: (result: Error) => void;
   // Container to limit search to (Optional)
