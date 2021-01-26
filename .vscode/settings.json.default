@@ -2,10 +2,12 @@
   "editor.formatOnSave": true,
   "eslint.format.enable": true,
   "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true
+    "source.fixAll.eslint": true
   },
   "search.exclude": {
-      ".stellar": true,
-      "dist": true
+    ".stellar": true,
+    "dist": true,
+    "package-lock.json": true
   },
+  "cSpell.words": ["Robinhood"]
 }
