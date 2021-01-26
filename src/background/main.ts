@@ -293,7 +293,6 @@ chrome.runtime.onMessage.addListener((message: Message, sender: chrome.runtime.M
     debug.log(`${message.event} event`);
     eventHandlers[message.event]({ message, sender });
   } else {
-    debug.error("Event Handler for event not found.", message.event, message);
-    throw new Error(message.event);
+    debug.error("Event Handler for event not found.", message);
   }
 });
