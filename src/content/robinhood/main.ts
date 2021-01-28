@@ -42,6 +42,7 @@ export interface Message {
   error?: Error;
   newProperties?: string;
   property?: string;
+  cash_available_from_instant_deposits?: string;
 }
 
 /**
@@ -67,20 +68,26 @@ const scrapeData = async () => {
 
     returnValue.debug = json;
 
-    if (json && json.uninvested_cash && json.uninvested_cash.amount) {
-      returnValue.uninvested_cash = json.uninvested_cash.amount;
-    }
+    if (json) {
+      if (json.uninvested_cash && json.uninvested_cash.amount) {
+        returnValue.uninvested_cash = json.uninvested_cash.amount;
+      }
 
-    if (json && json.crypto && json.crypto.equity && json.crypto.equity.amount) {
-      returnValue.crypto = json.crypto.equity.amount;
-    }
+      if (json.crypto && json.crypto.equity && json.crypto.equity.amount) {
+        returnValue.crypto = json.crypto.equity.amount;
+      }
 
-    if (json && json.equities && json.equities.equity && json.equities.equity.amount) {
-      returnValue.equities = json.equities.equity.amount;
-    }
+      if (json.equities && json.equities.equity && json.equities.equity.amount) {
+        returnValue.equities = json.equities.equity.amount;
+      }
 
-    if (json && json.total_equity && json.total_equity.amount) {
-      returnValue.total_equity = json.total_equity.amount;
+      if (json.total_equity && json.total_equity.amount) {
+        returnValue.total_equity = json.total_equity.amount;
+      }
+
+      if (json.cash_available_from_instant_deposits && json.cash_available_from_instant_deposits.amount) {
+        returnValue.cash_available_from_instant_deposits = json.cash_available_from_instant_deposits.amount;
+      }
     }
 
     return returnValue;

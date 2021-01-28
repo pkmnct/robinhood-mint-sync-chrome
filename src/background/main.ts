@@ -147,7 +147,7 @@ const eventHandlers = {
   // This event is emitted by the Mint property update content script.
   "mint-sync-complete": ({ sender }: eventHandler) => {
     debug.log("mint-sync-complete event");
-    chrome.storage.sync.set({ syncTime: new Date().toString() });
+    chrome.storage.sync.set({ syncTime: new Date().toISOString() });
     chrome.tabs.sendMessage(mintTab, {
       status: "Sync Complete! Reload to see the change.",
       link: "/overview.event",
@@ -195,6 +195,7 @@ const eventHandlers = {
           const currentTime = new Date();
           const differenceMilliseconds = currentTime.valueOf() - syncTimeParsed.valueOf();
           const differenceHours = Math.floor((differenceMilliseconds % 86400000) / 3600000);
+          debug.log(syncTime, syncTimeParsed, currentTime, differenceHours);
           if (differenceHours >= 1) {
             eventHandlers["trigger-sync"]();
           } else {
