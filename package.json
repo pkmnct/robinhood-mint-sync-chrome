@@ -16,10 +16,17 @@
     "noty": "^3.2.0-beta"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-typescript": "^7.12.7",
     "@types/chrome": "0.0.128",
+    "@types/jest": "^26.0.20",
+    "@types/selenium-webdriver": "^4.0.11",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
+    "babel-jest": "^26.6.3",
     "bestzip": "^2.1.7",
+    "chromedriver": "^88.0.0",
     "copy-webpack-plugin": "^7.0.0",
     "cross-env": "^7.0.3",
     "cross-var": "^1.1.0",
@@ -27,9 +34,11 @@
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "husky": "^4.3.8",
+    "jest": "^26.6.3",
     "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
+    "selenium-webdriver": "^4.0.0-alpha.8",
     "ts-loader": "^8.0.14",
     "typescript": "^4.1.3",
     "unzipper": "^0.10.11",
@@ -40,6 +49,7 @@
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "docs": "webpack serve --config webpack/webpack.docs.js",
+    "prebuild": "npm run clean",
     "build": "webpack --config webpack/webpack.prod.js",
     "build:docs": "webpack --config webpack/webpack.docs.js",
     "clean": "rimraf dist",
@@ -54,7 +64,8 @@
     "get:stellar": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node ./get-stellar.js",
     "postinstall": "npm run get:stellar",
     "manifest:update": "node manifest-helper.js",
-    "postversion": "npm run manifest:update && git add . && git commit -m \"Update manifest.json\""
+    "postversion": "npm run manifest:update && git add . && git commit -m \"Update manifest.json\"",
+    "test": "jest"
   },
   "husky": {
     "hooks": {
