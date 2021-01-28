@@ -7,6 +7,7 @@ export class Overlay {
     );
     this.wrapper.setAttribute("role", "dialog");
     this.wrapper.setAttribute("aria-label", "Robinhood Mint Sync");
+    this.wrapper.setAttribute("id", "robinhood-mint-sync-overlay");
   };
 
   constructor(headerText: string, messageText: string) {
