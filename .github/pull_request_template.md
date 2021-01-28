@@ -4,7 +4,8 @@
 
     If this pull request does not include one of the sections, you may omit it.
 
-    If any of these sections close an open issue, reference it with the "fixes" keyword.
+    If any of the items close an open issue, reference the issue with the "closes" keyword. For example:
+    - Introduce Pull Request Template (closes #123)
 -->
 
 ## New Features
@@ -16,6 +17,8 @@
 -
 
 ## Maintenance
+
+-
 
 <!--
     Make sure that you have run `npm version` with the correct versioning on this branch.
