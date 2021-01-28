@@ -78,6 +78,11 @@ const scrapeData = async () => {
       returnValue.total_equity = json.total_equity.amount;
     }
 
+    if (json && json.cash_available_from_instant_deposits && json.cash_available_from_instant_deposits.amount) {
+      debug.log("Got Cash Available From Instant Deposits", json.cash_available_from_instant_deposits);
+      returnValue.cash_available_from_instant_deposits = json.cash_available_from_instant_deposits.amount;
+    }
+
     debug.log("Getting Account Name");
     // TODO: maybe there's an API for this?
     const accountNameElement = document.querySelector(".main-container > h1") as HTMLElement;

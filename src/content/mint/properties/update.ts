@@ -181,7 +181,7 @@ const syncProperties = (propertyViewElement: HTMLElement, request: Message) => {
 
     // Cash
     if (request.uninvested_cash) {
-      cash = parseFloat(request.uninvested_cash);
+      cash = parseFloat(request.uninvested_cash) - parseFloat(request.cash_available_from_instant_deposits);
     }
     setRobinhoodAmount({
       label: "Cash" + subLabel,

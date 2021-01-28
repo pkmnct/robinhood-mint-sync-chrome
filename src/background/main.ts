@@ -142,7 +142,8 @@ const eventHandlers: {
   },
   // This event is emitted by the Mint property update content script.
   "mint-sync-complete": ({ message, sender }) => {
-    chrome.storage.sync.set({ syncTime: new Date().toString() });
+    debug.log("mint-sync-complete event");
+    chrome.storage.sync.set({ syncTime: new Date().toISOString() });
     let account = "";
     if (message.accountName) {
       account = sanitizeInput(message.accountName);
@@ -194,6 +195,7 @@ const eventHandlers: {
           const currentTime = new Date();
           const differenceMilliseconds = currentTime.valueOf() - syncTimeParsed.valueOf();
           const differenceHours = Math.floor((differenceMilliseconds % 86400000) / 3600000);
+          debug.log(syncTime, syncTimeParsed, currentTime, differenceHours);
           if (differenceHours >= 1 || forceUpdate) {
             eventHandlers["trigger-sync"]();
           } else {

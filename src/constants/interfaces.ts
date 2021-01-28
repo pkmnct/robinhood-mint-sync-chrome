@@ -9,4 +9,5 @@ export interface Message {
   property?: string;
   accountName?: string;
   forceUpdate?: boolean;
+  cash_available_from_instant_deposits?: string;
 }
