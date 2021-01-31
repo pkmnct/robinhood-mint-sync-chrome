@@ -56,6 +56,13 @@ jobs:
       - name: Build Extension
         run: npm run build
 
+      - name: Setup Chrome Driver
+        uses: nanasess/setup-chromedriver@master
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+
       - name: Test Extension
         run: npm run test
 
