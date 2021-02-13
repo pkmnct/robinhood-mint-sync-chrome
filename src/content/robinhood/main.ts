@@ -1,14 +1,15 @@
+import { Message } from "../../constants/interfaces";
+import { URLS } from "../../constants/urls";
 import { Overlay } from "../../utilities/overlay";
 import { Debug } from "../../utilities/debug";
-import { urls } from "../../urls";
 
 const debug = new Debug("content", "Robinhood - Main");
 
 /**
  * Function to get the bearer token from the redux store on Robinhood. This will be used for the Robinhood API calls.
  */
-const getBearerToken = () =>
-  new Promise((resolve, reject) => {
+const getBearerToken = () => {
+  return new Promise((resolve, reject) => {
     const database = window.indexedDB.open("localforage");
     database.onsuccess = () => {
       const transaction = database.result.transaction("keyvaluepairs", "readwrite");
@@ -31,19 +32,7 @@ const getBearerToken = () =>
       reject(e);
     };
   });
-
-export interface Message {
-  event: string;
-  debug?: unknown;
-  uninvested_cash?: string;
-  crypto?: string;
-  equities?: string;
-  total_equity?: string;
-  error?: Error;
-  newProperties?: string;
-  property?: string;
-  cash_available_from_instant_deposits?: string;
-}
+};
 
 /**
  * Function to scrape the portfolio and cash values
@@ -55,9 +44,11 @@ const scrapeData = async () => {
   } as Message;
 
   try {
+    debug.log("Getting API Token");
     const access_token = await getBearerToken();
 
-    const response = await fetch(urls.robinhood.api, {
+    debug.log("Sending request to Robinhood API");
+    const response = await fetch(URLS.robinhood.api, {
       method: "GET",
       headers: new Headers({
         authorization: `Bearer ${access_token}`,
@@ -65,35 +56,45 @@ const scrapeData = async () => {
     });
 
     const json = await response.json();
+    debug.log("Robinhood Response", json);
 
-    returnValue.debug = json;
+    if (json && json.uninvested_cash && json.uninvested_cash.amount) {
+      debug.log("Got Cash Amount", json.uninvested_cash.amount);
+      returnValue.uninvested_cash = json.uninvested_cash.amount;
+    }
 
-    if (json) {
-      if (json.uninvested_cash && json.uninvested_cash.amount) {
-        returnValue.uninvested_cash = json.uninvested_cash.amount;
-      }
+    if (json && json.crypto && json.crypto.equity && json.crypto.equity.amount) {
+      debug.log("Got Crypto Amount", json.crypto.equity.amount);
+      returnValue.crypto = json.crypto.equity.amount;
+    }
 
-      if (json.crypto && json.crypto.equity && json.crypto.equity.amount) {
-        returnValue.crypto = json.crypto.equity.amount;
-      }
+    if (json && json.equities && json.equities.equity && json.equities.equity.amount) {
+      debug.log("Got Equity Amount", json.equities.equity.amount);
+      returnValue.equities = json.equities.equity.amount;
+    }
 
-      if (json.equities && json.equities.equity && json.equities.equity.amount) {
-        returnValue.equities = json.equities.equity.amount;
-      }
+    if (json && json.total_equity && json.total_equity.amount) {
+      debug.log("Got Total Equity Amount", json.total_equity.amount);
+      returnValue.total_equity = json.total_equity.amount;
+    }
 
-      if (json.total_equity && json.total_equity.amount) {
-        returnValue.total_equity = json.total_equity.amount;
-      }
+    if (json && json.cash_available_from_instant_deposits && json.cash_available_from_instant_deposits.amount) {
+      debug.log("Got Cash Available From Instant Deposits", json.cash_available_from_instant_deposits);
+      returnValue.cash_available_from_instant_deposits = json.cash_available_from_instant_deposits.amount;
+    }
 
-      if (json.cash_available_from_instant_deposits && json.cash_available_from_instant_deposits.amount) {
-        returnValue.cash_available_from_instant_deposits = json.cash_available_from_instant_deposits.amount;
-      }
+    debug.log("Getting Account Name");
+    // TODO: maybe there's an API for this?
+    const accountNameElement = document.querySelector(".main-container > h1") as HTMLElement;
+    if (accountNameElement && accountNameElement.innerText) {
+      debug.log("Got Account Name", accountNameElement.innerText);
+      returnValue.accountName = accountNameElement.innerText;
     }
 
     return returnValue;
   } catch (error) {
     returnValue.error = error;
-    console.error(error);
+    debug.error(error);
     return returnValue;
   }
 };
@@ -103,8 +104,10 @@ const scrapeData = async () => {
  */
 const init = () => {
   new Overlay("Getting data from Robinhood...", "This window will automatically close when the sync is complete");
+
   const checkIfLoggedIn = async () => {
     debug.log("Waiting for page to load");
+
     if (document.location.pathname.includes("/account")) {
       clearInterval(checkIfLoggedInInterval);
       debug.log("Page loaded. Appears to be logged in.");
@@ -119,6 +122,7 @@ const init = () => {
       });
     }
   };
+
   const checkIfLoggedInInterval = setInterval(checkIfLoggedIn, 500);
 };
 

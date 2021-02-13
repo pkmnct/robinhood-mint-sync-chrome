@@ -8,6 +8,8 @@ const handleError = (error: Error) => debug.error(error);
 const params = new URLSearchParams(document.location.search);
 const property = params.get("property");
 
+// TODO: async await to get out of callback hell
+
 if (property) {
   new Overlay(`Adding Robinhood ${property} property to Mint...`, "This window will automatically close when complete.");
 

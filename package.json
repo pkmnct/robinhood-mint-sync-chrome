@@ -1,6 +1,6 @@
 {
   "name": "robinhood-mint-sync-chrome",
-  "version": "3.4.1",
+  "version": "3.5.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pkmnct/robinhood-mint-sync-chrome.git"
@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/chrome": "0.0.128",
+    "@types/firefox-webext-browser": "^82.0.0",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
     "bestzip": "^2.1.7",
@@ -51,6 +52,8 @@
     "eslint:fix": "eslint --fix --max-warnings 0 src/**",
     "prettier": "prettier --check src/**",
     "prettier:fix": "prettier --write src/**",
+    "lint": "npm run eslint && npm run prettier",
+    "lint:fix": "npm run eslint:fix && npm run prettier:fix",
     "get:stellar": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node ./get-stellar.js",
     "postinstall": "npm run get:stellar",
     "manifest:update": "node manifest-helper.js",

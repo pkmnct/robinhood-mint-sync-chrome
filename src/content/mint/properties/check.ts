@@ -1,56 +1,96 @@
-// Check to see if properties are set up, and trigger set up if they are not
-// https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true
-
 import { Overlay } from "../../../utilities/overlay";
 import { waitForElement } from "../../../utilities/waitForElement";
 import { Debug } from "../../../utilities/debug";
 
 const debug = new Debug("content", "Mint - Properties - Check");
 
-new Overlay("Performing Initial Setup. Please Wait...", "This window will automatically close when complete.");
-
 // The properties to set up/check for
 export const robinhoodProperties = ["Cash", "Stocks", "Crypto", "Other"];
 
-// Function to check if the propert exists on the page
-const checkIfPropertyExists = (property) => {
-  debug.log("Checking if property exists:", property);
+/**
+ *
+ * @param propertyName - Property name to look for
+ * @param exactMatch - if true the property can not contain any other extra characters
+ */
+const checkIfPropertyExists = (propertyName: string, exactMatch = true): boolean => {
+  debug.log("Checking if property exists:", propertyName);
 
   const propertyElements = document.querySelectorAll(".OtherPropertyView");
 
   let foundProperty = false;
   for (const propertyElement of propertyElements) {
-    if ((propertyElement as HTMLElement).innerText.includes(`Robinhood ${property}`)) {
-      debug.log(`Found property "${property}"`, propertyElement);
+    const titleElement = propertyElement.querySelector(".summaryView span:first-child") as HTMLElement;
+    const title = titleElement.innerText.trim();
+    if (title === `Robinhood ${propertyName}`) {
+      debug.log(`Found property "${propertyName}"`, propertyElement);
       foundProperty = true;
       // Stop searching
+      break;
+    } else if (!exactMatch && title.includes(`Robinhood ${propertyName}`)) {
+      debug.log(`Found property "${propertyName}" - loose check`, propertyElement);
+      foundProperty = true;
       break;
     }
   }
   return foundProperty;
 };
 
-const setupProperties = () => {
+/**
+ * Loops through and checks if each property needs to be created or not.
+ *
+ * @param subLabel - string to add to the end of the property name
+ */
+const checkAndCreateProperties = (subLabel = ""): number => {
   // Need to keep track of how many properties we added to ensure each gets set up before initiating sync
   let newProperties = 0;
 
   robinhoodProperties.forEach((property) => {
-    if (!checkIfPropertyExists(property)) {
-      debug.log(`Could not find "${property}", adding it.`);
-      // Trigger setup of property
-      chrome.runtime.sendMessage({
-        event: "mint-create",
-        property,
-      });
-      newProperties++;
+    const propertyName = property + subLabel;
+
+    // Bail if the property is already here.
+    if (checkIfPropertyExists(propertyName)) {
+      debug.log(`Found "${propertyName}".`);
+      return;
     }
+
+    // Trigger setup of property
+    debug.log(`Could not find "${propertyName}", adding it.`);
+    chrome.runtime.sendMessage({
+      event: "mint-create",
+      property: propertyName,
+    });
+    newProperties++;
   });
+
+  return newProperties;
+};
+
+/**
+ * Setups up properties for a single account setup
+ */
+const singleAccountPropertiesSetup = (): void => {
+  const newProperties = checkAndCreateProperties();
 
   // Check for old version
   if (checkIfPropertyExists("Account")) {
     debug.log("Found old Robinhood Account property. This must be removed to finish setup.");
     chrome.runtime.sendMessage({
       event: "mint-property-remove",
+    });
+    return;
+  }
+
+  // Check for old multiple account version
+  let multipleCheck = false;
+  robinhoodProperties.forEach((property) => {
+    if (checkIfPropertyExists(`${property} -`, false)) {
+      multipleCheck = true;
+    }
+  });
+  if (multipleCheck) {
+    debug.log("Found old Robinhood Multiple Account property. This must be removed to finish setup.");
+    chrome.runtime.sendMessage({
+      event: "mint-property-non-single-remove",
     });
     return;
   }
@@ -63,24 +103,103 @@ const setupProperties = () => {
   });
 };
 
-debug.log("Waiting for .OtherPropertyView");
-waitForElement({
-  selector: ".OtherPropertyView",
-  failureAttempts: 20,
-  callback: (result) => {
-    debug.log("Found Property View. Setting up properties.", result);
-    setupProperties();
-  },
-  onError: () => {
-    // If we don't find the OtherPropertyView, check if no properties are set up
-    debug.log("Did not find property view. Checking for zeroState");
-    waitForElement({
-      selector: ".zeroState",
-      callback: () => {
-        setupProperties();
-      },
-      onError: (error) => debug.error("Did not find zero state", error),
-      failureAttempts: 1, // We should fail right away if it doesn't exist. It's already waited many seconds for OtherPropertyView
+/**
+ * Setups up properties for a multiple account setup
+ */
+const multipleAccountPropertiesSetup = (multipleAccounts: Array<{ robinHoodAccountName: string }>): void => {
+  // For each of our accounts, run through and check if we need to create any
+  let newProperties = 0;
+  multipleAccounts.forEach((account) => {
+    const subLabel = ` - ${account.robinHoodAccountName}`;
+    newProperties += checkAndCreateProperties(subLabel);
+  });
+
+  // Check for old version
+  if (checkIfPropertyExists("Account")) {
+    debug.log("Found old Robinhood Account property. This must be removed to finish setup.");
+    chrome.runtime.sendMessage({
+      event: "mint-property-remove",
     });
+    return;
+  }
+
+  // Check for old non multiple account version
+  // Check for old multiple account version
+  let singleCheck = false;
+  robinhoodProperties.forEach((property) => {
+    if (checkIfPropertyExists(`${property}`)) {
+      singleCheck = true;
+    }
+  });
+  if (singleCheck) {
+    debug.log("Found old Robinhood Non Multiple Account property. This must be removed to finish setup.");
+    chrome.runtime.sendMessage({
+      event: "mint-property-non-multiple-remove",
+    });
+    return;
+  }
+
+  // Success.
+  debug.log("Finishing Setup");
+  chrome.runtime.sendMessage({
+    event: "mint-property-setup-complete",
+    newProperties,
+  });
+};
+
+/**
+ * Determines account configuration and calls correct setup
+ */
+const setupProperties = (multipleAccountsEnabled, multipleAccounts): void => {
+  const isMultipleAccount = multipleAccountsEnabled && multipleAccounts && multipleAccounts.length;
+  isMultipleAccount ? multipleAccountPropertiesSetup(multipleAccounts) : singleAccountPropertiesSetup();
+};
+
+// Pop overlay
+new Overlay("Performing Initial Setup. Please Wait...", "This window will automatically close when complete.");
+
+chrome.storage.sync.get(
+  {
+    multipleAccountsEnabled: false,
+    multipleAccounts: [],
   },
-});
+  (data) => {
+    const { multipleAccountsEnabled, multipleAccounts } = data;
+    // If we are on the check on page with multiple account enabled,
+    // but don't actually have any accounts set, we need to bail out and move to the sync flow
+    // Which should let us retreive our account name, set it, and then return here to set up.
+    if ((multipleAccountsEnabled && !multipleAccounts) || !multipleAccounts.length) {
+      debug.log("Multiple Accounts is enabled, but no accounts found. Bailing and calling the updater.");
+      chrome.runtime.sendMessage({
+        event: "trigger-sync-no-message",
+      });
+      return;
+    }
+    const isMultipleAccount = multipleAccountsEnabled && multipleAccounts && multipleAccounts.length;
+    isMultipleAccount ? multipleAccountPropertiesSetup(multipleAccounts) : singleAccountPropertiesSetup();
+
+    // Wait for Properties view, with fallback if we are in a 0 state
+    debug.log("Waiting for .OtherPropertyView");
+    waitForElement({
+      selector: ".OtherPropertyView",
+      failureAttempts: 20,
+      callback: () => {
+        debug.log("Found Property View. Setting up properties.");
+        setupProperties(multipleAccountsEnabled, multipleAccounts);
+      },
+      onError: () => {
+        // If we don't find the OtherPropertyView, check if no properties are set up
+        debug.log("Did not find property view. Checking for zeroState");
+        waitForElement({
+          selector: ".zeroState",
+          callback: () => {
+            debug.log("Found Zero State. Setting up properties.");
+            setupProperties(multipleAccountsEnabled, multipleAccounts);
+          },
+          onError: (error) => debug.error("Did not find zero state", error),
+          failureAttempts: 1, // We should fail right away if it doesn't exist. It's already waited many seconds for OtherPropertyView
+        });
+      },
+    });
+  }
+);

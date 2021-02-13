@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/settings.css" />
     <link rel="icon" type="image/png" href="/images/icon128.png" />
   </head>
+
   <body class="is-preload">
     <!-- Wrapper -->
     <div id="wrapper">
@@ -20,14 +21,16 @@
       <!-- Nav -->
       <nav id="nav">
         <ul>
-          <li><a href="#welcome" class="active">Welcome Page</a></li>
+          <li><a href="#changeLog" class="active">Changelog</a></li>
           <li><a href="#triangleFix">Triangle Indicator Fix</a></li>
+          <li><a href="#debugMode">Debug Mode</a></li>
+          <li><a href="#multipleAccounts">Multiple Accounts</a></li>
         </ul>
       </nav>
 
       <!-- Main -->
       <main id="main">
-        <section id="welcome" class="main">
+        <section id="changeLog" class="main">
           <header class="major">
             <h2>Changelog</h2>
           </header>
@@ -38,6 +41,8 @@
           <input type="checkbox" id="setting-changelogOnUpdate" name="setting-changelogOnUpdate" />
           <label for="setting-changelogOnUpdate">Display changelog on update</label>
         </section>
+
+        <!-- Triangle Indicator Fix -->
         <section id="triangleFix" class="main">
           <header class="major">
             <h2>Triangle Indicator Fix</h2>
@@ -49,6 +54,8 @@
           <input type="checkbox" id="setting-fixTriangle" name="setting-fixTriangle" />
           <label for="setting-fixTriangle">Triangle Indicator Fix</label>
         </section>
+
+        <!-- Debug Mode -->
         <section id="debugMode" class="main">
           <header class="major">
             <h2>Debug Mode</h2>
@@ -60,6 +67,8 @@
           <input type="checkbox" id="setting-debugMode" name="setting-debugMode" />
           <label for="setting-debugMode">Debug Mode</label>
         </section>
+
+        <!-- Trigger Initial Setup -->
         <section id="setup" class="main">
           <header class="major">
             <h2>Trigger Initial Setup</h2>
@@ -68,6 +77,19 @@
             If you need to re-setup the Mint properties, use this button. This will also force a sync. Make sure you are signed in to Robinhood and Mint first.
           </p>
           <a href="https://mint.intuit.com/settings.event?filter=property&setupRobinhood=true" target="_blank" class="button">Trigger Initial Setup</a>
+        </section>
+
+        <!-- Multiple Accounts -->
+        <section id="multipleAccounts" class="main">
+          <header class="major">
+            <h2>Multiple Accounts</h2>
+          </header>
+          <p>
+            Multiple account support allows you to sync more than one Robinhood account to a single Mint account. Whichever Robinhood account you currently have
+            signed in on your browser will be synced to Mint. To update another account, sign out of Robinhood and sign in with the account you want to sync.
+          </p>
+          <input type="checkbox" id="setting-multipleAccountsEnabled" name="setting-multipleAccountsEnabled" />
+          <label for="setting-multipleAccountsEnabled">Allow Multiple Accounts</label>
         </section>
       </main>
 

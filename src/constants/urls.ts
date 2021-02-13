@@ -1,4 +1,4 @@
-export const urls = {
+export const URLS = {
   robinhood: {
     login: "https://robinhood.com/login?redirectMint=true",
     scrape: "https://robinhood.com/account?syncMint=true",

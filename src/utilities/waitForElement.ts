@@ -1,14 +1,18 @@
 /**
  * waitForElement - Tries to wait for an element to appear on the page and then calls
  * the callback function. If it fails too many times, calls the onError callback function
+ *
+ * TODO: Refactor this to return a promise
+ * TODO: selector should be set to allow an array of values, and return if any return true.
+ * TODO: perhaps convert to class so _timesRun can be private
  */
-export interface WaitForElementOptions {
+interface WaitForElementOptions {
   // Selector to search for
   selector: string;
   // Text that must be in the selector (Optional)
   withText?: string | null;
   // Callback
-  callback: (result: HTMLElement) => void;
+  callback: (foundElement: HTMLElement) => void;
   // Error Callback
   onError: (result: Error) => void;
   // Container to limit search to (Optional)
@@ -18,10 +22,8 @@ export interface WaitForElementOptions {
   // Allowed number of failure attempts. Default is 50. (Optional)
   failureAttempts?: number;
   // Internal - How many loops we've run through (Optional)
-  // TODO: perhaps convert waitForElement to class so this can be private
   _timesRun?: number;
 }
-
 export const waitForElement = (options: WaitForElementOptions): void => {
   const { selector, withText, onError, callback, initialContainer, failureAttempts = 50, _timesRun = 0, checkInterval = 500 } = options;
 
