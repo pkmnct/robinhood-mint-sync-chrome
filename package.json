@@ -12,30 +12,30 @@
   },
   "homepage": "https://github.com/pkmnct/robinhood-mint-sync-chrome#readme",
   "dependencies": {
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.0",
     "noty": "^3.2.0-beta"
   },
   "devDependencies": {
-    "@types/chrome": "0.0.128",
-    "@typescript-eslint/eslint-plugin": "^4.13.0",
-    "@typescript-eslint/parser": "^4.13.0",
-    "bestzip": "^2.1.7",
-    "copy-webpack-plugin": "^7.0.0",
+    "@types/chrome": "0.0.173",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
+    "bestzip": "^2.2.0",
+    "copy-webpack-plugin": "^10.2.0",
     "cross-env": "^7.0.3",
     "cross-var": "^1.1.0",
-    "eslint": "^7.18.0",
-    "eslint-config-prettier": "^7.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "husky": "^4.3.8",
-    "lint-staged": "^10.5.3",
-    "prettier": "^2.2.1",
+    "eslint": "^8.5.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^12.1.4",
+    "prettier": "^2.5.1",
     "rimraf": "^3.0.2",
-    "ts-loader": "^8.0.14",
-    "typescript": "^4.1.3",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.4",
     "unzipper": "^0.10.11",
-    "webpack": "^5.15.0",
-    "webpack-cli": "^4.3.1",
-    "webpack-dev-server": "^3.11.2"
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.1"
   },
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
@@ -54,12 +54,8 @@
     "get:stellar": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node ./get-stellar.js",
     "postinstall": "npm run get:stellar",
     "manifest:update": "node manifest-helper.js",
-    "postversion": "npm run manifest:update && git add . && git commit -m \"Update manifest.json\""
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "postversion": "npm run manifest:update && git add . && git commit -m \"Update manifest.json\"",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "src/*": "prettier --write",
